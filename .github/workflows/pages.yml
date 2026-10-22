@@ -1,4 +1,4 @@
-name: Testbank publiceren op GitHub Pages
+name: TC420 Web publiceren op GitHub Pages
 
 on:
   push:

@@ -4,7 +4,7 @@
     {
       "name": "tc420-webapp",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8420", "--bind", "127.0.0.1", "--directory", "/Users/denver/Projects/tc420-reversing"],
+      "runtimeArgs": ["-m", "http.server", "8420", "--bind", "127.0.0.1"],
       "port": 8420
     }
   ]

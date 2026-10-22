@@ -1,5 +1,5 @@
 #!/bin/bash
-# Start de TC420 Testbank offline: lokale webserver + Chrome (of Edge).
+# Start de TC420 Web offline: lokale webserver + Chrome (of Edge).
 # Dubbelklik in Finder; sluit dit Terminal-venster om de server te stoppen.
 cd "$(dirname "$0")" || exit 1
 PORT=8420
@@ -24,6 +24,6 @@ else
   echo "Chrome of Edge niet gevonden. Open $URL in Chrome of Edge (Safari werkt niet)."
 fi
 
-echo "TC420 Testbank draait op $URL"
+echo "TC420 Web draait op $URL"
 echo "Sluit dit venster (of druk Ctrl+C) om te stoppen."
 [ -n "$SERVER" ] && wait $SERVER

@@ -1,10 +1,10 @@
-# TC420 Testbank
+# TC420 Web
 
 Een webpagina om de TC420 via USB te bedienen en te testen vanaf macOS, Linux of Windows. Je hebt Chrome of Edge nodig. Er is geen internet nodig.
 
 ## Starten
 
-- **macOS:** dubbelklik op `start-testbank.command`. Er gaat een Terminal-venster open dat de pagina in Chrome start. Sluit dat venster om te stoppen. Weigert macOS het script de eerste keer? Klik dan met rechts op het bestand en kies *Open*.
+- **macOS:** dubbelklik op `start-tc420-web.command`. Er gaat een Terminal-venster open dat de pagina in Chrome start. Sluit dat venster om te stoppen. Weigert macOS het script de eerste keer? Klik dan met rechts op het bestand en kies *Open*.
 - **Handmatig:** start in deze map `python3 -m http.server 8420 --bind 127.0.0.1` en open daarna `http://localhost:8420/` in Chrome of Edge.
 - **Simulatie zonder apparaat:** zet `?sim=1` achter het adres, bijvoorbeeld `http://localhost:8420/?sim=1`.
 

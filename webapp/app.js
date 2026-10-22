@@ -1,8 +1,8 @@
-// TC420 Testbank: UI, transport, test flows and persistent log.
+// TC420 Web: UI, transport, test flows and persistent log.
 (function () {
   'use strict';
   const T = window.TC420;
-  const APP_VERSION = '0.2.0';
+  const APP_VERSION = '0.3.0';
   const LOG_KEY = 'tc420-testlog-v1';
   const REPLY_TIMEOUT_MS = 3000;
   const END_MODE_WAIT_MS = 300;
@@ -70,14 +70,14 @@
   }
 
   function exportJson() {
-    const doc = { app: 'TC420 Testbank', version: APP_VERSION, exported: new Date().toISOString(), userAgent: navigator.userAgent, entries };
+    const doc = { app: 'TC420 Web', version: APP_VERSION, exported: new Date().toISOString(), userAgent: navigator.userAgent, entries };
     download(`tc420-testlog-${stamp()}.json`, JSON.stringify(doc, null, 2), 'application/json');
     log('info', 'logboek opgeslagen als .json');
   }
 
   function exportTxt() {
     const lines = entries.map((e) => `${e.t}\t${e.kind.toUpperCase()}\t${e.test || '-'}\t${e.text}`);
-    download(`tc420-testlog-${stamp()}.txt`, `TC420 Testbank ${APP_VERSION}\n${navigator.userAgent}\n\n${lines.join('\n')}\n`, 'text/plain');
+    download(`tc420-testlog-${stamp()}.txt`, `TC420 Web ${APP_VERSION}\n${navigator.userAgent}\n\n${lines.join('\n')}\n`, 'text/plain');
     log('info', 'logboek opgeslagen als .txt');
   }
 
@@ -93,7 +93,7 @@
   });
 
   function startSession() {
-    log('sessie', `nieuwe sessie · TC420 Testbank ${APP_VERSION} · ${location.protocol}//${location.host || '(bestand)'} · secure context ${window.isSecureContext} · WebHID ${'hid' in navigator}${SIM ? ' · SIMULATIE' : ''} · ${navigator.userAgent}`);
+    log('sessie', `nieuwe sessie · TC420 Web ${APP_VERSION} · ${location.protocol}//${location.host || '(bestand)'} · secure context ${window.isSecureContext} · WebHID ${'hid' in navigator}${SIM ? ' · SIMULATIE' : ''} · ${navigator.userAgent}`);
   }
 
   // ---------- observations ----------
