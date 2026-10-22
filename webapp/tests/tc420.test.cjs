@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const T = require('../tc420.js');
 
-const SCHEMAS = path.join(__dirname, '..', '..', "Schema's");
+const SCHEMAS = path.join(__dirname, '..', '..', 'schemas');
 
 // Reference packets generated with the hardware-tested wallneradam/tc420 Python
 // library (64 bytes, no report ID): significant prefix, then zeros, checksum, 0D 0A.

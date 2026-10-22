@@ -7,7 +7,7 @@ Bedien je TC420 LED-tijdcontroller vanuit de browser, op macOS, Linux en Windows
 ## Inhoud
 
 - `webapp/`: **TC420 Web**, een offline webpagina voor Chrome en Edge (WebHID). Hij kan de klok zetten, live bedienen (online play), `.tmf`-schema's laden, bewerken en downloaden en de controller wissen, en houdt een logboek bij. Zie [`webapp/LEESMIJ.md`](webapp/LEESMIJ.md).
-- `Schema's/`: `.tmf`-schema's. AFRIKA, AMAZONE en THAILAND zijn voorbeelden; WINTER en ZOMER zijn eigen schema's.
+- `schemas/`: `.tmf`-schema's. AFRIKA, AMAZONE en THAILAND zijn voorbeelden; WINTER en ZOMER zijn eigen schema's.
 - `testlogs/`: logboeken van tests op een echte TC420.
 - `TC420-analyse.md`: de eerste analyse van PLed.exe (21-10-2026). Een deel daarvan is achterhaald, zoals de opbouw van `0x12` en het antwoordformaat; zie het technisch ontwerp.
 
