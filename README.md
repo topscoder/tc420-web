@@ -2,6 +2,8 @@
 
 Bedien je TC420 LED-tijdcontroller vanuit de browser, op macOS, Linux en Windows. Je hebt de verouderde Windows-software PLed niet meer nodig. Het protocol is achterhaald door reverse engineering van PLed.
 
+**Online:** https://topscoder.github.io/tc420-web/ (Chrome of Edge; zonder apparaat: [simulatie](https://topscoder.github.io/tc420-web/?sim=1)). Elke push naar `main` met wijzigingen in `webapp/` wordt eerst getest en daarna automatisch gepubliceerd.
+
 ## Inhoud
 
 - `webapp/`: **TC420 Web**, een offline webpagina voor Chrome en Edge (WebHID). Hij kan de klok zetten, live bedienen (online play), `.tmf`-schema's laden, bewerken en downloaden en de controller wissen, en houdt een logboek bij. Zie [`webapp/LEESMIJ.md`](webapp/LEESMIJ.md).
