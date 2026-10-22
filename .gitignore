@@ -1,0 +1,8 @@
+.DS_Store
+
+# Leverancierssoftware (PLed 1.1, Windows) en het originele archief: binaries, niet onze code
+PLed/
+Software_tijdcontroller.zip
+
+# Lokale kopie van https://github.com/wallneradam/tc420 (GPL-3), alleen als referentie gebruikt
+tc420-main/
