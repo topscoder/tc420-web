@@ -6,3 +6,8 @@ Software_tijdcontroller.zip
 
 # Lokale kopie van https://github.com/wallneradam/tc420 (GPL-3), alleen als referentie gebruikt
 tc420-main/
+
+# Node / tests
+node_modules/
+test-results/
+playwright-report/

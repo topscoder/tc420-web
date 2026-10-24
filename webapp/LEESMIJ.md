@@ -14,6 +14,13 @@ Volg de tests T1 tot en met T7 op de pagina. Noteer per test wat je op de TC420 
 
 ## Bestanden
 
-- `index.html`: de pagina
-- `app.js`: bediening, testflows en logboek
-- `tc420.js`: protocol en `.tmf`-bestandsformaat; wordt ook in node getest
+- `index.html` en `css/app.css`: de pagina
+- `js/main.js`: start de app en koppelt alles aan elkaar
+- `js/protocol.js`: het USB-protocol (pakketten bouwen en antwoorden lezen)
+- `js/schedule.js`: het `.tmf`-bestandsformaat, controles en het verwachte lichtverloop
+- `js/device.js`: de verbinding met de TC420 (één commando tegelijk, wachten op antwoord)
+- `js/simulator.js`: een nagebootste TC420 voor `?sim=1` en de tests
+- `js/logbook.js`: het logboek dat in de browser bewaard blijft
+- `js/ui/`: de onderdelen van de testpagina
+
+Tests draaien vanuit de hoofdmap met `npm test` (unit- en end-to-end-tests); `npm run lint` controleert de code.

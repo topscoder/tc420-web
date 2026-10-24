@@ -1,234 +1,229 @@
 <!doctype html>
 <html lang="nl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TC420 Web</title>
-<style>
-  :root {
-    --bg: #f6f5f1; --card: #ffffff; --ink: #1d1d1b; --quiet: #6b6a64; --line: #dddbd3;
-    --accent: #2f6fdb; --ok: #2e8b57; --bad: #c2412d; --warn: #b7791f; --code-bg: #f1efe8;
-    --ch1: #2f6fdb; --ch2: #e0662f; --ch3: #2ea672; --ch4: #1f3a68; --ch5: #9a5bd1;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1a1a19; --card: #232321; --ink: #ecebe6; --quiet: #a3a29b; --line: #3a3a37;
-      --accent: #6b9cf0; --ok: #5cc28d; --bad: #f07a63; --warn: #e0b04f; --code-bg: #2b2b29;
-      --ch1: #6b9cf0; --ch2: #f08a5a; --ch3: #5cc28d; --ch4: #a9bde6; --ch5: #c093ec;
-    }
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
-  main { max-width: 1040px; margin: 0 auto; padding: 0 16px 64px; }
-  header.top { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); margin: 0 -16px 20px; padding: 12px 16px; }
-  .top-inner { max-width: 1040px; margin: 0 auto; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-  h1 { font-size: 20px; margin: 0; margin-right: auto; }
-  h2 { font-size: 17px; margin: 0; }
-  h3 { font-size: 14px; margin: 16px 0 8px; color: var(--quiet); font-weight: 600; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
-  .card-head { display: flex; gap: 10px; align-items: baseline; margin-bottom: 8px; flex-wrap: wrap; }
-  .tid { font: 600 12px ui-monospace, Menlo, monospace; color: var(--accent); }
-  .badge { font-size: 12px; padding: 1px 8px; border-radius: 99px; border: 1px solid var(--line); color: var(--quiet); }
-  .badge.danger { border-color: var(--bad); color: var(--bad); }
-  .badge.safe { border-color: var(--ok); color: var(--ok); }
-  .badge.sim { border-color: var(--warn); color: var(--warn); }
-  p { margin: 6px 0; }
-  .note { color: var(--quiet); font-size: 13px; }
-  button { font: inherit; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: 7px 13px; cursor: pointer; }
-  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  button.danger { background: var(--bad); border-color: var(--bad); color: #fff; }
-  button.small { padding: 3px 9px; font-size: 13px; }
-  button:disabled { opacity: .45; cursor: not-allowed; }
-  input, select { font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
-  input[type=number] { width: 64px; }
-  input[type=time] { width: 104px; }
-  input[type=range] { width: 100%; }
-  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 8px 0; }
-  .status { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--quiet); }
-  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
-  .dot.on { background: var(--ok); }
-  .obs { border-top: 1px dashed var(--line); margin-top: 14px; padding-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .obs input[type=text] { flex: 1; min-width: 200px; }
-  .obs .saved { font-size: 13px; color: var(--ok); }
-  .last { font-size: 13px; margin-top: 6px; }
-  .last.ok { color: var(--ok); } .last.bad { color: var(--bad); }
-  .sliders { display: grid; grid-template-columns: 48px 1fr 56px; gap: 6px 12px; align-items: center; max-width: 560px; }
-  .sliders label { font-weight: 600; }
-  .sliders output { font-variant-numeric: tabular-nums; text-align: right; }
-  #log { height: 300px; overflow: auto; background: var(--code-bg); border-radius: 8px; padding: 8px; font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
-  .log-row { display: grid; grid-template-columns: 150px 52px 40px 1fr; gap: 8px; }
-  .log-time, .log-test { color: var(--quiet); }
-  .log-kind { font-weight: 600; }
-  .log-text { word-break: break-all; }
-  .k-tx .log-kind { color: var(--accent); } .k-ack .log-kind, .k-obs-ok .log-kind { color: var(--ok); }
-  .k-nack .log-kind, .k-fout .log-kind, .k-obs-bad .log-kind { color: var(--bad); }
-  .k-sessie { border-top: 1px solid var(--line); margin-top: 4px; padding-top: 4px; }
-  #drop { border: 1.5px dashed var(--line); border-radius: 10px; padding: 14px; text-align: center; color: var(--quiet); }
-  #drop.over { border-color: var(--accent); color: var(--ink); }
-  #drop label { color: var(--accent); cursor: pointer; text-decoration: underline; }
-  .modes { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
-  .mode-item { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; }
-  .mode-item.sel { border-color: var(--accent); }
-  .mode-item .meta { color: var(--quiet); font-size: 13px; margin-right: auto; }
-  .warnings { color: var(--warn); margin: 6px 0; padding-left: 20px; font-size: 13px; }
-  .chart svg { width: 100%; height: auto; display: block; }
-  .chart .grid { stroke: var(--line); stroke-width: 1; }
-  .chart .tick { fill: var(--quiet); font-size: 11px; }
-  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; }
-  .legend i { width: 16px; height: 3px; border-radius: 2px; display: inline-block; margin-right: 5px; vertical-align: middle; }
-  .table-wrap { overflow-x: auto; }
-  table { border-collapse: collapse; font-size: 13px; }
-  th, td { text-align: left; padding: 3px 6px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-  th { color: var(--quiet); font-weight: 600; }
-  td.jumps label { margin-right: 6px; font-size: 12px; color: var(--quiet); }
-  code { background: var(--code-bg); padding: 1px 4px; border-radius: 4px; }
-  .warn-box { background: color-mix(in srgb, var(--bad) 12%, transparent); border: 1px solid var(--bad); border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; }
-  .sim-box { background: color-mix(in srgb, var(--warn) 14%, transparent); border: 1px solid var(--warn); border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; }
-  ol.plan { margin: 6px 0; padding-left: 20px; }
-  details summary { cursor: pointer; color: var(--quiet); }
-  .progress { font-variant-numeric: tabular-nums; }
-</style>
-</head>
-<body>
-<main>
-  <header class="top">
-    <div class="top-inner">
-      <h1>TC420 Web</h1>
-      <span class="status"><span class="dot" id="dot"></span><span id="status-text">Niet verbonden</span></span>
-      <span class="badge sim" id="sim-badge" hidden>SIMULATIE</span>
-      <button class="primary" id="btn-connect">Verbinden</button>
-      <button id="btn-export-json">Log opslaan (.json)</button>
-      <button id="btn-export-txt">Log opslaan (.txt)</button>
-    </div>
-  </header>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TC420 Web</title>
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <main>
+      <header class="top">
+        <div class="top-inner">
+          <h1>TC420 Web</h1>
+          <span class="status"><span class="dot" id="dot"></span><span id="status-text">Niet verbonden</span></span>
+          <span class="badge sim" id="sim-badge" hidden>SIMULATIE</span>
+          <button class="primary" id="btn-connect">Verbinden</button>
+          <button id="btn-export-json">Log opslaan (.json)</button>
+          <button id="btn-export-txt">Log opslaan (.txt)</button>
+        </div>
+      </header>
 
-  <div id="unsupported" class="warn-box" hidden>Deze browser ondersteunt geen WebHID. Gebruik Chrome of Edge; Safari en Firefox kunnen geen USB-HID-apparaten benaderen.</div>
-  <div id="sim-note" class="sim-box" hidden>Je gebruikt de <strong>simulatie</strong>: er is geen echte TC420. Elk commando krijgt een nagebootst OK-antwoord. Verwijder <code>?sim=1</code> uit de adresregel voor het echte apparaat.</div>
-
-  <section class="card">
-    <h2>Zo werkt TC420 Web</h2>
-    <p>Deze pagina werkt zonder internet. Elke actie en elk antwoord van de TC420 komt in het logboek onderaan. Het logboek blijft bewaard in deze browser, ook na herladen. Noteer bij elke test wat je op het apparaat ziet en klik op een resultaatknop. Sla na afloop het logboek op met <em>Log opslaan</em> en deel dat bestand later met Claude.</p>
-    <p>Aanbevolen volgorde:</p>
-    <ol class="plan">
-      <li><strong>T1</strong> Verbinden en <strong>T2</strong> Klok zetten. Veilig, al eerder gelukt.</li>
-      <li><strong>T3</strong> Live bediening. Veilig: er wordt niets opgeslagen.</li>
-      <li><strong>T4</strong> Schema laden of testschema maken. Dit gebeurt alleen in de browser.</li>
-      <li><strong>T5</strong> Downloaden. Dit overschrijft programma's op de controller.</li>
-      <li><strong>T6</strong> Alles wissen en <strong>T7</strong> Expert alleen als het nodig is.</li>
-    </ol>
-  </section>
-
-  <section class="card" data-test="T1">
-    <div class="card-head"><span class="tid">T1</span><h2>Verbinden</h2><span class="badge safe">veilig</span></div>
-    <p>Klik bovenaan op <em>Verbinden</em> en kies <em>Time Controller</em>. De pagina logt de USB-gegevens van het apparaat.</p>
-    <div class="last" id="last-T1"></div>
-  </section>
-
-  <section class="card" data-test="T2">
-    <div class="card-head"><span class="tid">T2</span><h2>Klok zetten</h2><span class="badge safe">veilig</span></div>
-    <p>Pc-tijd: <strong id="pc-time"></strong></p>
-    <div class="row">
-      <button class="primary needs-device" id="btn-sync">Klok synchroniseren (0x11)</button>
-      <button id="btn-sync-preview">Pakket tonen</button>
-    </div>
-    <p class="note">Kijk daarna of de tijd op het display van de TC420 klopt.</p>
-    <div class="last" id="last-T2"></div>
-  </section>
-
-  <section class="card" data-test="T3">
-    <div class="card-head"><span class="tid">T3</span><h2>Live bediening (online play)</h2><span class="badge safe">niets wordt opgeslagen</span></div>
-    <p>Hiermee bestuur je de uitgangen direct. De controller toont de naam op het display. Met <em>Stop</em> (0x02) keert hij terug naar zijn normale programma.</p>
-    <div class="row">
-      <label>Naam op display <input type="text" id="play-name" value="TEST" maxlength="8" size="9"></label>
-      <button class="primary needs-device" id="btn-play-start">Start (0x15)</button>
-      <button class="needs-device" id="btn-play-stop" disabled>Stop (0x02)</button>
-      <span class="progress note" id="play-stats"></span>
-    </div>
-    <div class="sliders" id="sliders"></div>
-    <div class="row">
-      <button class="needs-play" id="btn-all-0" disabled>Alles 0 %</button>
-      <button class="needs-play" id="btn-all-100" disabled>Alles 100 %</button>
-      <button class="needs-play" id="btn-sweep" disabled>Kanaaltest (elk kanaal 0→100→0)</button>
-      <label class="note"><input type="checkbox" id="verbose"> elk 0x16-pakket loggen</label>
-    </div>
-    <p class="note">Let op: brandt het juiste kanaal en dimt het mee? Volgt het licht de schuifregelaar vloeiend?</p>
-    <div class="last" id="last-T3"></div>
-  </section>
-
-  <section class="card" data-test="T4">
-    <div class="card-head"><span class="tid">T4</span><h2>Schema's laden, maken en bewerken</h2><span class="badge safe">alleen in de browser</span></div>
-    <div id="drop">Sleep <code>.tmf</code>-bestanden hierheen of <label for="file">kies bestanden</label><input id="file" type="file" accept=".tmf" multiple hidden></div>
-    <div class="row">
-      <button id="btn-new-mode">Leeg schema</button>
-      <button id="btn-test-mode">Testschema fade/spring (komende minuten)</button>
-    </div>
-    <details>
-      <summary>Wat doet het testschema?</summary>
-      <p class="note">Het maakt een programma dat vanaf ongeveer 2 minuten na nu in 3 minuten CH1 geleidelijk naar 100 % brengt (fade) en CH2 op hetzelfde moment in één keer op 100 % zet (springen). Na nog 3 minuten dimt CH1 geleidelijk naar 0 en gaat CH2 in één keer uit. Zo kun je met T5 zien of de springvlag doet wat we verwachten. De controller moet daarvoor dit programma afspelen; kies het zo nodig op het display.</p>
-    </details>
-    <h3>Schema's in deze sessie (worden in deze volgorde gedownload)</h3>
-    <div class="modes" id="modes"><p class="note">Nog geen schema's.</p></div>
-    <div id="editor" hidden>
-      <h3 id="editor-title">Bewerken</h3>
-      <ul class="warnings" id="editor-warnings"></ul>
-      <label class="note"><input type="checkbox" id="chart-zoom"> zoom in op het uur rond nu</label>
-      <div class="chart" id="editor-chart"></div>
-      <div class="legend" id="editor-legend"></div>
-      <div class="table-wrap"><table id="editor-table"></table></div>
-      <div class="row">
-        <button id="btn-add-step">Stap toevoegen</button>
-        <button id="btn-sort">Sorteer op tijd</button>
-        <button id="btn-export-tmf">Opslaan als .tmf</button>
+      <div id="unsupported" class="warn-box" hidden>
+        Deze browser ondersteunt geen WebHID. Gebruik Chrome of Edge; Safari en Firefox kunnen geen USB-HID-apparaten
+        benaderen.
       </div>
-      <p class="note">Springen aangevinkt = het kanaal gaat op dat tijdstip in één keer naar de nieuwe waarde in plaats van geleidelijk. De grafiek toont het verwachte verloop.</p>
-    </div>
-    <div class="last" id="last-T4"></div>
-  </section>
+      <div id="sim-note" class="sim-box" hidden>
+        Je gebruikt de <strong>simulatie</strong>: er is geen echte TC420. Elk commando krijgt een nagebootst
+        OK-antwoord. Verwijder <code>?sim=1</code> uit de adresregel voor het echte apparaat.
+      </div>
 
-  <section class="card" data-test="T5">
-    <div class="card-head"><span class="tid">T5</span><h2>Downloaden naar de controller</h2><span class="badge danger">overschrijft programma's</span></div>
-    <p>Stuurt alle schema's uit T4 naar de controller. Elk schema krijgt een eigen programmaplaats (bank), te beginnen bij de startbank. Een schema overschrijft alleen het programma op zijn eigen bank. Laat geen gaten: lege banken verschijnen als lege programma's op het display.</p>
-    <div class="row">
-      <label>Startbank <input type="number" id="start-bank" value="0" min="0" max="49"></label>
-      <button class="danger needs-device" id="btn-download">Downloaden</button>
-      <span class="progress" id="dl-progress"></span>
-    </div>
-    <p class="note">Controleer daarna op het display: staan de namen er? Klopt het licht op het huidige tijdstip met de grafiek in T4?</p>
-    <div class="last" id="last-T5"></div>
-  </section>
+      <section class="card">
+        <h2>Zo werkt TC420 Web</h2>
+        <p>
+          Deze pagina werkt zonder internet. Elke actie en elk antwoord van de TC420 komt in het logboek onderaan. Het
+          logboek blijft bewaard in deze browser, ook na herladen. Noteer bij elke test wat je op het apparaat ziet en
+          klik op een resultaatknop. Sla na afloop het logboek op met <em>Log opslaan</em> en deel dat bestand later met
+          Claude.
+        </p>
+        <p>Aanbevolen volgorde:</p>
+        <ol class="plan">
+          <li><strong>T1</strong> Verbinden en <strong>T2</strong> Klok zetten. Veilig, al eerder gelukt.</li>
+          <li><strong>T3</strong> Live bediening. Veilig: er wordt niets opgeslagen.</li>
+          <li><strong>T4</strong> Schema laden of testschema maken. Dit gebeurt alleen in de browser.</li>
+          <li><strong>T5</strong> Downloaden. Dit overschrijft programma's op de controller.</li>
+          <li><strong>T6</strong> Alles wissen en <strong>T7</strong> Expert alleen als het nodig is.</li>
+        </ol>
+      </section>
 
-  <section class="card" data-test="T6">
-    <div class="card-head"><span class="tid">T6</span><h2>Alle programma's wissen</h2><span class="badge danger">wist de controller</span></div>
-    <p>Stuurt 0x03. Daarna staan er geen programma's meer op de controller. Je moet bevestigen door <code>WISSEN</code> te typen.</p>
-    <div class="row"><button class="danger needs-device" id="btn-clear">Alles wissen (0x03)</button></div>
-    <div class="last" id="last-T6"></div>
-  </section>
+      <section class="card" data-test="T1">
+        <div class="card-head">
+          <span class="tid">T1</span>
+          <h2>Verbinden</h2>
+          <span class="badge safe">veilig</span>
+        </div>
+        <p>
+          Klik bovenaan op <em>Verbinden</em> en kies <em>Time Controller</em>. De pagina logt de USB-gegevens van het
+          apparaat.
+        </p>
+        <div class="last" id="last-T1"></div>
+      </section>
 
-  <section class="card" data-test="T7">
-    <div class="card-head"><span class="tid">T7</span><h2>Expert: los pakket sturen</h2><span class="badge danger">alleen op aanwijzing</span></div>
-    <p class="note">Voor gerichte proeven die Claude je later kan vragen. Commando en payload in hex; framing en checksum worden automatisch toegevoegd.</p>
-    <div class="row">
-      <label>Commando <input type="text" id="raw-cmd" value="11" size="4"></label>
-      <label>Payload <input type="text" id="raw-payload" value="" size="40" placeholder="bijv. 07 EA 0A 16 09 05 2D"></label>
-      <label class="note"><input type="checkbox" id="raw-expect" checked> antwoord verwachten</label>
-      <button class="needs-device" id="btn-raw">Versturen</button>
-    </div>
-    <div class="last" id="last-T7"></div>
-  </section>
+      <section class="card" data-test="T2">
+        <div class="card-head">
+          <span class="tid">T2</span>
+          <h2>Klok zetten</h2>
+          <span class="badge safe">veilig</span>
+        </div>
+        <p>Pc-tijd: <strong id="pc-time"></strong></p>
+        <div class="row">
+          <button class="primary needs-device" id="btn-sync">Klok synchroniseren (0x11)</button>
+          <button id="btn-sync-preview">Pakket tonen</button>
+        </div>
+        <p class="note">Kijk daarna of de tijd op het display van de TC420 klopt.</p>
+        <div class="last" id="last-T2"></div>
+      </section>
 
-  <section class="card">
-    <div class="card-head"><h2>Logboek</h2><span class="note" id="log-count"></span></div>
-    <div id="log" aria-live="polite"></div>
-    <div class="row">
-      <button id="btn-export-json2">Log opslaan (.json)</button>
-      <button id="btn-export-txt2">Log opslaan (.txt)</button>
-      <button id="btn-new-session">Nieuwe sessie markeren</button>
-      <button id="btn-clear-log">Logboek leegmaken</button>
-    </div>
-    <p class="note">Het logboek staat in de opslag van deze browser. Gebruik na het testen <em>Log opslaan</em> en bewaar het bestand; leegmaken kan niet ongedaan worden.</p>
-  </section>
-</main>
-<script src="tc420.js"></script>
-<script src="app.js"></script>
-</body>
+      <section class="card" data-test="T3">
+        <div class="card-head">
+          <span class="tid">T3</span>
+          <h2>Live bediening (online play)</h2>
+          <span class="badge safe">niets wordt opgeslagen</span>
+        </div>
+        <p>
+          Hiermee bestuur je de uitgangen direct. De controller toont de naam op het display. Met <em>Stop</em> (0x02)
+          keert hij terug naar zijn normale programma.
+        </p>
+        <div class="row">
+          <label>Naam op display <input type="text" id="play-name" value="TEST" maxlength="8" size="9" /></label>
+          <button class="primary needs-device" id="btn-play-start">Start (0x15)</button>
+          <button class="needs-device" id="btn-play-stop" disabled>Stop (0x02)</button>
+          <span class="progress note" id="play-stats"></span>
+        </div>
+        <div class="sliders" id="sliders"></div>
+        <div class="row">
+          <button class="needs-play" id="btn-all-0" disabled>Alles 0 %</button>
+          <button class="needs-play" id="btn-all-100" disabled>Alles 100 %</button>
+          <button class="needs-play" id="btn-sweep" disabled>Kanaaltest (elk kanaal 0→100→0)</button>
+          <label class="note"><input type="checkbox" id="verbose" /> elk 0x16-pakket loggen</label>
+        </div>
+        <p class="note">
+          Let op: brandt het juiste kanaal en dimt het mee? Volgt het licht de schuifregelaar vloeiend?
+        </p>
+        <div class="last" id="last-T3"></div>
+      </section>
+
+      <section class="card" data-test="T4">
+        <div class="card-head">
+          <span class="tid">T4</span>
+          <h2>Schema's laden, maken en bewerken</h2>
+          <span class="badge safe">alleen in de browser</span>
+        </div>
+        <div id="drop">
+          Sleep <code>.tmf</code>-bestanden hierheen of <label for="file">kies bestanden</label
+          ><input id="file" type="file" accept=".tmf" multiple hidden />
+        </div>
+        <div class="row">
+          <button id="btn-new-mode">Leeg schema</button>
+          <button id="btn-test-mode">Testschema fade/spring (komende minuten)</button>
+        </div>
+        <details>
+          <summary>Wat doet het testschema?</summary>
+          <p class="note">
+            Het maakt een programma dat vanaf ongeveer 2 minuten na nu in 3 minuten CH1 geleidelijk naar 100 % brengt
+            (fade) en CH2 op hetzelfde moment in één keer op 100 % zet (springen). Na nog 3 minuten dimt CH1 geleidelijk
+            naar 0 en gaat CH2 in één keer uit. Zo kun je met T5 zien of de springvlag doet wat we verwachten. De
+            controller moet daarvoor dit programma afspelen; kies het zo nodig op het display.
+          </p>
+        </details>
+        <h3>Schema's in deze sessie (worden in deze volgorde gedownload)</h3>
+        <div class="modes" id="modes"><p class="note">Nog geen schema's.</p></div>
+        <div id="editor" hidden>
+          <h3 id="editor-title">Bewerken</h3>
+          <ul class="warnings" id="editor-warnings"></ul>
+          <label class="note"><input type="checkbox" id="chart-zoom" /> zoom in op het uur rond nu</label>
+          <div class="chart" id="editor-chart"></div>
+          <div class="legend" id="editor-legend"></div>
+          <div class="table-wrap"><table id="editor-table"></table></div>
+          <div class="row">
+            <button id="btn-add-step">Stap toevoegen</button>
+            <button id="btn-sort">Sorteer op tijd</button>
+            <button id="btn-export-tmf">Opslaan als .tmf</button>
+          </div>
+          <p class="note">
+            Springen aangevinkt = het kanaal gaat op dat tijdstip in één keer naar de nieuwe waarde in plaats van
+            geleidelijk. De grafiek toont het verwachte verloop.
+          </p>
+        </div>
+        <div class="last" id="last-T4"></div>
+      </section>
+
+      <section class="card" data-test="T5">
+        <div class="card-head">
+          <span class="tid">T5</span>
+          <h2>Downloaden naar de controller</h2>
+          <span class="badge danger">overschrijft programma's</span>
+        </div>
+        <p>
+          Stuurt alle schema's uit T4 naar de controller. Elk schema krijgt een eigen programmaplaats (bank), te
+          beginnen bij de startbank. Een schema overschrijft alleen het programma op zijn eigen bank. Laat geen gaten:
+          lege banken verschijnen als lege programma's op het display.
+        </p>
+        <div class="row">
+          <label>Startbank <input type="number" id="start-bank" value="0" min="0" max="49" /></label>
+          <button class="danger needs-device" id="btn-download">Downloaden</button>
+          <span class="progress" id="dl-progress"></span>
+        </div>
+        <p class="note">
+          Controleer daarna op het display: staan de namen er? Klopt het licht op het huidige tijdstip met de grafiek in
+          T4?
+        </p>
+        <div class="last" id="last-T5"></div>
+      </section>
+
+      <section class="card" data-test="T6">
+        <div class="card-head">
+          <span class="tid">T6</span>
+          <h2>Alle programma's wissen</h2>
+          <span class="badge danger">wist de controller</span>
+        </div>
+        <p>
+          Stuurt 0x03. Daarna staan er geen programma's meer op de controller. Je moet bevestigen door
+          <code>WISSEN</code> te typen.
+        </p>
+        <div class="row"><button class="danger needs-device" id="btn-clear">Alles wissen (0x03)</button></div>
+        <div class="last" id="last-T6"></div>
+      </section>
+
+      <section class="card" data-test="T7">
+        <div class="card-head">
+          <span class="tid">T7</span>
+          <h2>Expert: los pakket sturen</h2>
+          <span class="badge danger">alleen op aanwijzing</span>
+        </div>
+        <p class="note">
+          Voor gerichte proeven die Claude je later kan vragen. Commando en payload in hex; framing en checksum worden
+          automatisch toegevoegd.
+        </p>
+        <div class="row">
+          <label>Commando <input type="text" id="raw-cmd" value="11" size="4" /></label>
+          <label
+            >Payload <input type="text" id="raw-payload" value="" size="40" placeholder="bijv. 07 EA 0A 16 09 05 2D"
+          /></label>
+          <label class="note"><input type="checkbox" id="raw-expect" checked /> antwoord verwachten</label>
+          <button class="needs-device" id="btn-raw">Versturen</button>
+        </div>
+        <div class="last" id="last-T7"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Logboek</h2>
+          <span class="note" id="log-count"></span>
+        </div>
+        <div id="log" aria-live="polite"></div>
+        <div class="row">
+          <button id="btn-export-json2">Log opslaan (.json)</button>
+          <button id="btn-export-txt2">Log opslaan (.txt)</button>
+          <button id="btn-new-session">Nieuwe sessie markeren</button>
+          <button id="btn-clear-log">Logboek leegmaken</button>
+        </div>
+        <p class="note">
+          Het logboek staat in de opslag van deze browser. Gebruik na het testen <em>Log opslaan</em> en bewaar het
+          bestand; leegmaken kan niet ongedaan worden.
+        </p>
+      </section>
+    </main>
+    <script type="module" src="js/main.js"></script>
+  </body>
 </html>

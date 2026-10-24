@@ -1,0 +1,11 @@
+node_modules/
+PLed/
+tc420-main/
+test-results/
+playwright-report/
+package-lock.json
+*.md
+docs/
+testlogs/
+schemas/
+.claude/

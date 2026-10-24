@@ -1,0 +1,26 @@
+{
+  "name": "tc420-web",
+  "version": "0.4.0",
+  "private": true,
+  "description": "Edit and send TC420 LED controller schedules from the browser",
+  "type": "module",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "node --test \"tests/unit/**/*.test.js\"",
+    "test:e2e": "playwright test",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "serve": "python3 -m http.server 8420 --bind 127.0.0.1 --directory webapp"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
+    "eslint": "10.13.0",
+    "globals": "17.13.0",
+    "prettier": "3.9.10"
+  }
+}
