@@ -26,9 +26,28 @@ export function stamp(d = new Date()) {
   return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;
 }
 
-export function setLast(test, ok, text) {
+// "Last result" lines per test. They are stored as message keys so they can be
+// shown again in another language.
+let i18n = null;
+const results = new Map();
+
+export function bindI18n(instance) {
+  i18n = instance;
+}
+
+function renderResult(test) {
   const n = $(`last-${test}`);
-  if (!n) return;
-  n.className = `last ${ok ? 'ok' : 'bad'}`;
-  n.textContent = `Laatste resultaat: ${text}`;
+  const r = results.get(test);
+  if (!n || !r) return;
+  n.className = `last ${r.ok ? 'ok' : 'bad'}`;
+  n.textContent = i18n.t('last.result', { text: i18n.t(r.key, r.params) });
+}
+
+export function setLast(test, ok, key, params = {}) {
+  results.set(test, { ok, key, params });
+  renderResult(test);
+}
+
+export function refreshResults() {
+  results.forEach((r, test) => renderResult(test));
 }

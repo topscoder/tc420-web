@@ -27,14 +27,14 @@ test('0x01 expects no reply and still succeeds', async () => {
   const { conn, lines } = await connected({}, { noReplyWaitMs: 20 });
   const r = await conn.send(CMD.END_MODE);
   assert.deepEqual(r, { ok: true, noReply: true });
-  assert.ok(lines.at(-1).text.includes('geen antwoord (zoals verwacht)'));
+  assert.ok(lines.at(-1).text.includes('no reply (as expected)'));
 });
 
 test('a missing reply times out', async () => {
   const { conn, lines } = await connected({ silentOn: CMD.CLEAR_ALL }, { replyTimeoutMs: 30 });
   const r = await conn.send(CMD.CLEAR_ALL);
   assert.deepEqual(r, { ok: false, error: 'timeout' });
-  assert.equal(lines.at(-1).kind, 'fout');
+  assert.equal(lines.at(-1).kind, 'error');
 });
 
 test('an error echo is reported as not OK', async () => {
@@ -75,5 +75,5 @@ test('close() closes the device and forgets it', async () => {
 });
 
 test('collections are described with report sizes', () => {
-  assert.equal(describeCollections(new SimDevice()), 'usagePage 0xff usage 0xff · in [id 0: 64 B] · uit [id 0: 64 B]');
+  assert.equal(describeCollections(new SimDevice()), 'usagePage 0xff usage 0xff · in [id 0: 64 B] · out [id 0: 64 B]');
 });

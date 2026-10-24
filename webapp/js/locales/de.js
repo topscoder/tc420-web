@@ -1,0 +1,170 @@
+// Deutsch. Gleiche Schlüssel und {Parameter} wie en.js.
+export default {
+  'app.title': 'TC420 Web',
+
+  'header.language': 'Sprache',
+  'header.status.disconnected': 'Nicht verbunden',
+  'header.status.connected': 'Verbunden: {name}',
+  'header.sim': 'SIMULATION',
+  'header.connect': 'Verbinden',
+  'header.disconnect': 'Trennen',
+  'header.exportJson': 'Protokoll speichern (.json)',
+  'header.exportTxt': 'Protokoll speichern (.txt)',
+
+  'banner.unsupported':
+    'Dieser Browser unterstützt kein WebHID. Verwenden Sie Chrome oder Edge; Safari und Firefox können nicht auf USB-HID-Geräte zugreifen.',
+  'banner.sim':
+    'Sie verwenden die <strong>Simulation</strong>: Es ist kein echter TC420 angeschlossen. Jeder Befehl erhält eine simulierte OK-Antwort. Entfernen Sie <code>?sim=1</code> aus der Adresszeile, um das echte Gerät zu verwenden.',
+
+  'intro.title': 'So funktioniert TC420 Web',
+  'intro.text':
+    'Diese Seite funktioniert ohne Internet. Jede Aktion und jede Antwort des TC420 landet im Protokoll unten. Das Protokoll bleibt in diesem Browser gespeichert, auch nach dem Neuladen. Notieren Sie bei jedem Test, was Sie am Gerät sehen, und klicken Sie auf eine Ergebnis-Schaltfläche. Speichern Sie zum Schluss das Protokoll mit <em>Protokoll speichern</em> und hängen Sie die Datei an, wenn Sie ein Problem melden.',
+  'intro.order': 'Empfohlene Reihenfolge:',
+  'intro.step1': '<strong>T1</strong> Verbinden und <strong>T2</strong> Uhr stellen. Sicher.',
+  'intro.step2': '<strong>T3</strong> Live-Steuerung. Sicher: Es wird nichts gespeichert.',
+  'intro.step3': '<strong>T4</strong> Zeitplan laden oder Testzeitplan erstellen. Das geschieht nur im Browser.',
+  'intro.step4': '<strong>T5</strong> Senden. Dadurch werden Programme auf dem Controller überschrieben.',
+  'intro.step5': '<strong>T6</strong> Alles löschen und <strong>T7</strong> Experte nur bei Bedarf.',
+
+  'badge.safe': 'sicher',
+  'badge.nothingStored': 'nichts wird gespeichert',
+  'badge.browserOnly': 'nur im Browser',
+  'badge.overwrites': 'überschreibt Programme',
+  'badge.clears': 'löscht den Controller',
+  'badge.onRequest': 'nur auf Anweisung',
+
+  'last.result': 'Letztes Ergebnis: {text}',
+
+  'obs.label': 'Ihre Beobachtung:',
+  'obs.placeholder': 'Was sehen Sie am TC420? (optional)',
+  'obs.works': '✔ Funktioniert',
+  'obs.fails': '✘ Funktioniert nicht',
+  'obs.saved': 'gespeichert',
+
+  't1.title': 'Verbinden',
+  't1.text':
+    'Klicken Sie oben auf <em>Verbinden</em> und wählen Sie <em>Time Controller</em>. Die Seite protokolliert die USB-Daten des Geräts.',
+  't1.connected': 'verbunden mit {name}',
+  't1.failed': 'Verbindung fehlgeschlagen: {error}',
+
+  't2.title': 'Uhr stellen',
+  't2.pcTime': 'Uhrzeit dieses Computers:',
+  't2.sync': 'Uhr synchronisieren (0x11)',
+  't2.preview': 'Paket anzeigen',
+  't2.note': 'Prüfen Sie danach, ob die Uhrzeit im Display des TC420 stimmt.',
+  't2.ok': 'Uhr gestellt, bestätigt',
+  't2.failed': 'nicht bestätigt',
+
+  't3.title': 'Live-Steuerung (Online Play)',
+  't3.text':
+    'Damit steuern Sie die Ausgänge direkt. Der Controller zeigt den Namen im Display. Mit <em>Stopp</em> (0x02) kehrt er zu seinem normalen Programm zurück.',
+  't3.name': 'Name im Display',
+  't3.start': 'Start (0x15)',
+  't3.stop': 'Stopp (0x02)',
+  't3.all0': 'Alle 0 %',
+  't3.all100': 'Alle 100 %',
+  't3.sweep': 'Kanaltest (jeder Kanal 0→100→0)',
+  't3.verbose': 'jedes 0x16-Paket protokollieren',
+  't3.note':
+    'Achten Sie darauf: Leuchtet der richtige Kanal und dimmt er mit? Folgt das Licht dem Schieberegler gleichmäßig?',
+  't3.stats': '{sent} Pakete · {failed} fehlgeschlagen · letzte Antwort {ms} ms',
+  't3.started': 'Online Play gestartet',
+  't3.startFailed': 'Start nicht bestätigt',
+  't3.stopped': 'gestoppt; {sent} Pakete, {failed} fehlgeschlagen',
+  't3.stopFailed': 'Stopp nicht bestätigt',
+
+  't4.title': 'Zeitpläne laden, erstellen und bearbeiten',
+  't4.drop': '<code>.tmf</code>-Dateien hierher ziehen oder <label for="file">Dateien auswählen</label>',
+  't4.new': 'Leerer Zeitplan',
+  't4.testMode': 'Testzeitplan Überblenden/Schalten (nächste Minuten)',
+  't4.testWhat': 'Was macht der Testzeitplan?',
+  't4.testExplain':
+    'Er erstellt ein Programm, das ab etwa 2 Minuten nach jetzt CH1 innerhalb von 3 Minuten allmählich auf 100 % bringt (Überblenden) und CH2 im selben Moment sofort auf 100 % schaltet (Schalten). Nach weiteren 3 Minuten dimmt CH1 allmählich auf 0 und CH2 schaltet sofort aus. So können Sie mit T5 sehen, ob das Schalt-Flag wie erwartet funktioniert. Der Controller muss dafür dieses Programm abspielen; wählen Sie es bei Bedarf im Display aus.',
+  't4.loadFailed': '{file} konnte nicht geladen werden: {error}',
+  't4.listTitle': 'Zeitpläne in dieser Sitzung (werden in dieser Reihenfolge gesendet)',
+  't4.none': 'Noch keine Zeitpläne.',
+  't4.bank': 'Bank {n}',
+  't4.steps': { one: '{count} Schritt', other: '{count} Schritte' },
+  't4.warnings': { one: '{count} Warnung', other: '{count} Warnungen' },
+  't4.edit': 'Bearbeiten',
+  't4.moveUp': 'Nach oben',
+  't4.remove': 'Entfernen',
+  't4.editTitle': 'Bearbeiten: {name}',
+  't4.zoom': 'auf die Stunde um jetzt zoomen',
+  't4.col.step': '#',
+  't4.col.time': 'Zeit',
+  't4.col.jump': 'Sofort schalten',
+  't4.deleteStep': 'Schritt löschen',
+  't4.addStep': 'Schritt hinzufügen',
+  't4.sort': 'Nach Zeit sortieren',
+  't4.exportTmf': 'Als .tmf speichern',
+  't4.jumpNote':
+    'Sofort schalten angehakt = der Kanal wechselt zu diesem Zeitpunkt sofort auf den neuen Wert statt allmählich. Das Diagramm zeigt den erwarteten Verlauf.',
+  't4.chartLabel': 'Erwartete Helligkeit pro Kanal',
+  't4.unused': '{channel} (0 %)',
+  't4.legendNow': 'gestrichelte Linie = jetzt ({time}); jetzt erwartet: {values} %',
+
+  'schedule.warn.tooFew': 'weniger als 2 Schritte: der Controller lehnt das ab',
+  'schedule.warn.tooMany': 'mehr als {max} Schritte',
+  'schedule.warn.invalidTime': 'Schritt {step}: ungültige Zeit {time}',
+  'schedule.warn.sameTime': 'Schritt {step} hat dieselbe Zeit wie Schritt {prev}',
+  'schedule.warn.outOfOrder': 'Schritt {step} ({time}) liegt vor Schritt {prev} ({prevTime})',
+  'schedule.warn.deviceType': 'Gerätetyp ist {type}, nicht TC420',
+  'schedule.warn.trailingBytes': {
+    one: '{count} überzähliges Byte am Ende ignoriert',
+    other: '{count} überzählige Bytes am Ende ignoriert',
+  },
+  'schedule.error.tooShort': 'die Datei ist zu kurz für einen .tmf-Header',
+  'schedule.error.channels': 'unerwartete Anzahl Kanäle: {count}',
+
+  't5.title': 'An den Controller senden',
+  't5.text':
+    'Sendet alle Zeitpläne aus T4 an den Controller. Jeder Zeitplan erhält einen eigenen Programmplatz (Bank), beginnend bei der Startbank. Ein Zeitplan überschreibt nur das Programm auf seiner eigenen Bank. Lassen Sie keine Lücken: Leere Banken erscheinen als leere Programme im Display.',
+  't5.startBank': 'Startbank',
+  't5.send': 'Senden',
+  't5.note':
+    'Prüfen Sie danach im Display: Stehen die Namen dort? Passt das Licht zur aktuellen Uhrzeit zum Diagramm in T4?',
+  't5.confirm': 'Diese Programme auf dem Controller überschreiben?\n\n{summary}',
+  't5.summaryLine': 'Bank {bank}: {name} ({steps})',
+  't5.summaryWarnings': ' – Achtung: {warnings}',
+  't5.progressMode': 'Bank {bank}: {name} …',
+  't5.progressStep': 'Bank {bank}: {name} · Schritt {step}/{steps} · gesamt {done}/{total}',
+  't5.success': 'Erfolgreich gesendet',
+  't5.failed': 'Senden fehlgeschlagen (siehe Protokoll)',
+  't5.resultOk': { one: '{count} Zeitplan gesendet', other: '{count} Zeitpläne gesendet' },
+  't5.resultFailed': 'fehlgeschlagen',
+
+  't6.title': 'Alle Programme löschen',
+  't6.text':
+    'Sendet 0x03. Danach sind keine Programme mehr auf dem Controller. Sie müssen durch Eingabe von <code>{word}</code> bestätigen.',
+  't6.button': 'Alles löschen (0x03)',
+  't6.word': 'LÖSCHEN',
+  't6.prompt': 'Geben Sie {word} ein, um alle Programme auf dem Controller zu löschen.',
+  't6.ok': 'alles gelöscht, bestätigt',
+  't6.failed': 'nicht bestätigt',
+
+  't7.title': 'Experte: einzelnes Paket senden',
+  't7.text':
+    'Für gezielte Versuche, um die ein Entwickler Sie bitten kann. Befehl und Nutzdaten in Hex; Rahmen und Prüfsumme werden automatisch ergänzt.',
+  't7.cmd': 'Befehl',
+  't7.payload': 'Nutzdaten',
+  't7.payloadPlaceholder': 'z. B. 07 EA 0A 16 09 05 2D',
+  't7.expect': 'Antwort erwarten',
+  't7.send': 'Senden',
+  't7.confirm': {
+    one: 'Befehl {cmd} mit {count} Byte Nutzdaten senden?',
+    other: 'Befehl {cmd} mit {count} Byte Nutzdaten senden?',
+  },
+  't7.ok': 'bestätigt',
+  't7.failed': 'nicht bestätigt ({error})',
+
+  'log.title': 'Protokoll',
+  'log.count': { one: '{count} Zeile', other: '{count} Zeilen' },
+  'log.stored': '{count} · in diesem Browser gespeichert',
+  'log.notStored': '{count} · ACHTUNG: Speichern in diesem Browser schlägt fehl, Protokoll zwischendurch speichern',
+  'log.newSession': 'Neue Sitzung markieren',
+  'log.clear': 'Protokoll leeren',
+  'log.clearConfirm': 'Protokoll leeren? Speichern Sie es vorher, wenn Sie es behalten möchten.',
+  'log.note':
+    'Das Protokoll wird in diesem Browser gespeichert und ist immer auf Englisch, damit es in Fehlerberichten geteilt werden kann. Verwenden Sie nach dem Testen <em>Protokoll speichern</em> und bewahren Sie die Datei auf; das Leeren kann nicht rückgängig gemacht werden.',
+};

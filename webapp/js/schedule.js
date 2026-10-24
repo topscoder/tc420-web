@@ -11,39 +11,77 @@ export function timeLabel(h, m) {
 
 const minutes = (s) => s.hour * 60 + s.minute;
 
+// Warnings are { code, ...params }; the UI turns them into text (schedule.warn.<code>).
 export function checkSteps(steps) {
   const warnings = [];
-  if (steps.length < 2) warnings.push('minder dan 2 stappen: de controller weigert dit');
-  if (steps.length > MAX_STEPS) warnings.push(`meer dan ${MAX_STEPS} stappen`);
+  if (steps.length < 2) warnings.push({ code: 'tooFew' });
+  if (steps.length > MAX_STEPS) warnings.push({ code: 'tooMany', max: MAX_STEPS });
   steps.forEach((s, i) => {
-    if (s.hour > 23 || s.minute > 59) warnings.push(`stap ${i + 1}: ongeldige tijd ${s.hour}:${s.minute}`);
+    if (s.hour > 23 || s.minute > 59)
+      warnings.push({ code: 'invalidTime', step: i + 1, time: `${s.hour}:${s.minute}` });
     if (i > 0) {
       const prev = steps[i - 1];
-      if (minutes(s) === minutes(prev)) warnings.push(`stap ${i + 1} heeft dezelfde tijd als stap ${i}`);
+      if (minutes(s) === minutes(prev)) warnings.push({ code: 'sameTime', step: i + 1, prev: i });
       else if (minutes(s) < minutes(prev)) {
-        warnings.push(
-          `stap ${i + 1} (${timeLabel(s.hour, s.minute)}) ligt vóór stap ${i} (${timeLabel(prev.hour, prev.minute)})`,
-        );
+        warnings.push({
+          code: 'outOfOrder',
+          step: i + 1,
+          time: timeLabel(s.hour, s.minute),
+          prev: i,
+          prevTime: timeLabel(prev.hour, prev.minute),
+        });
       }
     }
   });
   return warnings;
 }
 
+// English text of a warning, for the (always English) log.
+export function describeWarning(w) {
+  switch (w.code) {
+    case 'tooFew':
+      return 'fewer than 2 steps';
+    case 'tooMany':
+      return `more than ${w.max} steps`;
+    case 'invalidTime':
+      return `step ${w.step}: invalid time ${w.time}`;
+    case 'sameTime':
+      return `step ${w.step} has the same time as step ${w.prev}`;
+    case 'outOfOrder':
+      return `step ${w.step} (${w.time}) comes before step ${w.prev} (${w.prevTime})`;
+    case 'deviceType':
+      return `device type is ${w.type}, not TC420`;
+    case 'trailingBytes':
+      return `${w.count} extra bytes at the end ignored`;
+    default:
+      return w.code;
+  }
+}
+
+export class ScheduleError extends Error {
+  constructor(code, params = {}, message = code) {
+    super(message);
+    this.code = code;
+    this.params = params;
+  }
+}
+
 // .tmf: three u32 LE (device type, channel count, third field) then 56-byte
 // step records until EOF. Hour +4, minute +5, channels +0x2c, flags +0x31.
 export function parseTmf(buffer) {
   const bytes = new Uint8Array(buffer);
-  if (bytes.length < HEADER_SIZE) throw new Error('bestand is te kort voor een .tmf-header');
+  if (bytes.length < HEADER_SIZE) throw new ScheduleError('tooShort', {}, 'file is too short for a .tmf header');
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   const deviceType = view.getUint32(0, true);
   const channels = view.getUint32(4, true);
   const third = view.getUint32(8, true);
-  if (channels < 1 || channels > 5) throw new Error(`onverwacht aantal kanalen: ${channels}`);
+  if (channels < 1 || channels > 5) {
+    throw new ScheduleError('channels', { count: channels }, `unexpected number of channels: ${channels}`);
+  }
   const warnings = [];
-  if (deviceType !== 0) warnings.push(`apparaattype is ${DEVICE_TYPES[deviceType] || deviceType}, niet TC420`);
+  if (deviceType !== 0) warnings.push({ code: 'deviceType', type: DEVICE_TYPES[deviceType] || String(deviceType) });
   const rest = bytes.length - HEADER_SIZE;
-  if (rest % STEP_SIZE !== 0) warnings.push(`${rest % STEP_SIZE} losse bytes aan het eind genegeerd`);
+  if (rest % STEP_SIZE !== 0) warnings.push({ code: 'trailingBytes', count: rest % STEP_SIZE });
   const steps = [];
   for (let off = HEADER_SIZE; off + STEP_SIZE <= bytes.length; off += STEP_SIZE) {
     const r = bytes.subarray(off, off + STEP_SIZE);
@@ -57,7 +95,7 @@ export function parseTmf(buffer) {
   }
   return {
     deviceType,
-    deviceName: DEVICE_TYPES[deviceType] || `onbekend (${deviceType})`,
+    deviceName: DEVICE_TYPES[deviceType] || `unknown (${deviceType})`,
     channels,
     third,
     steps,

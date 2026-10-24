@@ -7,7 +7,7 @@ export class SimDevice extends EventTarget {
   constructor({ latencyMs = 10, failOn = null, silentOn = null } = {}) {
     super();
     this.opened = false;
-    this.productName = 'Time Controller (SIMULATIE)';
+    this.productName = 'Time Controller (simulator)';
     this.vendorId = VENDOR_ID;
     this.productId = PRODUCT_ID;
     this.latencyMs = latencyMs;

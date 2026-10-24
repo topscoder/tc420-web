@@ -1,7 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { parseTmf, serializeTmf, checkSteps, valuesAt } from '../../webapp/js/schedule.js';
+import {
+  parseTmf,
+  serializeTmf,
+  checkSteps,
+  describeWarning,
+  valuesAt,
+  ScheduleError,
+} from '../../webapp/js/schedule.js';
 
 const schema = (name) => readFileSync(new URL(`../../schemas/${name}.tmf`, import.meta.url));
 const at = (steps, hhmm) => valuesAt(steps, Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3)));
@@ -29,27 +36,46 @@ test('AFRIKA step 2 decodes to 09:00 with the right levels', () => {
 });
 
 test('AMAZONE warns about its out-of-order last step', () => {
-  assert.deepEqual(parseTmf(schema('AMAZONE')).warnings, ['stap 25 (02:30) ligt vóór stap 24 (22:30)']);
+  assert.deepEqual(parseTmf(schema('AMAZONE')).warnings, [
+    { code: 'outOfOrder', step: 25, time: '02:30', prev: 24, prevTime: '22:30' },
+  ]);
 });
 
 test('invalid files are rejected or flagged', () => {
-  assert.throws(() => parseTmf(new Uint8Array(4)));
+  assert.throws(
+    () => parseTmf(new Uint8Array(4)),
+    (e) => e instanceof ScheduleError && e.code === 'tooShort',
+  );
   const header = new Uint8Array(12);
   new DataView(header.buffer).setUint32(4, 9, true);
-  assert.throws(() => parseTmf(header), /kanalen/);
+  assert.throws(
+    () => parseTmf(header),
+    (e) => e.code === 'channels' && e.params.count === 9,
+  );
   const gm430 = new Uint8Array(12 + 56 * 2 + 3);
   new DataView(gm430.buffer).setUint32(0, 1, true);
   new DataView(gm430.buffer).setUint32(4, 5, true);
   const w = parseTmf(gm430).warnings;
-  assert.ok(w.some((x) => x.includes('GM430')));
-  assert.ok(w.some((x) => x.includes('3 losse bytes')));
+  assert.deepEqual(w.slice(0, 2), [
+    { code: 'deviceType', type: 'GM430' },
+    { code: 'trailingBytes', count: 3 },
+  ]);
 });
 
-test('checkSteps reports too few, duplicate and invalid times', () => {
-  assert.ok(checkSteps([step(1, 0, [0, 0, 0, 0, 0])])[0].includes('minder dan 2'));
-  assert.ok(checkSteps([step(1, 0, [0]), step(1, 0, [0])]).some((w) => w.includes('dezelfde tijd')));
-  assert.ok(checkSteps([step(1, 0, [0]), step(25, 0, [0])]).some((w) => w.includes('ongeldige tijd')));
+test('checkSteps reports too few, too many, duplicate and invalid times', () => {
+  assert.deepEqual(checkSteps([step(1, 0, [0, 0, 0, 0, 0])]), [{ code: 'tooFew' }]);
+  assert.deepEqual(checkSteps(Array.from({ length: 51 }, (_, i) => step(0, i, [0])))[0], { code: 'tooMany', max: 50 });
+  assert.deepEqual(checkSteps([step(1, 0, [0]), step(1, 0, [0])]), [{ code: 'sameTime', step: 2, prev: 1 }]);
+  assert.deepEqual(checkSteps([step(1, 0, [0]), step(25, 0, [0])]), [{ code: 'invalidTime', step: 2, time: '25:0' }]);
   assert.deepEqual(checkSteps([step(1, 0, [0]), step(2, 0, [0])]), []);
+});
+
+test('warnings have an English description for the log', () => {
+  assert.equal(
+    describeWarning({ code: 'outOfOrder', step: 25, time: '02:30', prev: 24, prevTime: '22:30' }),
+    'step 25 (02:30) comes before step 24 (22:30)',
+  );
+  assert.equal(describeWarning({ code: 'tooFew' }), 'fewer than 2 steps');
 });
 
 test('WINTER: expected levels fade linearly between steps', () => {

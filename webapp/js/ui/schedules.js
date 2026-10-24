@@ -1,7 +1,7 @@
 // T4: load, create and edit schedules in the browser.
 import { MAX_BANKS, MAX_STEPS, NAME_LEN } from '../protocol.js';
-import { parseTmf, serializeTmf, checkSteps, timeLabel } from '../schedule.js';
-import { $, el, download } from './dom.js';
+import { parseTmf, serializeTmf, checkSteps, describeWarning, timeLabel, ScheduleError } from '../schedule.js';
+import { $, el, download, setLast } from './dom.js';
 import { renderChart } from './chart.js';
 
 const blankStep = (h, m, ch, jump) => ({
@@ -21,21 +21,23 @@ export function nameFromFile(fname) {
     .toUpperCase();
 }
 
-export function mountSchedules({ log }) {
+export function mountSchedules({ log, i18n }) {
+  const t = (key, params) => i18n.t(key, params);
+  const warningText = (w) => t(`schedule.warn.${w.code}`, w);
   const modes = []; // { name, schema }
   let selected = -1;
 
-  const chart = (steps) => renderChart($('editor-chart'), $('editor-legend'), steps, { zoom: $('chart-zoom').checked });
+  const chart = (steps) =>
+    renderChart($('editor-chart'), $('editor-legend'), steps, { zoom: $('chart-zoom').checked, t });
 
   function add(name, schema) {
     if (modes.length >= MAX_BANKS) {
-      log('fout', `maximaal ${MAX_BANKS} schema's`, 'T4');
+      log('error', `at most ${MAX_BANKS} schedules`, 'T4');
       return;
     }
     modes.push({ name, schema });
     selected = modes.length - 1;
-    renderModes();
-    renderEditor();
+    render();
   }
 
   async function loadFiles(files) {
@@ -43,14 +45,16 @@ export function mountSchedules({ log }) {
       try {
         const schema = parseTmf(await f.arrayBuffer());
         add(nameFromFile(f.name), schema);
-        const warn = schema.warnings.length ? ` · waarschuwingen: ${schema.warnings.join('; ')}` : '';
+        const warn = schema.warnings.length ? ` · warnings: ${schema.warnings.map(describeWarning).join('; ')}` : '';
         log(
           'info',
-          `schema ingelezen: ${f.name} · ${schema.deviceName} · ${schema.channels} kanalen · ${schema.steps.length} stappen · derde veld ${schema.third}${warn}`,
+          `schedule loaded: ${f.name} · ${schema.deviceName} · ${schema.channels} channels · ${schema.steps.length} steps · third field ${schema.third}${warn}`,
           'T4',
         );
       } catch (e) {
-        log('fout', `${f.name}: ${e.message}`, 'T4');
+        log('error', `${f.name}: ${e.message}`, 'T4');
+        const error = e instanceof ScheduleError ? t(`schedule.error.${e.code}`, e.params) : e.message;
+        setLast('T4', false, 't4.loadFailed', { file: f.name, error });
       }
     }
   }
@@ -59,7 +63,7 @@ export function mountSchedules({ log }) {
     const box = $('modes');
     box.innerHTML = '';
     if (!modes.length) {
-      box.append(el('p', { class: 'note' }, "Nog geen schema's."));
+      box.append(el('p', { class: 'note' }, t('t4.none')));
       return;
     }
     const startBank = Number($('start-bank').value) || 0;
@@ -71,35 +75,31 @@ export function mountSchedules({ log }) {
         name.value = m.name;
       });
       const w = checkSteps(m.schema.steps);
+      const meta =
+        t('t4.steps', { count: m.schema.steps.length }) +
+        (w.length ? ` · ${t('t4.warnings', { count: w.length })}` : '');
       item.append(
-        el('span', { class: 'tid' }, `bank ${startBank + i}`),
+        el('span', { class: 'tid' }, t('t4.bank', { n: startBank + i })),
         name,
-        el(
-          'span',
-          { class: 'meta' },
-          `${m.schema.steps.length} stappen${w.length ? ` · ${w.length} waarschuwing(en)` : ''}`,
-        ),
+        el('span', { class: 'meta' }, meta),
       );
-      const edit = el('button', { class: 'small' }, 'Bewerken');
+      const edit = el('button', { class: 'small' }, t('t4.edit'));
       edit.addEventListener('click', () => {
         selected = i;
-        renderModes();
-        renderEditor();
+        render();
       });
-      const up = el('button', { class: 'small' }, '↑');
+      const up = el('button', { class: 'small', 'aria-label': t('t4.moveUp'), title: t('t4.moveUp') }, '↑');
       up.disabled = i === 0;
       up.addEventListener('click', () => {
         [modes[i - 1], modes[i]] = [modes[i], modes[i - 1]];
         selected = i - 1;
-        renderModes();
-        renderEditor();
+        render();
       });
-      const del = el('button', { class: 'small' }, 'Verwijderen');
+      const del = el('button', { class: 'small' }, t('t4.remove'));
       del.addEventListener('click', () => {
         modes.splice(i, 1);
         selected = Math.min(selected, modes.length - 1);
-        renderModes();
-        renderEditor();
+        render();
       });
       item.append(edit, up, del);
       box.append(item);
@@ -111,14 +111,16 @@ export function mountSchedules({ log }) {
     $('editor').hidden = !m;
     if (!m) return;
     const steps = m.schema.steps;
-    $('editor-title').textContent = `Bewerken: ${m.name}`;
+    $('editor-title').textContent = t('t4.editTitle', { name: m.name });
     $('editor-warnings').innerHTML = '';
-    checkSteps(steps).forEach((w) => $('editor-warnings').append(el('li', {}, w)));
+    checkSteps(steps).forEach((w) => $('editor-warnings').append(el('li', {}, warningText(w))));
     chart(steps);
     const table = $('editor-table');
     table.innerHTML = '';
     const head = el('tr');
-    ['#', 'Tijd', 'CH1', 'CH2', 'CH3', 'CH4', 'CH5', 'Springen', ''].forEach((h) => head.append(el('th', {}, h)));
+    [t('t4.col.step'), t('t4.col.time'), 'CH1', 'CH2', 'CH3', 'CH4', 'CH5', t('t4.col.jump'), ''].forEach((h) =>
+      head.append(el('th', {}, h)),
+    );
     table.append(head);
     steps.forEach((s, i) => {
       const tr = el('tr');
@@ -129,15 +131,20 @@ export function mountSchedules({ log }) {
         if (h >= 0) {
           s.hour = h;
           s.minute = mi;
-          renderEditor();
-          renderModes();
+          render();
         }
       });
       const tdTime = el('td');
       tdTime.append(time);
       tr.append(tdTime);
       for (let c = 0; c < 5; c++) {
-        const inp = el('input', { type: 'number', min: '0', max: '100', value: String(s.ch[c]) });
+        const inp = el('input', {
+          type: 'number',
+          min: '0',
+          max: '100',
+          value: String(s.ch[c]),
+          'aria-label': `CH${c + 1}`,
+        });
         inp.addEventListener('change', () => {
           s.ch[c] = Math.max(0, Math.min(100, Number(inp.value) || 0));
           inp.value = s.ch[c];
@@ -160,17 +167,21 @@ export function mountSchedules({ log }) {
         tdJ.append(lab);
       }
       tr.append(tdJ);
-      const del = el('button', { class: 'small' }, '×');
+      const del = el('button', { class: 'small', 'aria-label': t('t4.deleteStep'), title: t('t4.deleteStep') }, '×');
       del.addEventListener('click', () => {
         steps.splice(i, 1);
-        renderEditor();
-        renderModes();
+        render();
       });
       const tdDel = el('td');
       tdDel.append(del);
       tr.append(tdDel);
       table.append(tr);
     });
+  }
+
+  function render() {
+    renderModes();
+    renderEditor();
   }
 
   $('file').addEventListener('change', (e) => {
@@ -194,17 +205,17 @@ export function mountSchedules({ log }) {
       `MODE${modes.length + 1}`.slice(0, NAME_LEN),
       newSchema([blankStep(0, 0), blankStep(12, 0, [50, 50, 50, 50, 0])]),
     );
-    log('info', 'leeg schema aangemaakt', 'T4');
+    log('info', 'empty schedule created', 'T4');
   });
 
   $('btn-test-mode').addEventListener('click', () => {
     const now = new Date();
     const start = now.getHours() * 60 + now.getMinutes() + 2;
     if (start + 6 >= 1439 || start < 2) {
-      log('fout', 'testschema kan niet rond middernacht; probeer het na 00:05 of vóór 23:50', 'T4');
+      log('error', 'the test schedule cannot run around midnight; try after 00:05 or before 23:50', 'T4');
       return;
     }
-    const hm = (t) => [Math.floor(t / 60), t % 60];
+    const hm = (m) => [Math.floor(m / 60), m % 60];
     const steps = [
       blankStep(0, 0),
       blankStep(...hm(start)),
@@ -215,7 +226,7 @@ export function mountSchedules({ log }) {
     add('FADETEST', newSchema(steps));
     log(
       'info',
-      `testschema FADETEST gemaakt: CH1 fade en CH2 springen tussen ${timeLabel(...hm(start))} en ${timeLabel(...hm(start + 6))}`,
+      `test schedule FADETEST created: CH1 fades and CH2 jumps between ${timeLabel(...hm(start))} and ${timeLabel(...hm(start + 6))}`,
       'T4',
     );
   });
@@ -229,14 +240,13 @@ export function mountSchedules({ log }) {
     const m = modes[selected];
     if (!m) return;
     if (m.schema.steps.length >= MAX_STEPS) {
-      log('fout', `maximaal ${MAX_STEPS} stappen`, 'T4');
+      log('error', `at most ${MAX_STEPS} steps`, 'T4');
       return;
     }
     const last = m.schema.steps[m.schema.steps.length - 1];
-    const t = last ? Math.min(1439, last.hour * 60 + last.minute + 30) : 0;
-    m.schema.steps.push(blankStep(Math.floor(t / 60), t % 60, last ? last.ch.slice() : undefined));
-    renderEditor();
-    renderModes();
+    const next = last ? Math.min(1439, last.hour * 60 + last.minute + 30) : 0;
+    m.schema.steps.push(blankStep(Math.floor(next / 60), next % 60, last ? last.ch.slice() : undefined));
+    render();
   });
 
   $('btn-sort').addEventListener('click', () => {
@@ -250,9 +260,10 @@ export function mountSchedules({ log }) {
     const m = modes[selected];
     if (!m) return;
     download(`${m.name}.tmf`, serializeTmf(m.schema), 'application/octet-stream');
-    log('info', `schema ${m.name} opgeslagen als .tmf (${m.schema.steps.length} stappen)`, 'T4');
+    log('info', `schedule ${m.name} saved as .tmf (${m.schema.steps.length} steps)`, 'T4');
   });
 
-  renderModes();
-  return { modes, loadFiles };
+  render();
+  // refresh() redraws in the current language; modes and edits stay in memory.
+  return { modes, loadFiles, refresh: render, warningText };
 }

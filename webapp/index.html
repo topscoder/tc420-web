@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,140 +10,115 @@
     <main>
       <header class="top">
         <div class="top-inner">
-          <h1>TC420 Web</h1>
-          <span class="status"><span class="dot" id="dot"></span><span id="status-text">Niet verbonden</span></span>
-          <span class="badge sim" id="sim-badge" hidden>SIMULATIE</span>
-          <button class="primary" id="btn-connect">Verbinden</button>
-          <button id="btn-export-json">Log opslaan (.json)</button>
-          <button id="btn-export-txt">Log opslaan (.txt)</button>
+          <h1 data-i18n="app.title">TC420 Web</h1>
+          <span class="status"><span class="dot" id="dot"></span><span id="status-text"></span></span>
+          <span class="badge sim" id="sim-badge" data-i18n="header.sim" hidden></span>
+          <select id="lang" data-i18n-attr="aria-label:header.language"></select>
+          <button class="primary" id="btn-connect"></button>
+          <button id="btn-export-json" data-i18n="header.exportJson"></button>
+          <button id="btn-export-txt" data-i18n="header.exportTxt"></button>
         </div>
       </header>
 
-      <div id="unsupported" class="warn-box" hidden>
-        Deze browser ondersteunt geen WebHID. Gebruik Chrome of Edge; Safari en Firefox kunnen geen USB-HID-apparaten
-        benaderen.
-      </div>
-      <div id="sim-note" class="sim-box" hidden>
-        Je gebruikt de <strong>simulatie</strong>: er is geen echte TC420. Elk commando krijgt een nagebootst
-        OK-antwoord. Verwijder <code>?sim=1</code> uit de adresregel voor het echte apparaat.
-      </div>
+      <div id="unsupported" class="warn-box" data-i18n="banner.unsupported" hidden></div>
+      <div id="sim-note" class="sim-box" data-i18n-html="banner.sim" hidden></div>
 
       <section class="card">
-        <h2>Zo werkt TC420 Web</h2>
-        <p>
-          Deze pagina werkt zonder internet. Elke actie en elk antwoord van de TC420 komt in het logboek onderaan. Het
-          logboek blijft bewaard in deze browser, ook na herladen. Noteer bij elke test wat je op het apparaat ziet en
-          klik op een resultaatknop. Sla na afloop het logboek op met <em>Log opslaan</em> en deel dat bestand later met
-          Claude.
-        </p>
-        <p>Aanbevolen volgorde:</p>
+        <h2 data-i18n="intro.title"></h2>
+        <p data-i18n-html="intro.text"></p>
+        <p data-i18n="intro.order"></p>
         <ol class="plan">
-          <li><strong>T1</strong> Verbinden en <strong>T2</strong> Klok zetten. Veilig, al eerder gelukt.</li>
-          <li><strong>T3</strong> Live bediening. Veilig: er wordt niets opgeslagen.</li>
-          <li><strong>T4</strong> Schema laden of testschema maken. Dit gebeurt alleen in de browser.</li>
-          <li><strong>T5</strong> Downloaden. Dit overschrijft programma's op de controller.</li>
-          <li><strong>T6</strong> Alles wissen en <strong>T7</strong> Expert alleen als het nodig is.</li>
+          <li data-i18n-html="intro.step1"></li>
+          <li data-i18n-html="intro.step2"></li>
+          <li data-i18n-html="intro.step3"></li>
+          <li data-i18n-html="intro.step4"></li>
+          <li data-i18n-html="intro.step5"></li>
         </ol>
       </section>
 
       <section class="card" data-test="T1">
         <div class="card-head">
           <span class="tid">T1</span>
-          <h2>Verbinden</h2>
-          <span class="badge safe">veilig</span>
+          <h2 data-i18n="t1.title"></h2>
+          <span class="badge safe" data-i18n="badge.safe"></span>
         </div>
-        <p>
-          Klik bovenaan op <em>Verbinden</em> en kies <em>Time Controller</em>. De pagina logt de USB-gegevens van het
-          apparaat.
-        </p>
+        <p data-i18n-html="t1.text"></p>
         <div class="last" id="last-T1"></div>
       </section>
 
       <section class="card" data-test="T2">
         <div class="card-head">
           <span class="tid">T2</span>
-          <h2>Klok zetten</h2>
-          <span class="badge safe">veilig</span>
+          <h2 data-i18n="t2.title"></h2>
+          <span class="badge safe" data-i18n="badge.safe"></span>
         </div>
-        <p>Pc-tijd: <strong id="pc-time"></strong></p>
+        <p><span data-i18n="t2.pcTime"></span> <strong id="pc-time"></strong></p>
         <div class="row">
-          <button class="primary needs-device" id="btn-sync">Klok synchroniseren (0x11)</button>
-          <button id="btn-sync-preview">Pakket tonen</button>
+          <button class="primary needs-device" id="btn-sync" data-i18n="t2.sync"></button>
+          <button id="btn-sync-preview" data-i18n="t2.preview"></button>
         </div>
-        <p class="note">Kijk daarna of de tijd op het display van de TC420 klopt.</p>
+        <p class="note" data-i18n="t2.note"></p>
         <div class="last" id="last-T2"></div>
       </section>
 
       <section class="card" data-test="T3">
         <div class="card-head">
           <span class="tid">T3</span>
-          <h2>Live bediening (online play)</h2>
-          <span class="badge safe">niets wordt opgeslagen</span>
+          <h2 data-i18n="t3.title"></h2>
+          <span class="badge safe" data-i18n="badge.nothingStored"></span>
         </div>
-        <p>
-          Hiermee bestuur je de uitgangen direct. De controller toont de naam op het display. Met <em>Stop</em> (0x02)
-          keert hij terug naar zijn normale programma.
-        </p>
+        <p data-i18n-html="t3.text"></p>
         <div class="row">
-          <label>Naam op display <input type="text" id="play-name" value="TEST" maxlength="8" size="9" /></label>
-          <button class="primary needs-device" id="btn-play-start">Start (0x15)</button>
-          <button class="needs-device" id="btn-play-stop" disabled>Stop (0x02)</button>
+          <label
+            ><span data-i18n="t3.name"></span> <input type="text" id="play-name" value="TEST" maxlength="8" size="9"
+          /></label>
+          <button class="primary needs-device" id="btn-play-start" data-i18n="t3.start"></button>
+          <button class="needs-device" id="btn-play-stop" data-i18n="t3.stop" disabled></button>
           <span class="progress note" id="play-stats"></span>
         </div>
         <div class="sliders" id="sliders"></div>
         <div class="row">
-          <button class="needs-play" id="btn-all-0" disabled>Alles 0 %</button>
-          <button class="needs-play" id="btn-all-100" disabled>Alles 100 %</button>
-          <button class="needs-play" id="btn-sweep" disabled>Kanaaltest (elk kanaal 0→100→0)</button>
-          <label class="note"><input type="checkbox" id="verbose" /> elk 0x16-pakket loggen</label>
+          <button class="needs-play" id="btn-all-0" data-i18n="t3.all0" disabled></button>
+          <button class="needs-play" id="btn-all-100" data-i18n="t3.all100" disabled></button>
+          <button class="needs-play" id="btn-sweep" data-i18n="t3.sweep" disabled></button>
+          <label class="note"><input type="checkbox" id="verbose" /> <span data-i18n="t3.verbose"></span></label>
         </div>
-        <p class="note">
-          Let op: brandt het juiste kanaal en dimt het mee? Volgt het licht de schuifregelaar vloeiend?
-        </p>
+        <p class="note" data-i18n="t3.note"></p>
         <div class="last" id="last-T3"></div>
       </section>
 
       <section class="card" data-test="T4">
         <div class="card-head">
           <span class="tid">T4</span>
-          <h2>Schema's laden, maken en bewerken</h2>
-          <span class="badge safe">alleen in de browser</span>
+          <h2 data-i18n="t4.title"></h2>
+          <span class="badge safe" data-i18n="badge.browserOnly"></span>
         </div>
         <div id="drop">
-          Sleep <code>.tmf</code>-bestanden hierheen of <label for="file">kies bestanden</label
-          ><input id="file" type="file" accept=".tmf" multiple hidden />
+          <span data-i18n-html="t4.drop"></span><input id="file" type="file" accept=".tmf" multiple hidden />
         </div>
         <div class="row">
-          <button id="btn-new-mode">Leeg schema</button>
-          <button id="btn-test-mode">Testschema fade/spring (komende minuten)</button>
+          <button id="btn-new-mode" data-i18n="t4.new"></button>
+          <button id="btn-test-mode" data-i18n="t4.testMode"></button>
         </div>
         <details>
-          <summary>Wat doet het testschema?</summary>
-          <p class="note">
-            Het maakt een programma dat vanaf ongeveer 2 minuten na nu in 3 minuten CH1 geleidelijk naar 100 % brengt
-            (fade) en CH2 op hetzelfde moment in één keer op 100 % zet (springen). Na nog 3 minuten dimt CH1 geleidelijk
-            naar 0 en gaat CH2 in één keer uit. Zo kun je met T5 zien of de springvlag doet wat we verwachten. De
-            controller moet daarvoor dit programma afspelen; kies het zo nodig op het display.
-          </p>
+          <summary data-i18n="t4.testWhat"></summary>
+          <p class="note" data-i18n="t4.testExplain"></p>
         </details>
-        <h3>Schema's in deze sessie (worden in deze volgorde gedownload)</h3>
-        <div class="modes" id="modes"><p class="note">Nog geen schema's.</p></div>
+        <h3 data-i18n="t4.listTitle"></h3>
+        <div class="modes" id="modes"></div>
         <div id="editor" hidden>
-          <h3 id="editor-title">Bewerken</h3>
+          <h3 id="editor-title"></h3>
           <ul class="warnings" id="editor-warnings"></ul>
-          <label class="note"><input type="checkbox" id="chart-zoom" /> zoom in op het uur rond nu</label>
+          <label class="note"><input type="checkbox" id="chart-zoom" /> <span data-i18n="t4.zoom"></span></label>
           <div class="chart" id="editor-chart"></div>
           <div class="legend" id="editor-legend"></div>
           <div class="table-wrap"><table id="editor-table"></table></div>
           <div class="row">
-            <button id="btn-add-step">Stap toevoegen</button>
-            <button id="btn-sort">Sorteer op tijd</button>
-            <button id="btn-export-tmf">Opslaan als .tmf</button>
+            <button id="btn-add-step" data-i18n="t4.addStep"></button>
+            <button id="btn-sort" data-i18n="t4.sort"></button>
+            <button id="btn-export-tmf" data-i18n="t4.exportTmf"></button>
           </div>
-          <p class="note">
-            Springen aangevinkt = het kanaal gaat op dat tijdstip in één keer naar de nieuwe waarde in plaats van
-            geleidelijk. De grafiek toont het verwachte verloop.
-          </p>
+          <p class="note" data-i18n="t4.jumpNote"></p>
         </div>
         <div class="last" id="last-T4"></div>
       </section>
@@ -151,77 +126,68 @@
       <section class="card" data-test="T5">
         <div class="card-head">
           <span class="tid">T5</span>
-          <h2>Downloaden naar de controller</h2>
-          <span class="badge danger">overschrijft programma's</span>
+          <h2 data-i18n="t5.title"></h2>
+          <span class="badge danger" data-i18n="badge.overwrites"></span>
         </div>
-        <p>
-          Stuurt alle schema's uit T4 naar de controller. Elk schema krijgt een eigen programmaplaats (bank), te
-          beginnen bij de startbank. Een schema overschrijft alleen het programma op zijn eigen bank. Laat geen gaten:
-          lege banken verschijnen als lege programma's op het display.
-        </p>
+        <p data-i18n="t5.text"></p>
         <div class="row">
-          <label>Startbank <input type="number" id="start-bank" value="0" min="0" max="49" /></label>
-          <button class="danger needs-device" id="btn-download">Downloaden</button>
+          <label
+            ><span data-i18n="t5.startBank"></span> <input type="number" id="start-bank" value="0" min="0" max="49"
+          /></label>
+          <button class="danger needs-device" id="btn-download" data-i18n="t5.send"></button>
           <span class="progress" id="dl-progress"></span>
         </div>
-        <p class="note">
-          Controleer daarna op het display: staan de namen er? Klopt het licht op het huidige tijdstip met de grafiek in
-          T4?
-        </p>
+        <p class="note" data-i18n="t5.note"></p>
         <div class="last" id="last-T5"></div>
       </section>
 
       <section class="card" data-test="T6">
         <div class="card-head">
           <span class="tid">T6</span>
-          <h2>Alle programma's wissen</h2>
-          <span class="badge danger">wist de controller</span>
+          <h2 data-i18n="t6.title"></h2>
+          <span class="badge danger" data-i18n="badge.clears"></span>
         </div>
-        <p>
-          Stuurt 0x03. Daarna staan er geen programma's meer op de controller. Je moet bevestigen door
-          <code>WISSEN</code> te typen.
-        </p>
-        <div class="row"><button class="danger needs-device" id="btn-clear">Alles wissen (0x03)</button></div>
+        <p id="t6-text"></p>
+        <div class="row">
+          <button class="danger needs-device" id="btn-clear" data-i18n="t6.button"></button>
+        </div>
         <div class="last" id="last-T6"></div>
       </section>
 
       <section class="card" data-test="T7">
         <div class="card-head">
           <span class="tid">T7</span>
-          <h2>Expert: los pakket sturen</h2>
-          <span class="badge danger">alleen op aanwijzing</span>
+          <h2 data-i18n="t7.title"></h2>
+          <span class="badge danger" data-i18n="badge.onRequest"></span>
         </div>
-        <p class="note">
-          Voor gerichte proeven die Claude je later kan vragen. Commando en payload in hex; framing en checksum worden
-          automatisch toegevoegd.
-        </p>
+        <p class="note" data-i18n="t7.text"></p>
         <div class="row">
-          <label>Commando <input type="text" id="raw-cmd" value="11" size="4" /></label>
+          <label><span data-i18n="t7.cmd"></span> <input type="text" id="raw-cmd" value="11" size="4" /></label>
           <label
-            >Payload <input type="text" id="raw-payload" value="" size="40" placeholder="bijv. 07 EA 0A 16 09 05 2D"
+            ><span data-i18n="t7.payload"></span>
+            <input type="text" id="raw-payload" value="" size="40" data-i18n-attr="placeholder:t7.payloadPlaceholder"
           /></label>
-          <label class="note"><input type="checkbox" id="raw-expect" checked /> antwoord verwachten</label>
-          <button class="needs-device" id="btn-raw">Versturen</button>
+          <label class="note"
+            ><input type="checkbox" id="raw-expect" checked /> <span data-i18n="t7.expect"></span
+          ></label>
+          <button class="needs-device" id="btn-raw" data-i18n="t7.send"></button>
         </div>
         <div class="last" id="last-T7"></div>
       </section>
 
       <section class="card">
         <div class="card-head">
-          <h2>Logboek</h2>
+          <h2 data-i18n="log.title"></h2>
           <span class="note" id="log-count"></span>
         </div>
         <div id="log" aria-live="polite"></div>
         <div class="row">
-          <button id="btn-export-json2">Log opslaan (.json)</button>
-          <button id="btn-export-txt2">Log opslaan (.txt)</button>
-          <button id="btn-new-session">Nieuwe sessie markeren</button>
-          <button id="btn-clear-log">Logboek leegmaken</button>
+          <button id="btn-export-json2" data-i18n="header.exportJson"></button>
+          <button id="btn-export-txt2" data-i18n="header.exportTxt"></button>
+          <button id="btn-new-session" data-i18n="log.newSession"></button>
+          <button id="btn-clear-log" data-i18n="log.clear"></button>
         </div>
-        <p class="note">
-          Het logboek staat in de opslag van deze browser. Gebruik na het testen <em>Log opslaan</em> en bewaar het
-          bestand; leegmaken kan niet ongedaan worden.
-        </p>
+        <p class="note" data-i18n-html="log.note"></p>
       </section>
     </main>
     <script type="module" src="js/main.js"></script>

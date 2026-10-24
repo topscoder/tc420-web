@@ -16,15 +16,16 @@ export const CMD = {
   PLAY_VALUES: 0x16, // F5, CH1..CH5, 00
 };
 
+// Names used in the (always English) log.
 export const CMD_NAMES = {
-  0x01: 'einde modus',
-  0x02: 'einde / stop',
-  0x03: 'alles wissen',
-  0x11: 'klok zetten',
-  0x12: 'modus-header',
-  0x13: 'stap',
+  0x01: 'end of mode',
+  0x02: 'end / stop',
+  0x03: 'clear all',
+  0x11: 'set clock',
+  0x12: 'mode header',
+  0x13: 'step',
   0x15: 'online play start',
-  0x16: 'live waarden',
+  0x16: 'live values',
 };
 
 export const MAX_STEPS = 50;
@@ -34,7 +35,7 @@ export const NAME_LEN = 8;
 // Full 65-byte buffer as PLed builds it (byte 0 = HID report ID 0x00):
 // 00 55 AA CMD LEN_HI LEN_LO payload… (zero) … CHK@62 0D 0A
 export function buildFrame(cmd, payload = []) {
-  if (payload.length > 56) throw new Error('payload te lang (max. 56 bytes)');
+  if (payload.length > 56) throw new Error('payload too long (max. 56 bytes)');
   const b = new Uint8Array(65);
   b[1] = 0x55;
   b[2] = 0xaa;
@@ -57,7 +58,7 @@ export function frameToReport(frame) {
 
 function asciiName(name) {
   const clean = String(name).trim();
-  if (!clean) throw new Error('naam is leeg');
+  if (!clean) throw new Error('name is empty');
   return Array.from(clean.slice(0, NAME_LEN), (ch) => {
     const c = ch.charCodeAt(0);
     return c >= 0x20 && c < 0x7f ? c : 0x3f; // '?' like the library's errors='replace'
@@ -75,8 +76,8 @@ export function clockPayload(date) {
 }
 
 export function modeInitPayload(bank, stepCount, name) {
-  if (!(bank >= 0 && bank < MAX_BANKS)) throw new Error(`bank moet tussen 0 en ${MAX_BANKS - 1} liggen`);
-  if (stepCount < 2 || stepCount > MAX_STEPS) throw new Error(`aantal stappen moet tussen 2 en ${MAX_STEPS} liggen`);
+  if (!(bank >= 0 && bank < MAX_BANKS)) throw new Error(`bank must be between 0 and ${MAX_BANKS - 1}`);
+  if (stepCount < 2 || stepCount > MAX_STEPS) throw new Error(`step count must be between 2 and ${MAX_STEPS}`);
   return [bank, stepCount, ...asciiName(name)];
 }
 
@@ -136,7 +137,7 @@ export function parseHexBytes(text) {
     .split(/[\s,]+/)
     .filter(Boolean)
     .map((p) => {
-      if (!/^(0x)?[0-9a-f]{1,2}$/i.test(p)) throw new Error(`ongeldige byte: ${p}`);
+      if (!/^(0x)?[0-9a-f]{1,2}$/i.test(p)) throw new Error(`invalid byte: ${p}`);
       return parseInt(p.replace(/^0x/i, ''), 16);
     });
 }

@@ -276,11 +276,11 @@ input[type='range'] {
   color: var(--ok);
 }
 .k-nack .log-kind,
-.k-fout .log-kind,
+.k-error .log-kind,
 .k-obs-bad .log-kind {
   color: var(--bad);
 }
-.k-sessie {
+.k-session {
   border-top: 1px solid var(--line);
   margin-top: 4px;
   padding-top: 4px;

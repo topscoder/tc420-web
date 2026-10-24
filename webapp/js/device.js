@@ -11,8 +11,8 @@ export function describeCollections(dev) {
       const size = (reports) =>
         reports
           .map((r) => `id ${r.reportId}: ${r.items.reduce((s, it) => s + it.reportSize * it.reportCount, 0) / 8} B`)
-          .join(', ') || 'geen';
-      return `usagePage 0x${c.usagePage.toString(16)} usage 0x${c.usage.toString(16)} · in [${size(c.inputReports)}] · uit [${size(c.outputReports)}]`;
+          .join(', ') || 'none';
+      return `usagePage 0x${c.usagePage.toString(16)} usage 0x${c.usage.toString(16)} · in [${size(c.inputReports)}] · out [${size(c.outputReports)}]`;
     })
     .join(' | ');
 }
@@ -61,7 +61,7 @@ export class DeviceConnection {
       clearTimeout(w.timer);
       w.resolve({ reportId: event.reportId, data });
     } else {
-      this.log('rx', `onverwacht antwoord · report-id ${event.reportId} · ${toHex(data, 16)} …`);
+      this.log('rx', `unexpected reply · report-id ${event.reportId} · ${toHex(data, 16)} …`);
     }
   }
 
@@ -87,7 +87,7 @@ export class DeviceConnection {
   async sendNow(cmd, payload, o) {
     const label = `0x${hex2(cmd)} ${CMD_NAMES[cmd] || ''}`.trim();
     if (!this.device) {
-      this.log('fout', `${label}: niet verbonden`, o.test);
+      this.log('error', `${label}: not connected`, o.test);
       return { ok: false, error: 'not-connected' };
     }
     const frame = buildFrame(cmd, payload);
@@ -102,24 +102,24 @@ export class DeviceConnection {
         clearTimeout(this.waiter.timer);
         this.waiter = null;
       }
-      this.log('fout', `${label}: versturen mislukt · ${e.message}`, o.test);
+      this.log('error', `${label}: sending failed · ${e.message}`, o.test);
       return { ok: false, error: e.message };
     }
     const r = await reply;
     const ms = Math.round(performance.now() - t0);
     if (!r) {
       if (o.expectReply) {
-        this.log('fout', `${label}: geen antwoord binnen ${this.replyTimeoutMs} ms`, o.test);
+        this.log('error', `${label}: no reply within ${this.replyTimeoutMs} ms`, o.test);
         return { ok: false, error: 'timeout' };
       }
-      if (!o.quiet) this.log('info', `${label}: geen antwoord (zoals verwacht)`, o.test);
+      if (!o.quiet) this.log('info', `${label}: no reply (as expected)`, o.test);
       return { ok: true, noReply: true };
     }
     const a = parseResponse(r.data);
-    const pledNote = a.ok !== a.pledOk ? ` (PLed-regel zegt ${a.pledOk ? 'OK' : 'GEEN OK'})` : '';
-    const detail = `${ms} ms · RX ${toHex(r.data, 12)} … · cmd 0x${hex2(a.cmd)}, lengte ${a.len}, resultaat 0x${hex2(a.result)} → ${a.ok ? 'OK' : 'GEEN OK'}${pledNote}`;
+    const pledNote = a.ok !== a.pledOk ? ` (PLed rule says ${a.pledOk ? 'OK' : 'NOT OK'})` : '';
+    const detail = `${ms} ms · RX ${toHex(r.data, 12)} … · cmd 0x${hex2(a.cmd)}, length ${a.len}, result 0x${hex2(a.result)} → ${a.ok ? 'OK' : 'NOT OK'}${pledNote}`;
     if (!o.quiet || !a.ok) this.log(a.ok ? 'ack' : 'nack', `${label}: ${detail}`, o.test, { rx: toHex(r.data) });
-    if (!o.expectReply) this.log('info', `${label}: toch een antwoord ontvangen (onverwacht)`, o.test);
+    if (!o.expectReply) this.log('info', `${label}: got a reply anyway (unexpected)`, o.test);
     return { ok: a.ok, resp: a, ms };
   }
 }

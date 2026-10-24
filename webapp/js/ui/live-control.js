@@ -5,7 +5,7 @@ import { CH_COLORS } from './chart.js';
 
 const PLAY_INTERVAL_MS = 60;
 
-export function mountLiveControl({ conn, log, onChange }) {
+export function mountLiveControl({ conn, log, i18n, onChange }) {
   let playing = false;
   let values = [0, 0, 0, 0, 0];
   let sweepTimer = null;
@@ -24,6 +24,11 @@ export function mountLiveControl({ conn, log, onChange }) {
     });
     $('sliders').append(lab, s, out);
     sliders.push({ s, out });
+  }
+
+  function showStats() {
+    if (!stats.sent) return;
+    $('play-stats').textContent = i18n.t('t3.stats', stats);
   }
 
   function setValues(v) {
@@ -56,14 +61,13 @@ export function mountLiveControl({ conn, log, onChange }) {
       const key = v.join(',');
       // Without verbose logging, log changed values at most twice a second.
       if (!verbose && key !== lastLogged && performance.now() - lastLogAt >= 500) {
-        log('info', `live waarden CH1–CH5 = ${v.join(' / ')} %${r.ok ? '' : ' (niet bevestigd)'}`, 'T3');
+        log('info', `live values CH1–CH5 = ${v.join(' / ')} %${r.ok ? '' : ' (not confirmed)'}`, 'T3');
         lastLogged = key;
         lastLogAt = performance.now();
       }
-      $('play-stats').textContent =
-        `${stats.sent} pakketten · ${stats.failed} mislukt · laatste antwoord ${stats.ms} ms`;
+      showStats();
       if (stats.failed >= 5 && stats.failed === stats.sent) {
-        log('fout', 'online play: 5 keer geen bevestiging, gestopt', 'T3');
+        log('error', 'online play: 5 times no confirmation, stopped', 'T3');
         await stop();
         break;
       }
@@ -77,11 +81,11 @@ export function mountLiveControl({ conn, log, onChange }) {
     try {
       payload = playInitPayload($('play-name').value);
     } catch (e) {
-      log('fout', e.message, 'T3');
+      log('error', e.message, 'T3');
       return;
     }
     const r = await conn.send(CMD.PLAY_INIT, payload, { test: 'T3' });
-    setLast('T3', r.ok, r.ok ? 'online play gestart' : 'start niet bevestigd');
+    setLast('T3', r.ok, r.ok ? 't3.started' : 't3.startFailed');
     if (!r.ok) return;
     stats = { sent: 0, failed: 0, ms: 0 };
     setPlaying(true);
@@ -97,20 +101,20 @@ export function mountLiveControl({ conn, log, onChange }) {
     const r = await conn.send(CMD.END, [], { test: 'T3' });
     log(
       'info',
-      `online play gestopt na ${stats.sent} pakketten (${stats.failed} mislukt); laatste waarden ${values.join(' / ')} %`,
+      `online play stopped after ${stats.sent} packets (${stats.failed} failed); last values ${values.join(' / ')} %`,
       'T3',
     );
-    setLast('T3', r.ok, r.ok ? `gestopt; ${stats.sent} pakketten, ${stats.failed} mislukt` : 'stop niet bevestigd');
+    setLast('T3', r.ok, r.ok ? 't3.stopped' : 't3.stopFailed', { sent: stats.sent, failed: stats.failed });
   }
 
   function sweep() {
     if (sweepTimer) {
       clearInterval(sweepTimer);
       sweepTimer = null;
-      log('info', 'kanaaltest afgebroken', 'T3');
+      log('info', 'channel test aborted', 'T3');
       return;
     }
-    log('info', 'kanaaltest gestart: CH1 t/m CH5 elk 0→100→0 in 4 s', 'T3');
+    log('info', 'channel test started: CH1 to CH5 each 0→100→0 in 4 s', 'T3');
     const t0 = performance.now();
     sweepTimer = setInterval(() => {
       const t = (performance.now() - t0) / 1000;
@@ -119,7 +123,7 @@ export function mountLiveControl({ conn, log, onChange }) {
         clearInterval(sweepTimer);
         sweepTimer = null;
         setValues([0, 0, 0, 0, 0]);
-        log('info', 'kanaaltest klaar', 'T3');
+        log('info', 'channel test done', 'T3');
         return;
       }
       const ph = (t % 4) / 2;
@@ -140,6 +144,7 @@ export function mountLiveControl({ conn, log, onChange }) {
       return playing;
     },
     stop,
+    refresh: showStats,
     // The device disappeared: stop the loop without sending anything.
     abort() {
       if (sweepTimer) clearInterval(sweepTimer);
