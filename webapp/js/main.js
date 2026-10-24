@@ -21,10 +21,12 @@ import { I18n, LANGUAGES, LANG_KEY, detectLanguage, applyTranslations } from './
 import { $, el, download, stamp, setLast, bindI18n, refreshResults } from './ui/dom.js';
 import { mountLogView } from './ui/log-view.js';
 import { mountLiveControl } from './ui/live-control.js';
-import { mountSchedules } from './ui/schedules.js';
+import { mountPrograms } from './ui/programs.js';
+import { ProgramStore } from './programs.js';
+import { createBackend } from './storage.js';
 
 const APP = 'TC420 Web';
-const APP_VERSION = '0.5.0';
+const APP_VERSION = '0.6.0';
 const SIM = new URLSearchParams(location.search).has('sim');
 
 // localStorage can throw (private mode, blocked site data); then nothing is remembered.
@@ -127,7 +129,18 @@ document.querySelectorAll('[data-test]').forEach((card) => {
 // ---------- device ----------
 
 const live = mountLiveControl({ conn, log, i18n, onChange: updateButtons });
-const schedules = mountSchedules({ log, i18n });
+const store = await new ProgramStore({ backend: await createBackend() }).load();
+log('info', `program library: ${store.programs.length} programs in ${store.backend?.kind || 'memory'} storage`, 'T4');
+const programs = mountPrograms({ store, log, i18n, meta });
+
+const multipleSetting = $('setting-multiple');
+multipleSetting.checked = store.settings.multiplePrograms;
+multipleSetting.addEventListener('change', () => {
+  store.setSetting('multiplePrograms', multipleSetting.checked);
+  log('info', `setting: multiple programs on the controller ${multipleSetting.checked ? 'on' : 'off'}`, 'T5');
+  programs.refresh();
+});
+$('btn-backup-after').addEventListener('click', programs.exportBackup);
 
 function updateButtons() {
   const on = conn.connected;
@@ -208,26 +221,27 @@ function setProgress(key, params = {}) {
 }
 
 $('btn-download').addEventListener('click', async () => {
-  const modes = schedules.modes;
+  const modes = store.programs.slice();
   if (!modes.length) {
-    log('error', 'no schedules to send; load or create one in T4 first', 'T5');
+    log('error', 'no programs to send; import or create one in T4 first', 'T5');
     return;
   }
   if (live.playing) await live.stop();
+  $('btn-backup-after').hidden = true;
   const startBank = Number($('start-bank').value) || 0;
   if (startBank + modes.length > MAX_BANKS) {
     log('error', `banks ${startBank}–${startBank + modes.length - 1} are outside 0–${MAX_BANKS - 1}`, 'T5');
     return;
   }
-  const bad = modes.filter((m) => m.schema.steps.length < 2 || m.schema.steps.length > MAX_STEPS);
+  const bad = modes.filter((m) => m.steps.length < 2 || m.steps.length > MAX_STEPS);
   if (bad.length) {
     log('error', `invalid number of steps in: ${bad.map((m) => m.name).join(', ')}`, 'T5');
     return;
   }
   const lines = modes.map((m, i) => {
-    const w = checkSteps(m.schema.steps);
-    const steps = t('t4.steps', { count: m.schema.steps.length });
-    const warn = w.length ? t('t5.summaryWarnings', { warnings: w.map(schedules.warningText).join('; ') }) : '';
+    const w = checkSteps(m.steps);
+    const steps = t('t4.steps', { count: m.steps.length });
+    const warn = w.length ? t('t5.summaryWarnings', { warnings: w.map(programs.warningText).join('; ') }) : '';
     return t('t5.summaryLine', { bank: startBank + i, name: m.name, steps }) + warn;
   });
   if (!confirm(t('t5.confirm', { summary: lines.join('\n') }))) {
@@ -236,25 +250,25 @@ $('btn-download').addEventListener('click', async () => {
   }
   const logSummary = modes
     .map((m, i) => {
-      const w = checkSteps(m.schema.steps);
-      return `bank ${startBank + i}: ${m.name} (${m.schema.steps.length} steps)${w.length ? ` – ${w.map(describeWarning).join('; ')}` : ''}`;
+      const w = checkSteps(m.steps);
+      return `bank ${startBank + i}: ${m.name} (${m.steps.length} steps)${w.length ? ` – ${w.map(describeWarning).join('; ')}` : ''}`;
     })
     .join('; ');
-  log('info', `sending started · ${modes.length} schedule(s) · ${logSummary}`, 'T5');
+  log('info', `sending started · ${modes.length} program(s) · ${logSummary}`, 'T5');
   let ok = true;
   let sentSteps = 0;
-  const total = modes.reduce((s, m) => s + m.schema.steps.length, 0);
+  const total = modes.reduce((s, m) => s + m.steps.length, 0);
   outer: for (let i = 0; i < modes.length; i++) {
     const m = modes[i];
     const bank = startBank + i;
     setProgress('t5.progressMode', { bank, name: m.name });
-    const r1 = await conn.send(CMD.MODE_INIT, modeInitPayload(bank, m.schema.steps.length, m.name), { test: 'T5' });
+    const r1 = await conn.send(CMD.MODE_INIT, modeInitPayload(bank, m.steps.length, m.name), { test: 'T5' });
     if (!r1.ok) {
       ok = false;
       break;
     }
-    for (let k = 0; k < m.schema.steps.length; k++) {
-      const r = await conn.send(CMD.STEP, stepPayload(m.schema.steps[k]), { test: 'T5' });
+    for (let k = 0; k < m.steps.length; k++) {
+      const r = await conn.send(CMD.STEP, stepPayload(m.steps[k]), { test: 'T5' });
       if (!r.ok) {
         ok = false;
         break outer;
@@ -264,7 +278,7 @@ $('btn-download').addEventListener('click', async () => {
         bank,
         name: m.name,
         step: k + 1,
-        steps: m.schema.steps.length,
+        steps: m.steps.length,
         done: sentSteps,
         total,
       });
@@ -277,11 +291,16 @@ $('btn-download').addEventListener('click', async () => {
   log(
     ok ? 'info' : 'error',
     ok
-      ? `sending succeeded: ${modes.length} schedule(s), ${sentSteps} steps`
+      ? `sending succeeded: ${modes.length} program(s), ${sentSteps} steps`
       : `sending failed after ${sentSteps} of ${total} steps`,
     'T5',
   );
   setLast('T5', ok, ok ? 't5.resultOk' : 't5.resultFailed', { count: modes.length });
+  $('btn-backup-after').hidden = !ok;
+  if (ok) {
+    store.markSent(modes.map((m, i) => ({ id: m.id, bank: startBank + i })));
+    programs.refresh();
+  }
 });
 
 // ---------- T6 clear ----------
@@ -332,7 +351,7 @@ function applyLanguage() {
   showClock();
   updateButtons();
   refreshResults();
-  schedules.refresh();
+  programs.refresh();
   live.refresh();
   logView.render();
   if (progress) $('dl-progress').textContent = t(progress.key, progress.params);

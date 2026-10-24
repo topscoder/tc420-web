@@ -93,12 +93,17 @@
           <h2 data-i18n="t4.title"></h2>
           <span class="badge safe" data-i18n="badge.browserOnly"></span>
         </div>
+        <p class="note" id="lib-status"></p>
+        <p class="note" data-i18n="t4.noReadBack"></p>
         <div id="drop">
           <span data-i18n-html="t4.drop"></span><input id="file" type="file" accept=".tmf" multiple hidden />
         </div>
         <div class="row">
           <button id="btn-new-mode" data-i18n="t4.new"></button>
           <button id="btn-test-mode" data-i18n="t4.testMode"></button>
+          <button id="btn-export-backup" data-i18n="t4.exportBackup"></button>
+          <button id="btn-restore-backup" data-i18n="t4.restoreBackup"></button>
+          <input id="backup-file" type="file" accept=".json,application/json" hidden />
         </div>
         <details>
           <summary data-i18n="t4.testWhat"></summary>
@@ -136,7 +141,12 @@
           /></label>
           <button class="danger needs-device" id="btn-download" data-i18n="t5.send"></button>
           <span class="progress" id="dl-progress"></span>
+          <button id="btn-backup-after" data-i18n="t5.exportBackup" hidden></button>
         </div>
+        <p>
+          <label><input type="checkbox" id="setting-multiple" /> <span data-i18n="t5.multiple"></span></label>
+          <br /><span class="note" data-i18n="t5.multipleHint"></span>
+        </p>
         <p class="note" data-i18n="t5.note"></p>
         <div class="last" id="last-T5"></div>
       </section>

@@ -21,6 +21,9 @@ Volg de tests T1 tot en met T7 op de pagina. Noteer per test wat je op de TC420 
 - `js/device.js`: de verbinding met de TC420 (één commando tegelijk, wachten op antwoord)
 - `js/simulator.js`: een nagebootste TC420 voor `?sim=1` en de tests
 - `js/logbook.js`: het logboek dat in de browser bewaard blijft
+- `js/programs.js`: de programmabibliotheek (naamregels, wat op de controller staat, back-ups)
+- `js/storage.js`: opslag van de bibliotheek in IndexedDB, met terugval op localStorage of geheugen
+- `js/i18n.js` en `js/locales/`: de vertalingen (EN, NL, DE)
 - `js/ui/`: de onderdelen van de testpagina
 
 Tests draaien vanuit de hoofdmap met `npm test` (unit- en end-to-end-tests); `npm run lint` controleert de code.

@@ -22,7 +22,8 @@ export default {
   'intro.order': 'Empfohlene Reihenfolge:',
   'intro.step1': '<strong>T1</strong> Verbinden und <strong>T2</strong> Uhr stellen. Sicher.',
   'intro.step2': '<strong>T3</strong> Live-Steuerung. Sicher: Es wird nichts gespeichert.',
-  'intro.step3': '<strong>T4</strong> Zeitplan laden oder Testzeitplan erstellen. Das geschieht nur im Browser.',
+  'intro.step3':
+    '<strong>T4</strong> Programme verwalten: importieren, erstellen, bearbeiten, sichern. Das geschieht nur im Browser.',
   'intro.step4': '<strong>T5</strong> Senden. Dadurch werden Programme auf dem Controller überschrieben.',
   'intro.step5': '<strong>T6</strong> Alles löschen und <strong>T7</strong> Experte nur bei Bedarf.',
 
@@ -73,16 +74,48 @@ export default {
   't3.stopped': 'gestoppt; {sent} Pakete, {failed} fehlgeschlagen',
   't3.stopFailed': 'Stopp nicht bestätigt',
 
-  't4.title': 'Zeitpläne laden, erstellen und bearbeiten',
+  't4.title': 'Meine Programme',
   't4.drop': '<code>.tmf</code>-Dateien hierher ziehen oder <label for="file">Dateien auswählen</label>',
-  't4.new': 'Leerer Zeitplan',
+  't4.new': 'Neues Programm',
   't4.testMode': 'Testzeitplan Überblenden/Schalten (nächste Minuten)',
   't4.testWhat': 'Was macht der Testzeitplan?',
   't4.testExplain':
     'Er erstellt ein Programm, das ab etwa 2 Minuten nach jetzt CH1 innerhalb von 3 Minuten allmählich auf 100 % bringt (Überblenden) und CH2 im selben Moment sofort auf 100 % schaltet (Schalten). Nach weiteren 3 Minuten dimmt CH1 allmählich auf 0 und CH2 schaltet sofort aus. So können Sie mit T5 sehen, ob das Schalt-Flag wie erwartet funktioniert. Der Controller muss dafür dieses Programm abspielen; wählen Sie es bei Bedarf im Display aus.',
+  't4.saved': 'Automatisch in diesem Browser gespeichert.',
+  't4.savedMemory':
+    'Dieser Browser kann nichts speichern (privates Fenster oder blockierter Speicher). Ihre Programme gehen beim Schließen der Seite verloren: Erstellen Sie eine Sicherung.',
+  't4.saveFailed':
+    'Speichern in diesem Browser ist fehlgeschlagen. Erstellen Sie eine Sicherung, um Ihre Programme zu behalten.',
+  't4.noReadBack':
+    'Der Controller kann nicht ausgelesen werden, daher ist dieser Browser der einzige Ort, an dem Ihre Programme gespeichert sind. Erstellen Sie ab und zu eine Sicherung.',
+  't4.exportBackup': 'Sicherung erstellen',
+  't4.restoreBackup': 'Sicherung wiederherstellen',
+  't4.confirmRestore': {
+    one: 'Alle Programme in diesem Browser durch das {count} Programm aus der Sicherung ersetzen?',
+    other: 'Alle Programme in diesem Browser durch die {count} Programme aus der Sicherung ersetzen?',
+  },
+  't4.restored': {
+    one: '{count} Programm aus der Sicherung wiederhergestellt',
+    other: '{count} Programme aus der Sicherung wiederhergestellt',
+  },
+  't4.backupError.notJson': '{file} ist keine Sicherungsdatei',
+  't4.backupError.notBackup': '{file} ist keine Sicherung von TC420 Web',
+  't4.backupError.newerVersion': '{file} wurde mit einer neueren Version von TC420 Web erstellt',
+  't4.backupError.empty': '{file} enthält keine Programme',
+  't4.imported': { one: '{count} Programm importiert', other: '{count} Programme importiert' },
+  't4.importRenamed': '{file} als {name} importiert (Namen: max. 8 Zeichen, A–Z, 0–9, Leerzeichen, -)',
+  't4.full': 'Die Bibliothek ist voll (max. {max} Programme)',
+  't4.duplicate': 'Duplizieren',
+  't4.confirmDelete': 'Programm {name} löschen? Das kann nicht rückgängig gemacht werden.',
+  't4.slot': 'Programm {n}',
+  't4.onController': 'Auf dem Controller',
+  't4.onControllerSlot': 'Auf dem Controller (Programm {n})',
+  't4.changedSinceSent': 'seit dem Senden geändert',
+  't4.moveDown': 'Nach unten',
+  't4.nameHint': 'Wird im Display des Controllers angezeigt: max. 8 Zeichen, A–Z, 0–9, Leerzeichen, -',
   't4.loadFailed': '{file} konnte nicht geladen werden: {error}',
-  't4.listTitle': 'Zeitpläne in dieser Sitzung (werden in dieser Reihenfolge gesendet)',
-  't4.none': 'Noch keine Zeitpläne.',
+  't4.listTitle': 'Programme (werden in dieser Reihenfolge an den Controller gesendet)',
+  't4.none': 'Noch keine Programme.',
   't4.bank': 'Bank {n}',
   't4.steps': { one: '{count} Schritt', other: '{count} Schritte' },
   't4.warnings': { one: '{count} Warnung', other: '{count} Warnungen' },
@@ -124,6 +157,10 @@ export default {
   't5.send': 'Senden',
   't5.note':
     'Prüfen Sie danach im Display: Stehen die Namen dort? Passt das Licht zur aktuellen Uhrzeit zum Diagramm in T4?',
+  't5.exportBackup': 'Jetzt Sicherung erstellen',
+  't5.multiple': 'Mehrere Programme auf dem Controller',
+  't5.multipleHint':
+    'Nur wenn Sie mit den Tasten Ihres TC420 ein Programm auswählen können. Die Liste zeigt dann Programmnummern in der Reihenfolge des Controllers und kann umsortiert werden.',
   't5.confirm': 'Diese Programme auf dem Controller überschreiben?\n\n{summary}',
   't5.summaryLine': 'Bank {bank}: {name} ({steps})',
   't5.summaryWarnings': ' – Achtung: {warnings}',

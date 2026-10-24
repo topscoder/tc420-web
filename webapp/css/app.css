@@ -410,3 +410,9 @@ details summary {
 .progress {
   font-variant-numeric: tabular-nums;
 }
+.warn-text {
+  color: var(--warn);
+}
+.mode-item .badge {
+  font-size: 11px;
+}
