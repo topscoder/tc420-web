@@ -18,10 +18,11 @@ Assumptions: users are not technical, sit next to the controller with a USB cabl
 
 1. **Edit first, connect later.** All editing works without a device or WebHID. The controller is only needed to send, preview or set the clock.
 2. **The app is the source of truth.** The TC420 cannot be read back, so the app saves everything automatically and nudges users to export a backup.
-3. **No protocol words.** The main UI never shows packets, command codes, banks, WebHID or report IDs. Those live in *Advanced*.
-4. **Safe by default.** Anything that overwrites or clears the controller needs a confirmation that says exactly what will change.
-5. **One clear primary action per screen.** In the main view that is *Send to TC420*.
-6. **Same words everywhere.** Use the glossary in section 7 in all three languages.
+3. **One program on the controller by default.** Many controllers are built in where nobody can reach their buttons, so users cannot switch programs on the device. By default *Send to TC420* replaces everything on the controller with the one selected program, so there is no doubt which program runs. Users who can switch programs on the device turn on *Multiple programs on the controller* in Settings.
+4. **No protocol words.** The main UI never shows packets, command codes, banks, WebHID or report IDs. Those live in *Advanced*.
+5. **Safe by default.** Anything that overwrites or clears the controller needs a confirmation that says exactly what will change.
+6. **One clear primary action per screen.** In the main view that is *Send to TC420*.
+7. **Same words everywhere.** Use the glossary in section 7 in all three languages.
 
 ## 3. App structure
 
@@ -55,7 +56,8 @@ The device status chip is the single entry point for the device:
 
 Two panes.
 
-- **Programs (left).** A list in controller order. Each card shows the slot number (Program 1, 2, …), the name (max. 8 characters, as on the controller display), a mini chart and the number of steps. Actions: *New program*, *Import*, drag to reorder. Pinned at the bottom: the primary button **Send to TC420**, with a hint like "3 programs · last sent 22 Oct 09:28" or "Changes not sent yet".
+- **My programs (left).** All programs saved in this browser (own programs, imported `.tmf` files, programs made from templates). Each card shows the name (max. 8 characters, as on the controller display), a mini chart and the number of steps. The program that was last sent carries an **On controller** badge. Actions: *New program*, *Import*. Pinned at the bottom: the primary button **Send to TC420**, which sends the selected program, with a hint like "On controller: WINTER · sent 22 Oct 09:28" or "WINTER changed since it was sent". Switching between, for example, winter and summer is done by selecting the other program and sending it.
+- **Multiple programs mode** (Settings, off by default, for controllers whose buttons the user can reach): the list shows slot numbers (Program 1, 2, …) in controller order, can be reordered by dragging, and *Send to TC420* sends all programs in that order.
 - **Editor (right)** for the selected program:
   - Name field with a live character counter (8).
   - Timeline chart from 00:00 to 24:00, one coloured line per channel, a "now" marker, draggable points.
@@ -68,7 +70,7 @@ On narrow screens (< 900 px) the panes stack: the programs list becomes a dropdo
 
 ### Dialogs and panels
 
-- **Send to TC420** (dialog): list of what will be written, "Program 1 ← WINTER, Program 2 ← ZOMER", the note "These slots on the controller are replaced. The controller cannot be read back, so keep a backup.", a checkbox *Also set the clock* (checked), and the buttons *Cancel* / *Send*. During sending: a progress bar and the current program. Afterwards: success with *Export backup* as a secondary action, or a failure message with *Try again*.
+- **Send to TC420** (dialog): "The controller will run **WINTER**. Everything else on the controller is removed.", the note "The controller cannot be read back. Your programs stay saved in this browser; export a backup to be safe.", a checkbox *Also set the clock* (checked), and the buttons *Cancel* / *Send*. Technically the app clears the controller, writes the program to slot 1 and sets the clock. In multiple programs mode the dialog lists "Program 1 ← WINTER, Program 2 ← ZOMER" instead. During sending: a progress bar. Afterwards: success with *Export backup* as a secondary action, or a failure message with *Try again*.
 - **Preview on device** (side panel): play the program fast-forwarded (1 day in 1, 2 or 5 minutes), play/pause/stop, a time scrubber, and a *Manual* tab with sliders per channel. The editor chart shows the playback cursor. A note says that nothing is saved and the controller returns to its normal program afterwards.
 - **Clear controller** (dialog): "Remove all programs from the controller?" Typed confirmation is not needed; the danger button is labelled *Remove all programs*.
 - **Settings**: language, channel names and colours (e.g. "White", "Blue", "Moonlight"), *Export backup* / *Restore backup*, *Delete all programs in this browser*, about and version, *Install as app* instructions.
@@ -90,7 +92,7 @@ flowchart TD
   M --> H[Tip: install as app to use it offline]
 ```
 
-Templates: *Simple day and night*, *Sunrise, noon and sunset*, *Winter* and *Summer* (all channels equal), plus the three PLed examples if their licence allows (issue #16).
+Templates: *Simple day and night*, *Sunrise, noon and sunset*, *Winter* and *Summer* (all channels equal), and the three examples that came with PLed (*AFRIKA*, *AMAZONE*, *THAILAND*). The PLed examples are bundled as they are; AMAZONE's out-of-order last step is sorted by time when the template is opened.
 
 ### 4.2 Make a schedule and send it
 
@@ -98,8 +100,11 @@ Templates: *Simple day and night*, *Sunrise, noon and sunset*, *Winter* and *Sum
 2. Drag points or add steps; leave *Same level for all channels* on for a simple setup.
 3. Optional: *Preview on device* to see it on the real lights.
 4. Click *Send to TC420*. If not connected, the browser device chooser opens first.
-5. Confirm in the dialog (clock is set too by default).
-6. Success screen offers *Export backup*.
+5. Confirm in the dialog: "The controller will run WINTER" (clock is set too by default).
+6. The app clears the controller, writes the program and sets the clock.
+7. Success screen: "WINTER is now running on the controller", with *Export backup*.
+
+Changing season later: select *ZOMER* and send it; the controller then runs only ZOMER.
 
 ### 4.3 Connect and set the clock
 
@@ -128,7 +133,7 @@ Templates: *Simple day and night*, *Sunrise, noon and sunset*, *Winter* and *Sum
 - Address the user as "you"; short sentences; verbs on buttons (*Send to TC420*, not *Upload*).
 - Say **controller** in running text and **TC420** on buttons and in the device chip.
 - Times in 24-hour format in NL and DE and in the user's locale format in EN; levels in %.
-- Program names: max. 8 characters (letters, digits, space, `-`); explain why: "shown on the controller display".
+- Program names: strictly max. 8 characters from `A–Z`, `0–9`, space and `-`; letters are converted to capitals while typing; other characters cannot be entered. Explain why: "shown on the controller display".
 - Never show hex, command codes, "bank", "WebHID", "report", "packet" outside *Advanced*.
 
 ## 7. Glossary
@@ -156,7 +161,7 @@ The NL and DE terms are proposals for the native-speaker review (issue #17).
 | --- | --- |
 | Language switcher, glossary | #2, #17 |
 | Editor, templates | #3 |
-| Programs list, saving, import/export, backup | #4 |
+| Programs list, *On controller* badge, saving, import/export, backup, multiple programs setting | #4 |
 | Device chip, connect, set clock, send, clear, errors | #5 |
 | Preview panel | #6 |
 | Advanced section | #7 |
@@ -164,8 +169,15 @@ The NL and DE terms are proposals for the native-speaker review (issue #17).
 | Unsupported browser banner, Linux guide | #9 |
 | Visual design, accessibility | #10 |
 
-## 9. Open questions
+## 9. Decisions and open questions
 
-- Should *Send to TC420* always send all programs, or allow sending only the selected one to its slot? Proposal: always all, so the controller matches the app.
-- Is the 8-character name limit strict on the device, and which characters are displayed correctly? (issue #11)
-- Do we keep the PLed example programs as templates? (issue #16)
+Decided (24 Oct 2026):
+
+- Default: one program on the controller. *Send to TC420* clears the controller and writes the selected program to slot 1. Sending all programs in order is available as *Multiple programs on the controller* in Settings.
+- Program names are strictly limited to 8 characters (`A–Z`, `0–9`, space, `-`).
+- The PLed example programs are bundled as templates.
+
+To verify on hardware (issue #11):
+
+- After *clear controller* + writing slot 1, does the controller run that program without anyone pressing buttons, also after a power cycle?
+- Which program runs after sending several programs, if nobody selects one on the device?

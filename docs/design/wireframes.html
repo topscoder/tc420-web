@@ -53,6 +53,7 @@
   .pcard .name { font-weight: 600; grid-column: 1; }
   .pcard .meta { font-size: 11px; color: var(--quiet); grid-column: 1; }
   .pcard .mini { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+  .badge-on { color: var(--ok); font-weight: 600; }
   .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .spacer { flex: 1; }
   .btn { display: inline-block; border: 1px solid var(--line); border-radius: 7px; padding: 5px 11px; background: var(--paper); white-space: nowrap; font-size: 13px; }
@@ -129,7 +130,7 @@
           <h3>Create a lighting schedule for your TC420</h3>
           <p class="hint" style="max-width:520px">Make programs here, then send them to the controller over USB. Your work is saved in this browser. No internet or other software needed after this first visit.</p>
           <div class="choices">
-            <div class="choice"><b>Start from a template</b><span class="hint">Day and night, sunrise and sunset, winter, summer</span><span class="btn primary small" style="align-self:flex-start">Choose template</span></div>
+            <div class="choice"><b>Start from a template</b><span class="hint">Day and night, sunrise and sunset, winter, summer, PLed examples</span><span class="btn primary small" style="align-self:flex-start">Choose template</span></div>
             <div class="choice"><b>Open PLed files</b><span class="hint">Import one or more .tmf files from the old Windows software</span><span class="btn small" style="align-self:flex-start">Import .tmf</span></div>
             <div class="choice"><b>Start empty</b><span class="hint">A blank program with two steps</span><span class="btn small" style="align-self:flex-start">New program</span></div>
           </div>
@@ -153,13 +154,14 @@
         <div class="appbar"><span class="logo">TC420 Web</span><span class="chip">○ Connect TC420</span><span class="lang"><b>EN</b> · NL · DE</span><span class="menu-btn">☰</span></div>
         <div class="panes">
           <aside class="programs">
-            <h3>Programs</h3>
-            <div class="pcard sel"><span class="slot">Program 1</span><span class="name">WINTER</span><span class="meta">9 steps</span><span class="mini" data-chart="winter" data-w="70" data-h="34"></span></div>
-            <div class="pcard"><span class="slot">Program 2</span><span class="name">ZOMER</span><span class="meta">9 steps</span><span class="mini" data-chart="summer" data-w="70" data-h="34"></span></div>
+            <h3>My programs</h3>
+            <div class="pcard sel"><span class="slot"><span class="badge-on">● On controller</span></span><span class="name">WINTER</span><span class="meta">9 steps</span><span class="mini" data-chart="winter" data-w="70" data-h="34"></span></div>
+            <div class="pcard"><span class="slot">&nbsp;</span><span class="name">ZOMER</span><span class="meta">9 steps</span><span class="mini" data-chart="summer" data-w="70" data-h="34"></span></div>
+            <div class="pcard"><span class="slot">&nbsp;</span><span class="name">AFRIKA</span><span class="meta">21 steps · template</span><span class="mini" data-chart="africa" data-w="70" data-h="34"></span></div>
             <div class="row"><span class="btn ghost small">+ New program</span><span class="btn ghost small">Import</span></div>
             <div class="spacer"></div>
-            <span class="hint warn">Changes not sent yet</span>
-            <span class="btn primary block">Send to TC420</span>
+            <span class="hint">On controller: WINTER · sent 22 Oct 09:28</span>
+            <span class="btn primary block">Send WINTER to TC420</span>
           </aside>
           <div class="editor">
             <div class="row"><span class="field">Name <b>WINTER</b> <span class="hint">6/8</span></span><span class="spacer"></span><span class="btn small">Preview on device</span><span class="btn small">Duplicate</span><span class="btn small">Export .tmf</span><span class="btn small">Delete</span></div>
@@ -177,11 +179,12 @@
         </div>
       </div>
       <ol class="notes">
-        <li>Programs are listed in controller order; "Program 1" is the slot on the device (bank 0). Drag to reorder.</li>
-        <li>Name limited to 8 characters because the controller display shows it.</li>
+        <li>"My programs" is the library in this browser. The badge shows which program is on the controller; by default that is the only program on it.</li>
+        <li>Send sends the selected program and replaces everything on the controller. Switching season = select ZOMER and send.</li>
+        <li>Name strictly 8 characters (A–Z, 0–9, space, -) because the controller display shows it.</li>
         <li>Chart is the main editing surface (drag points); the table is the precise alternative.</li>
         <li>"Same level for all channels" is on for new programs; turning it off shows one slider per channel and per-channel Fade/Instant.</li>
-        <li>Send to TC420 is the one primary action, pinned under the list with a "not sent yet" hint.</li>
+        <li>Send is the one primary action, pinned under the list. If the program changed after sending, the hint says "WINTER changed since it was sent".</li>
       </ol>
     </div>
   </section>
@@ -259,17 +262,18 @@
         <div class="appbar"><span class="logo">TC420 Web</span><span class="chip on">● TC420 connected</span><span class="lang"><b>EN</b> · NL · DE</span><span class="menu-btn">☰</span></div>
         <div class="overlay">
           <div class="dialog">
-            <h4>Send 2 programs to the TC420?</h4>
-            <ul><li>Program 1 ← <b>WINTER</b> (9 steps)</li><li>Program 2 ← <b>ZOMER</b> (9 steps)</li></ul>
-            <p class="hint" style="margin:0">These programs on the controller will be replaced. The controller cannot be read back, so keep a backup of your programs.</p>
+            <h4>Send WINTER to the TC420?</h4>
+            <div class="row" style="flex-wrap:nowrap"><span class="mini" data-chart="winter" data-w="120" data-h="44" style="display:block;width:120px;flex:none"></span><span>The controller will run <b>WINTER</b> (9 steps). Everything else on the controller is removed.</span></div>
+            <p class="hint" style="margin:0">The controller cannot be read back. Your programs stay saved in this browser; export a backup to be safe.</p>
             <span class="toggle"><i></i>Also set the clock to 10:42</span>
             <div class="row"><span class="spacer"></span><span class="btn">Cancel</span><span class="btn primary">Send</span></div>
           </div>
         </div>
       </div>
       <ol class="notes">
-        <li>Always sends all programs in list order, so the controller matches the app (open question in ux-design.md).</li>
-        <li>States exactly which slots change and why a backup matters.</li>
+        <li>Default: clear the controller, write the selected program to slot 1, set the clock. No program switching needed on the device.</li>
+        <li>In "Multiple programs" mode the dialog lists "Program 1 ← WINTER, Program 2 ← ZOMER" and sends all.</li>
+        <li>Says exactly what changes and why a backup matters.</li>
         <li>If not connected, clicking Send first runs the connect flow, then shows this dialog.</li>
       </ol>
     </div>
@@ -280,12 +284,12 @@
     <div class="board-head"><span class="tag">F</span><h2>Sending, success and failure</h2><span class="issue">#5</span></div>
     <div class="board-body">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
-        <div class="frame" style="min-height:220px"><div class="appbar"><span class="logo">TC420 Web</span><span class="chip busy">◌ Sending… 12/20</span></div>
-          <div class="overlay"><div class="dialog"><h4>Sending to TC420…</h4><span class="hint">Program 2 of 2: ZOMER</span><div class="progress"><i style="width:60%"></i></div><span class="hint">Keep the cable connected.</span></div></div></div>
+        <div class="frame" style="min-height:220px"><div class="appbar"><span class="logo">TC420 Web</span><span class="chip busy">◌ Sending… 6/9</span></div>
+          <div class="overlay"><div class="dialog"><h4>Sending to TC420…</h4><span class="hint">WINTER · step 6 of 9</span><div class="progress"><i style="width:60%"></i></div><span class="hint">Keep the cable connected.</span></div></div></div>
         <div class="frame" style="min-height:220px"><div class="appbar"><span class="logo">TC420 Web</span><span class="chip on">● TC420 connected</span></div>
-          <div class="overlay"><div class="dialog"><h4>✓ Sent to TC420</h4><span class="hint">2 programs and the clock are on the controller. Select the program on the controller display.</span><div class="row"><span class="btn small">Export backup</span><span class="spacer"></span><span class="btn primary small">Done</span></div></div></div></div>
+          <div class="overlay"><div class="dialog"><h4>✓ WINTER is running on the controller</h4><span class="hint">The clock was set to 10:42. Nothing else is on the controller.</span><div class="row"><span class="btn small">Export backup</span><span class="spacer"></span><span class="btn primary small">Done</span></div></div></div></div>
         <div class="frame" style="min-height:220px"><div class="appbar"><span class="logo">TC420 Web</span><span class="chip warn">⚠ Disconnected</span></div>
-          <div class="overlay"><div class="dialog"><h4>Sending was interrupted</h4><span class="hint">The connection was lost at program 2. The controller may contain an incomplete program. Reconnect and send again.</span><div class="row"><span class="btn small">Show details</span><span class="spacer"></span><span class="btn primary small">Reconnect and retry</span></div></div></div></div>
+          <div class="overlay"><div class="dialog"><h4>Sending was interrupted</h4><span class="hint">The connection was lost at step 6 of 9. The controller may now be empty or contain an incomplete program. Reconnect and send again.</span><div class="row"><span class="btn small">Show details</span><span class="spacer"></span><span class="btn primary small">Reconnect and retry</span></div></div></div></div>
       </div>
       <ol class="notes">
         <li>UI is locked while sending; chip shows progress.</li>
@@ -331,6 +335,7 @@
           <span class="label">Language</span><span><span class="seg"><span class="on">English</span><span>Nederlands</span><span>Deutsch</span></span></span>
           <span class="label">Channel names</span>
           <span><span class="swatch" style="background:#2f6fdb"></span> <span class="field">White</span> &nbsp;<span class="swatch" style="background:#e0662f"></span> <span class="field">Warm</span> &nbsp;<span class="swatch" style="background:#2ea672"></span> <span class="field">Moonlight</span> &nbsp;<span class="swatch" style="background:#1f3a68"></span> <span class="field">Blue</span> &nbsp;<span class="swatch" style="background:#9a5bd1"></span> <span class="field">CH5</span></span>
+          <span class="label">Controller</span><span><span class="toggle off"><i></i>Multiple programs on the controller</span><br><span class="hint">Only if you can select programs with the buttons on your TC420. Then all programs are sent, in list order.</span></span>
           <span class="label">Backup</span><span class="row"><span class="btn small">Export backup</span><span class="btn small">Restore backup</span><span class="hint">Last backup: never</span></span>
           <span class="label">Use offline</span><span class="hint">Install TC420 Web as an app from the browser menu. It then works without internet.</span>
           <span class="label">Data</span><span><span class="btn small" style="color:var(--danger)">Delete all programs in this browser…</span></span>
@@ -345,6 +350,7 @@
       <ol class="notes">
         <li>Language switch is also in the header; here it is explicit.</li>
         <li>Channel names apply to all programs.</li>
+        <li>"Multiple programs" is off by default because many controllers are built in and cannot be switched by hand.</li>
         <li>Advanced is collapsed by default; it holds the former test bench (log, raw packets, simulator).</li>
         <li>"Report a problem" explains how to attach the exported log to a GitHub issue.</li>
       </ol>
@@ -374,12 +380,12 @@
       <div class="frame narrow" style="min-height:520px">
         <div class="appbar"><span class="logo">TC420 Web</span><span class="chip on">●</span><span class="menu-btn">☰</span></div>
         <div class="stack">
-          <span class="field">Program 1 · <b>WINTER</b> ▾</span>
+          <span class="field"><b>WINTER</b> ▾ <span class="badge-on">● On controller</span></span>
           <div class="chart" data-chart="winter" data-w="340" data-h="130" data-axes="1"></div>
           <span class="toggle"><i></i>Same level for all channels</span>
           <table class="steps"><tr><th>Time</th><th>Level</th><th></th></tr><tr><td>07:00</td><td>10 %</td><td>Fade</td></tr><tr><td>07:30</td><td>70 %</td><td>Fade</td></tr><tr><td>11:00</td><td>70 %</td><td>Fade</td></tr></table>
         </div>
-        <div class="sticky"><span class="btn primary block">Send to TC420</span></div>
+        <div class="sticky"><span class="btn primary block">Send WINTER to TC420</span></div>
       </div>
       <ol class="notes">
         <li>Program list becomes a dropdown; Send moves to a sticky bottom bar.</li>
