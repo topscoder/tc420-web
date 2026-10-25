@@ -6,7 +6,6 @@ playwright-report/
 package-lock.json
 *.md
 docs/
-testlogs/
 schemas/
 .claude/
 _site/
