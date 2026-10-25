@@ -55,10 +55,12 @@ test('imports a .tmf file, edits it and sends it to the controller', async ({ pa
   await expect(page.locator('#log .k-ack', { hasText: '0x13 step' })).toHaveCount(22);
 });
 
-test('shows a translated warning for an out-of-order step', async ({ page }) => {
+test('sorts the steps of an out-of-order file on import', async ({ page }) => {
   await page.setInputFiles('#file', schema('AMAZONE'));
-  await expect(page.locator('#editor-warnings li')).toHaveText('step 25 (02:30) comes before step 24 (22:30)');
-  await expect(page.locator('#modes .mode-item')).toContainText('25 steps · 1 warning');
+  await expect(page.locator('#last-T4')).toHaveText('Last result: AMAZONE.tmf: the steps were sorted by time');
+  await expect(page.locator('#editor-warnings li')).toHaveCount(0);
+  await expect(page.locator('#editor-table tr').nth(3).locator('input[type=time]')).toHaveValue('00:31');
+  await expect(page.locator('#editor-table tr').nth(4).locator('input[type=time]')).toHaveValue('02:30');
 });
 
 test('reports a file that is not a schedule', async ({ page }) => {

@@ -1,9 +1,11 @@
 // T4: the user's program library (saved in the browser) with editor, .tmf import/export and backups.
-import { MAX_BANKS, MAX_STEPS, NAME_LEN } from '../protocol.js';
+import { MAX_BANKS, NAME_LEN } from '../protocol.js';
 import { parseTmf, serializeTmf, checkSteps, describeWarning, timeLabel, ScheduleError } from '../schedule.js';
 import { sanitizeName, parseBackup, BackupError } from '../programs.js';
+import { minutesOf } from '../editor-model.js';
+import { TEMPLATES } from '../templates.js';
 import { $, el, download, stamp, setLast } from './dom.js';
-import { renderChart } from './chart.js';
+import { mountEditor } from './editor.js';
 
 const blankStep = (h, m, ch, jump) => ({
   hour: h,
@@ -16,7 +18,7 @@ const blankStep = (h, m, ch, jump) => ({
 function liveName(value) {
   return value
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toUpperCase()
     .replace(/[^A-Z0-9 -]/g, '')
     .slice(0, NAME_LEN);
@@ -26,11 +28,10 @@ export function mountPrograms({ store, log, i18n, meta }) {
   const t = (key, params) => i18n.t(key, params);
   const warningText = (w) => t(`schedule.warn.${w.code}`, w);
 
-  const chart = (steps) =>
-    renderChart($('editor-chart'), $('editor-legend'), steps, { zoom: $('chart-zoom').checked, t });
+  const editor = mountEditor({ store, log, i18n, onChange: () => renderList() });
 
-  function add(name, steps, source) {
-    const p = store.add({ name, steps, source });
+  function add(name, steps, source, linked) {
+    const p = store.add({ name, steps, source, linked });
     if (!p) {
       setLast('T4', false, 't4.full', { max: MAX_BANKS });
       log('error', `library full (max. ${MAX_BANKS} programs)`, 'T4');
@@ -55,7 +56,10 @@ export function mountPrograms({ store, log, i18n, meta }) {
           `program imported: ${f.name} as ${p.name} · ${schema.deviceName} · ${schema.channels} channels · ${schema.steps.length} steps · third field ${schema.third}${warn}`,
           'T4',
         );
+        const sorted = schema.steps.some((st, k) => k > 0 && minutesOf(st) < minutesOf(schema.steps[k - 1]));
+        if (sorted) log('info', `${f.name}: steps sorted by time`, 'T4');
         if (p.name !== base) setLast('T4', true, 't4.importRenamed', { file: f.name, name: p.name });
+        else if (sorted) setLast('T4', true, 't4.importSorted', { file: f.name });
         else setLast('T4', true, 't4.imported', { count });
       } catch (e) {
         log('error', `${f.name}: ${e.message}`, 'T4');
@@ -131,7 +135,7 @@ export function mountPrograms({ store, log, i18n, meta }) {
       name.addEventListener('change', () => {
         store.rename(p.id, name.value);
         name.value = p.name;
-        if (p.id === store.selected?.id) $('editor-title').textContent = t('t4.editTitle', { name: p.name });
+        if (p.id === store.selected?.id) editor.render();
         renderList();
       });
       item.append(name);
@@ -154,6 +158,7 @@ export function mountPrograms({ store, log, i18n, meta }) {
       };
       button(t('t4.edit'), () => {
         store.select(p.id);
+        editor.reset();
         render();
       });
       button(t('t4.duplicate'), () => {
@@ -188,87 +193,20 @@ export function mountPrograms({ store, log, i18n, meta }) {
     });
   }
 
-  // ---------- editor ----------
-
-  function renderEditor() {
-    const p = store.selected;
-    $('editor').hidden = !p;
-    if (!p) return;
-    const edit = (mutate, { full = false } = {}) => {
-      store.update(p.id, mutate);
-      if (full) render();
-      else {
-        chart(p.steps);
-        renderList();
-      }
-    };
-    $('editor-title').textContent = t('t4.editTitle', { name: p.name });
-    $('editor-warnings').innerHTML = '';
-    checkSteps(p.steps).forEach((w) => $('editor-warnings').append(el('li', {}, warningText(w))));
-    chart(p.steps);
-    const table = $('editor-table');
-    table.innerHTML = '';
-    const head = el('tr');
-    [t('t4.col.step'), t('t4.col.time'), 'CH1', 'CH2', 'CH3', 'CH4', 'CH5', t('t4.col.jump'), ''].forEach((h) =>
-      head.append(el('th', {}, h)),
-    );
-    table.append(head);
-    p.steps.forEach((s, i) => {
-      const tr = el('tr');
-      tr.append(el('td', {}, String(i + 1)));
-      const time = el('input', { type: 'time', value: timeLabel(s.hour, s.minute) });
-      time.addEventListener('change', () => {
-        const [h, mi] = time.value.split(':').map(Number);
-        if (h >= 0) edit((q) => Object.assign(q.steps[i], { hour: h, minute: mi }), { full: true });
-      });
-      const tdTime = el('td');
-      tdTime.append(time);
-      tr.append(tdTime);
-      for (let c = 0; c < 5; c++) {
-        const inp = el('input', {
-          type: 'number',
-          min: '0',
-          max: '100',
-          value: String(s.ch[c]),
-          'aria-label': `CH${c + 1}`,
-        });
-        inp.addEventListener('change', () => {
-          edit((q) => {
-            q.steps[i].ch[c] = Math.max(0, Math.min(100, Number(inp.value) || 0));
-          });
-          inp.value = p.steps[i].ch[c];
-        });
-        const td = el('td');
-        td.append(inp);
-        tr.append(td);
-      }
-      const tdJ = el('td', { class: 'jumps' });
-      for (let c = 0; c < 5; c++) {
-        const lab = el('label');
-        const cb = el('input', { type: 'checkbox' });
-        cb.checked = !!s.jump[c];
-        cb.addEventListener('change', () =>
-          edit((q) => {
-            q.steps[i].jump[c] = cb.checked;
-          }),
-        );
-        lab.append(cb, document.createTextNode(String(c + 1)));
-        tdJ.append(lab);
-      }
-      tr.append(tdJ);
-      const del = el('button', { class: 'small', 'aria-label': t('t4.deleteStep'), title: t('t4.deleteStep') }, '×');
-      del.addEventListener('click', () => edit((q) => q.steps.splice(i, 1), { full: true }));
-      const tdDel = el('td');
-      tdDel.append(del);
-      tr.append(tdDel);
-      table.append(tr);
-    });
-  }
-
   function render() {
     renderStatus();
     renderList();
-    renderEditor();
+    renderTemplates();
+    editor.render();
+  }
+
+  function renderTemplates() {
+    const select = $('template-select');
+    const current = select.value;
+    select.innerHTML = '';
+    select.append(el('option', { value: '' }, t('templates.choose')));
+    Object.keys(TEMPLATES).forEach((id) => select.append(el('option', { value: id }, t(`templates.${id}`))));
+    select.value = current;
   }
 
   // ---------- events ----------
@@ -290,7 +228,16 @@ export function mountPrograms({ store, log, i18n, meta }) {
   });
 
   $('btn-new-mode').addEventListener('click', () => {
-    if (add(`PROG${store.programs.length + 1}`, [blankStep(0, 0), blankStep(12, 0, [50, 50, 50, 50, 0])], 'new')) {
+    const day = [80, 80, 80, 80, 80];
+    const steps = [
+      blankStep(0, 0),
+      blankStep(8, 0),
+      blankStep(8, 30, day),
+      blankStep(20, 0, day.slice()),
+      blankStep(20, 30),
+    ];
+    if (add(`PROG${store.programs.length + 1}`, steps, 'new', true)) {
+      editor.reset();
       log('info', 'empty program created', 'T4');
       render();
     }
@@ -311,7 +258,8 @@ export function mountPrograms({ store, log, i18n, meta }) {
       blankStep(...hm(start + 6), [0, 0, 0, 0, 0], [false, true, false, false, false]),
       blankStep(23, 59),
     ];
-    if (add('FADETEST', steps, 'test')) {
+    if (add('FADETEST', steps, 'test', false)) {
+      editor.reset();
       log(
         'info',
         `test program FADETEST created: CH1 fades and CH2 jumps between ${timeLabel(...hm(start))} and ${timeLabel(...hm(start + 6))}`,
@@ -321,37 +269,23 @@ export function mountPrograms({ store, log, i18n, meta }) {
     }
   });
 
+  $('btn-add-template').addEventListener('click', () => {
+    const id = $('template-select').value;
+    const tpl = TEMPLATES[id];
+    if (!tpl) return;
+    if (add(tpl.name, tpl.steps(), `template:${id}`, tpl.linked)) {
+      log('info', `program created from template ${id}`, 'T4');
+      setLast('T4', true, 't4.fromTemplate', { name: store.selected.name });
+      editor.reset();
+      render();
+    }
+  });
+
   $('btn-export-backup').addEventListener('click', exportBackup);
   $('btn-restore-backup').addEventListener('click', () => $('backup-file').click());
   $('backup-file').addEventListener('change', (e) => {
     if (e.target.files[0]) restoreBackup(e.target.files[0]);
     e.target.value = '';
-  });
-
-  $('chart-zoom').addEventListener('change', () => {
-    if (store.selected) chart(store.selected.steps);
-  });
-
-  $('btn-add-step').addEventListener('click', () => {
-    const p = store.selected;
-    if (!p) return;
-    if (p.steps.length >= MAX_STEPS) {
-      log('error', `at most ${MAX_STEPS} steps`, 'T4');
-      return;
-    }
-    const last = p.steps[p.steps.length - 1];
-    const next = last ? Math.min(1439, last.hour * 60 + last.minute + 30) : 0;
-    store.update(p.id, (q) =>
-      q.steps.push(blankStep(Math.floor(next / 60), next % 60, last ? last.ch.slice() : undefined)),
-    );
-    render();
-  });
-
-  $('btn-sort').addEventListener('click', () => {
-    const p = store.selected;
-    if (!p) return;
-    store.update(p.id, (q) => q.steps.sort((a, b) => a.hour * 60 + a.minute - (b.hour * 60 + b.minute)));
-    render();
   });
 
   $('btn-export-tmf').addEventListener('click', () => {

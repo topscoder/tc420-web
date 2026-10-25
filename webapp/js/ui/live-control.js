@@ -1,9 +1,9 @@
 // T3: online play with sliders and a channel sweep. Nothing is stored on the device.
 import { CMD, playInitPayload, playValuesPayload } from '../protocol.js';
 import { $, el, setLast } from './dom.js';
-import { CH_COLORS } from './chart.js';
 
 const PLAY_INTERVAL_MS = 60;
+const CH_COLORS = ['var(--ch1)', 'var(--ch2)', 'var(--ch3)', 'var(--ch4)', 'var(--ch5)'];
 
 export function mountLiveControl({ conn, log, i18n, onChange }) {
   let playing = false;

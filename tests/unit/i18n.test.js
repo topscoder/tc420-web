@@ -4,6 +4,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { I18n, MESSAGES, LANGUAGES, detectLanguage, localeFor } from '../../webapp/js/i18n.js';
+import { TEMPLATES } from '../../webapp/js/templates.js';
 
 const WEBAPP = fileURLToPath(new URL('../../webapp/', import.meta.url));
 const en = MESSAGES.en;
@@ -39,7 +40,7 @@ test('every key used in index.html and the UI code exists', () => {
   for (const m of html.matchAll(/data-i18n-attr="([^"]+)"/g)) {
     m[1].split(';').forEach((pair) => keys.add(pair.split(':')[1].trim()));
   }
-  const prefixes = '(?:app|header|banner|intro|badge|last|obs|t[1-7]|schedule|log)';
+  const prefixes = '(?:app|header|banner|intro|badge|last|obs|t[1-7]|schedule|log|editor|templates)';
   const literal = new RegExp(`'(${prefixes}\\.[\\w.]+)'`, 'g');
   for (const file of filesIn(join(WEBAPP, 'js'), '.js')) {
     for (const m of readFileSync(file, 'utf8').matchAll(literal)) keys.add(m[1]);
@@ -49,6 +50,8 @@ test('every key used in index.html and the UI code exists', () => {
     keys.add(`schedule.warn.${c}`),
   );
   ['tooShort', 'channels'].forEach((c) => keys.add(`schedule.error.${c}`));
+  Object.keys(TEMPLATES).forEach((id) => keys.add(`templates.${id}`));
+  ['notJson', 'notBackup', 'newerVersion', 'empty'].forEach((c) => keys.add(`t4.backupError.${c}`));
   const missing = [...keys].filter((k) => !(k in en));
   assert.deepEqual(missing, []);
   assert.ok(keys.size > 100, `only ${keys.size} keys found; the scan is probably broken`);

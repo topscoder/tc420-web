@@ -100,6 +100,8 @@
         </div>
         <div class="row">
           <button id="btn-new-mode" data-i18n="t4.new"></button>
+          <select id="template-select" data-i18n-attr="aria-label:templates.title"></select>
+          <button id="btn-add-template" data-i18n="templates.add"></button>
           <button id="btn-test-mode" data-i18n="t4.testMode"></button>
           <button id="btn-export-backup" data-i18n="t4.exportBackup"></button>
           <button id="btn-restore-backup" data-i18n="t4.restoreBackup"></button>
@@ -113,17 +115,28 @@
         <div class="modes" id="modes"></div>
         <div id="editor" hidden>
           <h3 id="editor-title"></h3>
-          <ul class="warnings" id="editor-warnings"></ul>
-          <label class="note"><input type="checkbox" id="chart-zoom" /> <span data-i18n="t4.zoom"></span></label>
-          <div class="chart" id="editor-chart"></div>
-          <div class="legend" id="editor-legend"></div>
-          <div class="table-wrap"><table id="editor-table"></table></div>
           <div class="row">
+            <label><input type="checkbox" id="link-channels" /> <strong data-i18n="editor.link"></strong></label>
+            <span class="spacer"></span>
+            <button id="btn-undo" data-i18n="editor.undo"></button>
+            <button id="btn-redo" data-i18n="editor.redo"></button>
             <button id="btn-add-step" data-i18n="t4.addStep"></button>
-            <button id="btn-sort" data-i18n="t4.sort"></button>
             <button id="btn-export-tmf" data-i18n="t4.exportTmf"></button>
           </div>
-          <p class="note" data-i18n="t4.jumpNote"></p>
+          <div class="row" id="channel-picker"></div>
+          <ul class="warnings" id="editor-warnings"></ul>
+          <p class="note warn-text" id="editor-message" role="status"></p>
+          <div class="chart" id="editor-chart"></div>
+          <div class="row">
+            <span class="note" data-i18n="editor.chartHelp"></span>
+            <span class="spacer"></span>
+            <label class="note"><input type="checkbox" id="chart-zoom" /> <span data-i18n="t4.zoom"></span></label>
+          </div>
+          <div class="table-wrap"><table id="editor-table"></table></div>
+          <details>
+            <summary data-i18n="editor.channels"></summary>
+            <div id="channel-fields"></div>
+          </details>
         </div>
         <div class="last" id="last-T4"></div>
       </section>

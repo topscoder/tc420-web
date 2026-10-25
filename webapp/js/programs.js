@@ -2,6 +2,7 @@
 // controller. The TC420 cannot be read back, so this is the only copy of the
 // user's work; every change is saved through the injected backend.
 import { NAME_LEN, MAX_BANKS, MAX_STEPS, clampPct } from './protocol.js';
+import { sortSteps, isLinked } from './editor-model.js';
 
 export const STATE_VERSION = 1;
 export const BACKUP_FORMAT = 'tc420-web-backup';
@@ -10,7 +11,10 @@ export const CHANNELS = 5;
 export const DEFAULT_SETTINGS = {
   multiplePrograms: false,
   channelNames: ['CH1', 'CH2', 'CH3', 'CH4', 'CH5'],
+  channelColors: ['#2f6fdb', '#e0662f', '#2ea672', '#c9971c', '#9a5bd1'],
 };
+const COLOR = /^#[0-9a-f]{6}$/i;
+export const CHANNEL_NAME_LEN = 12;
 
 const NAME_CHARS = /[^A-Z0-9 -]/g;
 const HAS_INVALID = /[^A-Z0-9 -]/;
@@ -61,9 +65,18 @@ export function programHash(p) {
   return JSON.stringify([p.name, p.steps.map((s) => [s.hour, s.minute, ...s.ch, ...s.jump.map(Number)])]);
 }
 
-export function makeProgram({ name, steps = [], source = 'new', id = newId(), now = new Date() } = {}) {
+export function makeProgram({ name, steps = [], source = 'new', id = newId(), linked, now = new Date() } = {}) {
   const stamp = now.toISOString();
-  return { id, name: sanitizeName(name), steps: steps.map(cleanStep), source, createdAt: stamp, updatedAt: stamp };
+  const clean = sortSteps(steps.slice(0, MAX_STEPS).map(cleanStep));
+  return {
+    id,
+    name: sanitizeName(name),
+    steps: clean,
+    linked: typeof linked === 'boolean' ? linked && isLinked(clean) : isLinked(clean),
+    source,
+    createdAt: stamp,
+    updatedAt: stamp,
+  };
 }
 
 function emptyState() {
@@ -82,7 +95,13 @@ function normaliseState(raw) {
   state.programs = (Array.isArray(raw.programs) ? raw.programs : [])
     .filter((p) => p && Array.isArray(p.steps))
     .map((p) => ({
-      ...makeProgram({ name: p.name, steps: p.steps, source: p.source || 'new', id: p.id || newId() }),
+      ...makeProgram({
+        name: p.name,
+        steps: p.steps,
+        source: p.source || 'new',
+        id: p.id || newId(),
+        linked: p.linked,
+      }),
       createdAt: p.createdAt || new Date().toISOString(),
       updatedAt: p.updatedAt || new Date().toISOString(),
     }));
@@ -92,7 +111,13 @@ function normaliseState(raw) {
   state.settings = {
     multiplePrograms: !!raw.settings?.multiplePrograms,
     channelNames: DEFAULT_SETTINGS.channelNames.map(
-      (d, i) => String(raw.settings?.channelNames?.[i] ?? d).slice(0, 20) || d,
+      (d, i) =>
+        String(raw.settings?.channelNames?.[i] ?? d)
+          .trim()
+          .slice(0, CHANNEL_NAME_LEN) || d,
+    ),
+    channelColors: DEFAULT_SETTINGS.channelColors.map((d, i) =>
+      COLOR.test(raw.settings?.channelColors?.[i]) ? raw.settings.channelColors[i] : d,
     ),
   };
   if (raw.controller && Array.isArray(raw.controller.entries)) {
@@ -172,9 +197,9 @@ export class ProgramStore {
   }
 
   // Returns the new program, or null when the library is full.
-  add({ name, steps, source = 'new' }) {
+  add({ name, steps, source = 'new', linked }) {
     if (this.state.programs.length >= MAX_BANKS) return null;
-    const p = makeProgram({ name, steps, source, now: this.now() });
+    const p = makeProgram({ name, steps, source, linked, now: this.now() });
     this.state.programs.push(p);
     this.state.selectedId = p.id;
     this.commit();
@@ -193,7 +218,8 @@ export class ProgramStore {
     if (!p) return;
     mutate(p);
     p.name = sanitizeName(p.name);
-    p.steps = p.steps.slice(0, MAX_STEPS).map(cleanStep);
+    p.steps = sortSteps(p.steps.slice(0, MAX_STEPS).map(cleanStep));
+    p.linked = !!p.linked && isLinked(p.steps);
     p.updatedAt = this.now().toISOString();
     this.commit();
   }
@@ -211,7 +237,7 @@ export class ProgramStore {
     let n = 2;
     const taken = new Set(this.state.programs.map((x) => x.name));
     while (taken.has(`${base}-${n}`) && n < 9) n++;
-    return this.add({ name: `${base}-${n}`, steps: structuredClone(p.steps), source: p.source });
+    return this.add({ name: `${base}-${n}`, steps: structuredClone(p.steps), source: p.source, linked: p.linked });
   }
 
   remove(id) {
@@ -235,7 +261,7 @@ export class ProgramStore {
 
   setSetting(key, value) {
     if (!(key in DEFAULT_SETTINGS)) return;
-    this.state.settings[key] = value;
+    this.state.settings = normaliseState({ settings: { ...this.state.settings, [key]: value } }).settings;
     this.commit();
   }
 
@@ -274,10 +300,11 @@ export class ProgramStore {
         appVersion: version,
         exported: this.now().toISOString(),
         settings: this.state.settings,
-        programs: this.state.programs.map(({ id, name, steps, source, createdAt, updatedAt }) => ({
+        programs: this.state.programs.map(({ id, name, steps, linked, source, createdAt, updatedAt }) => ({
           id,
           name,
           steps,
+          linked,
           source,
           createdAt,
           updatedAt,

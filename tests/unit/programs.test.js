@@ -108,9 +108,15 @@ test('steps are cleaned on update: clamped, at most 50', async () => {
     q.steps[0].hour = 30;
     for (let i = 0; i < 60; i++) q.steps.push({ hour: 1, minute: i % 60, ch: [1], jump: [] });
   });
-  assert.equal(store.get(p.id).steps[0].ch[0], 100);
-  assert.equal(store.get(p.id).steps[0].hour, 23);
-  assert.equal(store.get(p.id).steps.length, 50);
+  const steps = store.get(p.id).steps;
+  assert.equal(steps.length, 50);
+  const moved = steps.find((s) => s.hour === 23 && s.ch[0] === 100);
+  assert.ok(moved, 'hour clamped to 23 and level to 100');
+  assert.deepEqual(
+    steps.map((s) => s.hour * 60 + s.minute),
+    steps.map((s) => s.hour * 60 + s.minute).sort((x, y) => x - y),
+    'steps stay sorted by time',
+  );
 });
 
 test('the library holds at most 50 programs', async () => {

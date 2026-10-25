@@ -26,7 +26,7 @@ import { ProgramStore } from './programs.js';
 import { createBackend } from './storage.js';
 
 const APP = 'TC420 Web';
-const APP_VERSION = '0.6.0';
+const APP_VERSION = '0.7.0';
 const SIM = new URLSearchParams(location.search).has('sim');
 
 // localStorage can throw (private mode, blocked site data); then nothing is remembered.

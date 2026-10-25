@@ -416,3 +416,90 @@ details summary {
 .mode-item .badge {
   font-size: 11px;
 }
+.spacer {
+  flex: 1;
+}
+.editor-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+.editor-svg .grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.editor-svg .tick {
+  fill: var(--quiet);
+  font-size: 11px;
+}
+.editor-svg .now-line {
+  stroke: var(--quiet);
+  stroke-dasharray: 3 3;
+}
+.editor-svg .chart-hit {
+  fill: transparent;
+  cursor: crosshair;
+}
+.editor-svg .step-point {
+  stroke: var(--card);
+  stroke-width: 2;
+  cursor: grab;
+}
+.editor-svg .step-point:hover,
+.editor-svg .step-point:focus,
+.editor-svg .step-point.focused {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  outline: none;
+}
+#editor-table tr.focused td {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.level-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.level-field input[type='range'] {
+  width: 140px;
+}
+.channel-cell {
+  white-space: nowrap;
+}
+.seg-toggle {
+  margin-left: 4px;
+  min-width: 64px;
+}
+.seg-toggle.on {
+  background: var(--ink);
+  color: var(--card);
+  border-color: var(--ink);
+}
+.channel-btn .swatch,
+.channel-btn i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.channel-btn.on {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.warnings .lead {
+  list-style: none;
+  margin-left: -20px;
+  font-weight: 600;
+}
+#editor-message:empty {
+  display: none;
+}
+#channel-fields .row input[type='color'] {
+  width: 36px;
+  height: 28px;
+  padding: 0 2px;
+}
