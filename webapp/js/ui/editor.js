@@ -108,10 +108,32 @@ export function mountEditor({ store, log, i18n, onChange }) {
     return { from, to: from + 60 };
   }
 
+  // Playback position of "Preview on device", or null.
+  let cursorMinute = null;
+  let chartX = null;
+
+  function drawCursor() {
+    const root = $('editor-chart').querySelector('svg');
+    if (!root) return;
+    let line = root.querySelector('.play-cursor');
+    const { from, to } = window_();
+    if (cursorMinute === null || cursorMinute < from || cursorMinute > to) {
+      line?.remove();
+      return;
+    }
+    if (!line) {
+      line = svg('line', { class: 'play-cursor', y1: Y0, y2: Y1 });
+      root.querySelector('.chart-hit').after(line);
+    }
+    line.setAttribute('x1', chartX(cursorMinute));
+    line.setAttribute('x2', chartX(cursorMinute));
+  }
+
   function renderChart(steps) {
     const p = program();
     const { from, to } = window_();
     const X = (m) => X0 + ((m - from) / (to - from)) * (X1 - X0);
+    chartX = X;
     const Y = (v) => Y1 - (v / 100) * (Y1 - Y0);
     const minuteAt = (x) => from + ((x - X0) / (X1 - X0)) * (to - from);
     const levelAt = (y) => ((Y1 - y) / (Y1 - Y0)) * 100;
@@ -206,6 +228,7 @@ export function mountEditor({ store, log, i18n, onChange }) {
     });
 
     $('editor-chart').replaceChildren(root);
+    drawCursor();
     if (focusMinute !== null) root.querySelector(`[data-minute="${focusMinute}"]`)?.focus({ preventScroll: true });
   }
 
@@ -522,6 +545,11 @@ export function mountEditor({ store, log, i18n, onChange }) {
 
   return {
     render,
+    // Shows the preview's playback position on the chart (null hides it).
+    setCursor(minute) {
+      cursorMinute = minute;
+      drawCursor();
+    },
     // Called when another program is selected.
     reset() {
       focusMinute = null;

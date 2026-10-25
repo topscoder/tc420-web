@@ -87,6 +87,60 @@
                 <button id="btn-redo" data-i18n="editor.redo"></button>
                 <button id="btn-add-step" data-i18n="t4.addStep"></button>
                 <button id="btn-export-tmf" data-i18n="t4.exportTmf"></button>
+                <button
+                  id="btn-preview"
+                  aria-expanded="false"
+                  aria-controls="preview-panel"
+                  data-i18n="preview.open"
+                ></button>
+              </div>
+              <div id="preview-panel" class="preview" role="region" data-i18n-attr="aria-label:preview.title" hidden>
+                <div class="row">
+                  <strong data-i18n="preview.title"></strong>
+                  <span class="seg" role="radiogroup" data-i18n-attr="aria-label:preview.title">
+                    <label
+                      ><input type="radio" name="preview-mode" value="play" checked />
+                      <span data-i18n="preview.modePlay"></span
+                    ></label>
+                    <label
+                      ><input type="radio" name="preview-mode" value="manual" />
+                      <span data-i18n="preview.modeManual"></span
+                    ></label>
+                  </span>
+                  <span class="spacer"></span>
+                  <span class="note" id="preview-state" role="status"></span>
+                </div>
+                <div id="preview-play">
+                  <div class="row">
+                    <span class="note" data-i18n="preview.dayIn"></span>
+                    <span class="seg" role="radiogroup" data-i18n-attr="aria-label:preview.dayIn">
+                      <label
+                        ><input type="radio" name="preview-speed" value="1" /> <span data-i18n="preview.min1"></span
+                      ></label>
+                      <label
+                        ><input type="radio" name="preview-speed" value="2" /> <span data-i18n="preview.min2"></span
+                      ></label>
+                      <label
+                        ><input type="radio" name="preview-speed" value="5" /> <span data-i18n="preview.min5"></span
+                      ></label>
+                    </span>
+                  </div>
+                  <div class="row">
+                    <button class="primary" id="btn-preview-play"></button>
+                    <label class="grow"
+                      ><span class="sr-only" data-i18n="preview.time"></span>
+                      <input type="range" id="preview-time" min="0" max="1439" step="1" value="0"
+                    /></label>
+                    <output id="preview-clock" for="preview-time"></output>
+                  </div>
+                </div>
+                <div id="preview-manual" hidden>
+                  <div class="sliders" id="preview-sliders"></div>
+                </div>
+                <div class="row">
+                  <button id="btn-preview-stop" data-i18n="preview.stop"></button>
+                  <span class="note" data-i18n="preview.note"></span>
+                </div>
               </div>
               <div class="row" id="channel-picker"></div>
               <ul class="warnings" id="editor-warnings"></ul>

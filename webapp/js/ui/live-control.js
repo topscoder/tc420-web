@@ -1,4 +1,5 @@
-// T3: online play with sliders and a channel sweep. Nothing is stored on the device.
+// Online play (0x15/0x16/0x02): the controller shows the values it is sent and
+// stores nothing. Used by the manual sliders in Advanced and by the preview.
 import { CMD, playInitPayload, playValuesPayload } from '../protocol.js';
 import { $, el, setLast } from './dom.js';
 
@@ -10,6 +11,8 @@ export function mountLiveControl({ conn, log, i18n, onChange }) {
   let values = [0, 0, 0, 0, 0];
   let sweepTimer = null;
   let stats = { sent: 0, failed: 0, ms: 0 };
+  const stopListeners = [];
+  const stopped = () => stopListeners.forEach((f) => f());
 
   const sliders = [];
   for (let c = 0; c < 5; c++) {
@@ -76,20 +79,23 @@ export function mountLiveControl({ conn, log, i18n, onChange }) {
     }
   }
 
-  async function start() {
+  // name: shown on the controller display (1–8 characters). Resolves to true when started.
+  async function start(name = $('play-name').value) {
+    if (playing) return true;
     let payload;
     try {
-      payload = playInitPayload($('play-name').value);
+      payload = playInitPayload(name);
     } catch (e) {
       log('error', e.message, 'T3');
-      return;
+      return false;
     }
     const r = await conn.send(CMD.PLAY_INIT, payload, { test: 'T3' });
     setLast('T3', r.ok, r.ok ? 't3.started' : 't3.startFailed');
-    if (!r.ok) return;
+    if (!r.ok) return false;
     stats = { sent: 0, failed: 0, ms: 0 };
     setPlaying(true);
     loop();
+    return true;
   }
 
   async function stop() {
@@ -97,7 +103,9 @@ export function mountLiveControl({ conn, log, i18n, onChange }) {
       clearInterval(sweepTimer);
       sweepTimer = null;
     }
+    if (!playing) return;
     setPlaying(false);
+    stopped();
     const r = await conn.send(CMD.END, [], { test: 'T3' });
     log(
       'info',
@@ -133,7 +141,7 @@ export function mountLiveControl({ conn, log, i18n, onChange }) {
     }, 50);
   }
 
-  $('btn-play-start').addEventListener('click', start);
+  $('btn-play-start').addEventListener('click', () => start());
   $('btn-play-stop').addEventListener('click', stop);
   $('btn-all-0').addEventListener('click', () => setValues([0, 0, 0, 0, 0]));
   $('btn-all-100').addEventListener('click', () => setValues([100, 100, 100, 100, 100]));
@@ -143,13 +151,23 @@ export function mountLiveControl({ conn, log, i18n, onChange }) {
     get playing() {
       return playing;
     },
+    start,
     stop,
+    setValues,
+    get values() {
+      return values.slice();
+    },
+    onStop(f) {
+      stopListeners.push(f);
+    },
     refresh: showStats,
     // The device disappeared: stop the loop without sending anything.
     abort() {
       if (sweepTimer) clearInterval(sweepTimer);
       sweepTimer = null;
+      if (!playing) return;
       setPlaying(false);
+      stopped();
     },
   };
 }

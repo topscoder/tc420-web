@@ -1,6 +1,6 @@
 // TC420 Web entry point: wires language, program library, device connection, sending, logbook and the Advanced panel.
 // UI texts come from js/locales/*; the log stays in English so it can be shared in bug reports.
-import { parseHexBytes } from './protocol.js';
+import { CMD, buildFrame, frameToReport, parseHexBytes } from './protocol.js';
 import { usbSupport } from './platform.js';
 import { DeviceConnection } from './device.js';
 import { Logbook } from './logbook.js';
@@ -16,9 +16,10 @@ import { mountDevice } from './ui/device.js';
 import { mountSend } from './ui/send.js';
 import { mountSupport } from './ui/support.js';
 import { mountPwa } from './ui/pwa.js';
+import { mountPreview } from './ui/preview.js';
 
 const APP = 'TC420 Web';
-const APP_VERSION = '0.12.0';
+const APP_VERSION = '0.13.0';
 const SIM = new URLSearchParams(location.search).has('sim');
 const detected = usbSupport(navigator, { secure: window.isSecureContext });
 const usb = SIM ? { ...detected, ok: true } : detected; // the simulator needs no USB
@@ -126,6 +127,7 @@ simSetting.addEventListener('change', () => {
 
 // ---------- device ----------
 
+let preview = null; // mounted below; updateButtons() runs before that
 const live = mountLiveControl({ conn, log, i18n, onChange: updateButtons });
 const store = await new ProgramStore({ backend: await createBackend() }).load();
 log('info', `program library: ${store.programs.length} programs in ${store.backend?.kind || 'memory'} storage`, 'T4');
@@ -152,6 +154,7 @@ function updateButtons() {
   });
   device.render();
   send.render();
+  preview?.render();
 }
 
 const support = mountSupport({ usb, i18n, log });
@@ -171,6 +174,16 @@ const device = mountDevice({
 const send = mountSend({ conn, store, device, programs, live, log, i18n, usb, onChange: () => updateButtons() });
 store.onChange(() => send.render());
 const pwa = mountPwa({ i18n, log, toast: device.toast });
+preview = mountPreview({ conn, store, live, editor: programs.editor, log, i18n });
+store.onChange(() => preview.render());
+
+// Leaving the page during online play: tell the controller to go back to its program.
+// Best effort: the browser may close the page before the report is out.
+window.addEventListener('pagehide', () => {
+  if (!live.playing) return;
+  const { reportId, data } = frameToReport(buildFrame(CMD.END, []));
+  conn.device?.sendReport(reportId, data);
+});
 
 // ---------- raw packet ----------
 
@@ -201,6 +214,7 @@ function applyLanguage() {
   $('app-version').textContent = t('adv.version', { version: APP_VERSION });
   support.render();
   pwa.render();
+  preview.render();
   updateButtons();
   refreshResults();
   programs.refresh();

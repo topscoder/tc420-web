@@ -486,6 +486,54 @@ details summary {
   fill: var(--quiet);
   font-size: 11px;
 }
+.preview {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 8px 0;
+  background: var(--code-bg);
+}
+.preview .grow {
+  flex: 1;
+  min-width: 160px;
+  display: flex;
+}
+.preview .grow input {
+  flex: 1;
+}
+#preview-clock {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  min-width: 3.5em;
+}
+.seg {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.seg label {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px 8px;
+  cursor: pointer;
+  background: var(--card);
+}
+.seg label:has(input:checked) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.seg label:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.seg input {
+  margin: 0 4px 0 0;
+}
+.editor-svg .play-cursor {
+  stroke: var(--ink);
+  stroke-width: 2;
+  pointer-events: none;
+}
 .editor-svg .now-line {
   stroke: var(--quiet);
   stroke-dasharray: 3 3;

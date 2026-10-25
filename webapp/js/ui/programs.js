@@ -345,5 +345,5 @@ export function mountPrograms({ store, log, i18n, meta }) {
   store.onChange(renderStatus);
   render();
   // refresh() redraws in the current language; programs live in the store.
-  return { refresh: render, warningText, exportBackup, sanitizeName };
+  return { refresh: render, warningText, exportBackup, sanitizeName, editor };
 }
