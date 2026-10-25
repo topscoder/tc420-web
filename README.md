@@ -86,7 +86,7 @@ your own risk.
 
 ## License and credits
 
-[MIT license](LICENSE), © 2026 TC420 Web contributors.
+[MIT license](LICENSE), © 2026 TC420 Web contributors. What changed in each version: [CHANGELOG.md](CHANGELOG.md).
 
 - The USB protocol was worked out by reverse engineering the vendor's PLed 1.1 software and checked against
   the open-source library [wallneradam/tc420](https://github.com/wallneradam/tc420) (GPL-3). That library was
