@@ -346,4 +346,16 @@ export default {
   'welcome.importButton': '.tmf importieren',
   'welcome.emptyTitle': 'Leer beginnen',
   'welcome.emptyText': 'Ein einfaches Tagesprogramm, das Sie selbst anpassen.',
+
+  'pwa.title': 'Ohne Internet verwenden',
+  'pwa.status.online': 'Die Offline-Nutzung wird vorbereitet…',
+  'pwa.status.ready': 'Bereit: TC420 Web funktioniert in diesem Browser jetzt auch ohne Internet.',
+  'pwa.status.unsupported': 'Dieser Browser kann TC420 Web nicht für die Offline-Nutzung speichern.',
+  'pwa.installHint':
+    'Tipp: Installieren Sie TC420 Web als App (in Chrome oder Edge: das Installationssymbol in der Adressleiste oder Browsermenü → Installieren). Sie öffnen es dann vom Desktop oder Dock aus, auch ohne Internet, zum Beispiel neben Ihrem Aquarium.',
+  'pwa.status.unavailable':
+    'Die Offline-Nutzung ist in dieser Kopie der App nicht verfügbar. Öffnen Sie https://topscoder.github.io/tc420-web/, um sie ohne Internet zu verwenden.',
+  'pwa.install': 'Als App installieren',
+  'pwa.updateReady': 'Eine neue Version von TC420 Web ist bereit.',
+  'pwa.reload': 'Neu laden',
 };

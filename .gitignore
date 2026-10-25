@@ -11,3 +11,6 @@ tc420-main/
 node_modules/
 test-results/
 playwright-report/
+
+# Built site (scripts/build.mjs)
+_site/

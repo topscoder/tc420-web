@@ -9,11 +9,9 @@
       content="Edit the lighting schedules of a TC420 LED controller and send them over USB, without internet or other software."
     />
     <meta name="theme-color" content="#1f3a68" />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f3a68'/%3E%3Cg fill='%23ffcc4d'%3E%3Crect x='4.5' y='18' width='3' height='8' rx='1.2'/%3E%3Crect x='9.5' y='12' width='3' height='14' rx='1.2'/%3E%3Crect x='14.5' y='6' width='3' height='20' rx='1.2'/%3E%3Crect x='19.5' y='12' width='3' height='14' rx='1.2'/%3E%3Crect x='24.5' y='18' width='3' height='8' rx='1.2'/%3E%3C/g%3E%3C/svg%3E"
-    />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
     <link rel="stylesheet" href="css/app.css" />
   </head>
   <body>
@@ -128,6 +126,10 @@
           <button id="btn-restore-backup" data-i18n="t4.restoreBackup"></button>
           <input id="backup-file" type="file" accept=".json,application/json" hidden />
         </div>
+        <h3 data-i18n="pwa.title"></h3>
+        <p><strong id="offline-status"></strong></p>
+        <p class="note" id="install-hint" data-i18n="pwa.installHint"></p>
+        <div class="row"><button class="primary" id="btn-install" data-i18n="pwa.install" hidden></button></div>
         <h3 data-i18n="settings.controllerTitle"></h3>
         <p>
           <label><input type="checkbox" id="setting-multiple" /> <span data-i18n="t5.multiple"></span></label>

@@ -342,4 +342,16 @@ export default {
   'welcome.importButton': '.tmf importeren',
   'welcome.emptyTitle': 'Leeg beginnen',
   'welcome.emptyText': 'Een eenvoudig dagprogramma dat je zelf aanpast.',
+
+  'pwa.title': 'Gebruiken zonder internet',
+  'pwa.status.online': 'Offline gebruik wordt voorbereid…',
+  'pwa.status.ready': 'Klaar: TC420 Web werkt in deze browser nu ook zonder internet.',
+  'pwa.status.unsupported': 'Deze browser kan TC420 Web niet bewaren voor gebruik zonder internet.',
+  'pwa.installHint':
+    'Tip: installeer TC420 Web als app (in Chrome of Edge: het installatie-icoon in de adresbalk, of het browsermenu → Installeren). Je opent hem dan vanaf je bureaublad of Dock, ook zonder internet, bijvoorbeeld naast je aquarium.',
+  'pwa.status.unavailable':
+    'Offline gebruik is niet beschikbaar in deze kopie van de app. Open https://topscoder.github.io/tc420-web/ om hem zonder internet te gebruiken.',
+  'pwa.install': 'Installeren als app',
+  'pwa.updateReady': 'Er is een nieuwe versie van TC420 Web klaar.',
+  'pwa.reload': 'Herladen',
 };

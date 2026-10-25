@@ -15,9 +15,10 @@ import { createBackend } from './storage.js';
 import { mountDevice } from './ui/device.js';
 import { mountSend } from './ui/send.js';
 import { mountSupport } from './ui/support.js';
+import { mountPwa } from './ui/pwa.js';
 
 const APP = 'TC420 Web';
-const APP_VERSION = '0.11.0';
+const APP_VERSION = '0.12.0';
 const SIM = new URLSearchParams(location.search).has('sim');
 const detected = usbSupport(navigator, { secure: window.isSecureContext });
 const usb = SIM ? { ...detected, ok: true } : detected; // the simulator needs no USB
@@ -169,6 +170,7 @@ const device = mountDevice({
 });
 const send = mountSend({ conn, store, device, programs, live, log, i18n, usb, onChange: () => updateButtons() });
 store.onChange(() => send.render());
+const pwa = mountPwa({ i18n, log, toast: device.toast });
 
 // ---------- raw packet ----------
 
@@ -198,6 +200,7 @@ function applyLanguage() {
   applyTranslations(document, i18n);
   $('app-version').textContent = t('adv.version', { version: APP_VERSION });
   support.render();
+  pwa.render();
   updateButtons();
   refreshResults();
   programs.refresh();
