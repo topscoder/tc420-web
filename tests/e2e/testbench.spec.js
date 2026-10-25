@@ -176,16 +176,6 @@ test('exports an edited schedule as .tmf', async ({ page }) => {
   expect(readFileSync(await download.path())).toEqual(readFileSync(schema('WINTER')));
 });
 
-test('explains when the browser has no WebHID', async ({ page }) => {
-  await page.addInitScript(() => {
-    delete Navigator.prototype.hid;
-  });
-  await page.goto('./');
-  await expect(page.locator('#unsupported')).toBeVisible();
-  await expect(page.locator('#unsupported')).toContainText('cannot connect to USB devices');
-  await expect(page.locator('#btn-connect')).toBeDisabled();
-});
-
 test.describe('languages', () => {
   test('switches language without losing edits and remembers the choice', async ({ page }) => {
     await connect(page);

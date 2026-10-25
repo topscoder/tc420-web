@@ -9,8 +9,6 @@ export default {
   'header.exportJson': 'Save log (.json)',
   'header.exportTxt': 'Save log (.txt)',
 
-  'banner.unsupported':
-    'This browser cannot connect to USB devices. You can make and edit programs here, but to send them to the TC420 use Chrome or Edge on a computer.',
   'banner.sim':
     'You are using the <strong>simulator</strong>: there is no real TC420. Every command gets a simulated OK reply. Turn it off under <em>Advanced</em> to use the real device.',
 
@@ -28,7 +26,7 @@ export default {
   'device.helpContinue': 'Continue',
   'device.error.noDevice': 'No controller selected.',
   'device.error.denied':
-    'Your computer blocked access to the controller. On Linux this needs a one-time setup (a udev rule for USB device 0888:4000).',
+    'Your computer blocked access to the controller. Unplug the cable, plug it in again and try again.',
   'device.error.busy': 'The controller is in use by another tab or app. Close it and try again.',
   'device.error.unknown': 'Connecting to the controller failed. Unplug the cable, plug it in again and try again.',
   'device.unplugged': 'The TC420 was disconnected.',
@@ -164,7 +162,6 @@ export default {
   't4.nameHint': 'Shown on the controller display: max. 8 characters, A–Z, 0–9, space, -',
   't4.loadFailed': '{file} could not be loaded: {error}',
   't4.listTitle': 'Programs (sent to the controller in this order)',
-  't4.none': 'No programs yet.',
   't4.steps': { one: '{count} step', other: '{count} steps' },
   't4.warnings': { one: '{count} warning', other: '{count} warnings' },
   't4.edit': 'Edit',
@@ -279,4 +276,58 @@ export default {
   'adv.simHint':
     'The page reloads. Every command gets a simulated reply, so you can try everything without a controller.',
   'adv.testTitle': 'Fade and switch test',
+
+  'banner.mobile':
+    'Phones and tablets cannot connect to the TC420. You can make, import and export programs here. To send them to the controller, open TC420 Web in Chrome or Edge on a computer.',
+  'banner.browserNamed':
+    '{browser} cannot connect to USB devices. You can make, import and export programs here. To send them to the controller, open TC420 Web in Chrome or Edge.',
+  'banner.browser':
+    'This browser cannot connect to USB devices. You can make, import and export programs here. To send them to the controller, open TC420 Web in Chrome or Edge.',
+  'banner.insecure':
+    'Connecting to the TC420 only works on a secure page. Open TC420 Web at https://topscoder.github.io/tc420-web/ or from this computer (localhost).',
+  'device.chipNoUsb': '⚠ USB not available',
+  'device.error.deniedLinux': 'Linux blocked access to the controller. This needs a one-time setup.',
+  'send.needsUsb': 'Sending needs Chrome or Edge on a computer.',
+  'support.more': 'Which browsers work?',
+  'support.title': 'Which browsers can connect to the TC420?',
+  'support.intro': 'TC420 Web talks to the controller over USB. Only some browsers allow that.',
+  'support.works':
+    '<strong>Works:</strong> Chrome, Edge, Opera and other Chromium-based browsers on Windows, macOS, Linux and ChromeOS.',
+  'support.notWorks':
+    '<strong>Does not work:</strong> Safari, Firefox, and any browser on an iPhone, iPad or Android device.',
+  'support.os':
+    'Windows and macOS need no drivers or other software. Linux needs a <strong>one-time setup</strong> so that your user may open the controller.',
+  'support.editing':
+    'In every browser you can still make, import and export programs, and send them later from a computer with Chrome or Edge.',
+  'support.advTitle': 'Browser and computer',
+  'support.infoOk': '{where} · can connect to the TC420',
+  'support.infoNo': '{where} · cannot connect to the TC420',
+  'support.unknownBrowser': 'Unknown browser',
+  'support.platform.mac': 'macOS',
+  'support.platform.windows': 'Windows',
+  'support.platform.linux': 'Linux',
+  'support.platform.chromeos': 'ChromeOS',
+  'support.platform.ios': 'iPhone or iPad',
+  'support.platform.android': 'Android',
+  'support.platform.other': 'unknown system',
+  'linux.open': 'Linux setup',
+  'linux.title': 'Allow access to the TC420 on Linux',
+  'linux.text':
+    'Linux only lets you use USB devices that are allowed. Run these commands once in a terminal. They add a rule for the TC420 (USB 0888:4000) and ask for your password.',
+  'linux.after': 'Then unplug the TC420, plug it in again and click Connect TC420.',
+  'linux.packaged':
+    'Still blocked? Chromium from Snap or Flatpak may not be allowed to open USB devices at all. Google Chrome or Chromium from your distribution’s own packages works.',
+  'linux.copy': 'Copy commands',
+  'linux.copied': 'Copied.',
+  'welcome.title': 'Create a lighting schedule for your TC420',
+  'welcome.text':
+    'Make programs here, then send them to the controller over USB. Your work is saved in this browser. No internet or other software is needed after this first visit.',
+  'welcome.templateTitle': 'Start from a template',
+  'welcome.templateText': 'Day and night, sunrise and sunset, winter, summer, or the examples that came with PLed.',
+  'welcome.templateButton': 'Choose template',
+  'welcome.importTitle': 'Open PLed files',
+  'welcome.importText': 'Import one or more .tmf files from the old Windows software.',
+  'welcome.importButton': 'Import .tmf',
+  'welcome.emptyTitle': 'Start empty',
+  'welcome.emptyText': 'A simple day program that you change yourself.',
 };

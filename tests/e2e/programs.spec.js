@@ -77,7 +77,7 @@ test('exports a backup and restores it', async ({ page }) => {
     page.once('dialog', (d) => d.accept());
     await items(page).first().getByRole('button', { name: 'Remove' }).click();
   }
-  await expect(page.locator('#modes')).toHaveText('No programs yet.');
+  await expect(page.locator('#modes .welcome')).toBeVisible();
 
   page.once('dialog', (d) => {
     expect(d.message()).toContain('with the 2 programs from the backup');

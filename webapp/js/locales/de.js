@@ -9,8 +9,6 @@ export default {
   'header.exportJson': 'Protokoll speichern (.json)',
   'header.exportTxt': 'Protokoll speichern (.txt)',
 
-  'banner.unsupported':
-    'Dieser Browser kann keine Verbindung zu USB-Geräten herstellen. Sie können hier Programme erstellen und bearbeiten, aber zum Senden an den TC420 verwenden Sie Chrome oder Edge auf einem Computer.',
   'banner.sim':
     'Sie verwenden die <strong>Simulation</strong>: Es ist kein echter TC420 angeschlossen. Jeder Befehl erhält eine simulierte OK-Antwort. Schalten Sie sie unter <em>Erweitert</em> aus, um das echte Gerät zu verwenden.',
 
@@ -28,7 +26,7 @@ export default {
   'device.helpContinue': 'Weiter',
   'device.error.noDevice': 'Kein Controller ausgewählt.',
   'device.error.denied':
-    'Ihr Computer blockiert den Zugriff auf den Controller. Unter Linux ist eine einmalige Einrichtung nötig (eine udev-Regel für das USB-Gerät 0888:4000).',
+    'Ihr Computer hat den Zugriff auf den Controller blockiert. Ziehen Sie das Kabel ab, stecken Sie es wieder ein und versuchen Sie es erneut.',
   'device.error.busy':
     'Der Controller wird von einem anderen Tab oder Programm verwendet. Schließen Sie es und versuchen Sie es erneut.',
   'device.error.unknown':
@@ -174,7 +172,6 @@ export default {
   't4.nameHint': 'Wird im Display des Controllers angezeigt: max. 8 Zeichen, A–Z, 0–9, Leerzeichen, -',
   't4.loadFailed': '{file} konnte nicht geladen werden: {error}',
   't4.listTitle': 'Programme (werden in dieser Reihenfolge an den Controller gesendet)',
-  't4.none': 'Noch keine Programme.',
   't4.steps': { one: '{count} Schritt', other: '{count} Schritte' },
   't4.warnings': { one: '{count} Warnung', other: '{count} Warnungen' },
   't4.edit': 'Bearbeiten',
@@ -290,4 +287,60 @@ export default {
   'adv.simHint':
     'Die Seite wird neu geladen. Jeder Befehl erhält eine simulierte Antwort, sodass Sie alles ohne Controller ausprobieren können.',
   'adv.testTitle': 'Test für Überblenden und Schalten',
+
+  'banner.mobile':
+    'Smartphones und Tablets können keine Verbindung zum TC420 herstellen. Sie können hier Programme erstellen, importieren und exportieren. Um sie an den Controller zu senden, öffnen Sie TC420 Web in Chrome oder Edge auf einem Computer.',
+  'banner.browserNamed':
+    '{browser} kann keine Verbindung zu USB-Geräten herstellen. Sie können hier Programme erstellen, importieren und exportieren. Um sie an den Controller zu senden, öffnen Sie TC420 Web in Chrome oder Edge.',
+  'banner.browser':
+    'Dieser Browser kann keine Verbindung zu USB-Geräten herstellen. Sie können hier Programme erstellen, importieren und exportieren. Um sie an den Controller zu senden, öffnen Sie TC420 Web in Chrome oder Edge.',
+  'banner.insecure':
+    'Die Verbindung zum TC420 funktioniert nur auf einer sicheren Seite. Öffnen Sie TC420 Web unter https://topscoder.github.io/tc420-web/ oder auf diesem Computer (localhost).',
+  'device.chipNoUsb': '⚠ USB nicht verfügbar',
+  'device.error.deniedLinux':
+    'Linux hat den Zugriff auf den Controller blockiert. Dafür ist eine einmalige Einrichtung nötig.',
+  'send.needsUsb': 'Zum Senden brauchen Sie Chrome oder Edge auf einem Computer.',
+  'support.more': 'Welche Browser funktionieren?',
+  'support.title': 'Welche Browser können sich mit dem TC420 verbinden?',
+  'support.intro': 'TC420 Web spricht über USB mit dem Controller. Nicht jeder Browser erlaubt das.',
+  'support.works':
+    '<strong>Funktioniert:</strong> Chrome, Edge, Opera und andere Chromium-basierte Browser unter Windows, macOS, Linux und ChromeOS.',
+  'support.notWorks':
+    '<strong>Funktioniert nicht:</strong> Safari, Firefox und jeder Browser auf einem iPhone, iPad oder Android-Gerät.',
+  'support.os':
+    'Windows und macOS brauchen keine Treiber oder andere Software. Linux braucht eine <strong>einmalige Einrichtung</strong>, damit Ihr Benutzer den Controller öffnen darf.',
+  'support.editing':
+    'In jedem Browser können Sie Programme erstellen, importieren und exportieren und sie später von einem Computer mit Chrome oder Edge senden.',
+  'support.advTitle': 'Browser und Computer',
+  'support.infoOk': '{where} · kann sich mit dem TC420 verbinden',
+  'support.infoNo': '{where} · kann sich nicht mit dem TC420 verbinden',
+  'support.unknownBrowser': 'Unbekannter Browser',
+  'support.platform.mac': 'macOS',
+  'support.platform.windows': 'Windows',
+  'support.platform.linux': 'Linux',
+  'support.platform.chromeos': 'ChromeOS',
+  'support.platform.ios': 'iPhone oder iPad',
+  'support.platform.android': 'Android',
+  'support.platform.other': 'unbekanntes System',
+  'linux.open': 'Linux einrichten',
+  'linux.title': 'Zugriff auf den TC420 unter Linux erlauben',
+  'linux.text':
+    'Linux lässt Sie nur erlaubte USB-Geräte verwenden. Führen Sie diese Befehle einmal in einem Terminal aus. Sie fügen eine Regel für den TC420 (USB 0888:4000) hinzu und fragen nach Ihrem Passwort.',
+  'linux.after': 'Ziehen Sie danach den TC420 ab, stecken Sie ihn wieder ein und klicken Sie auf TC420 verbinden.',
+  'linux.packaged':
+    'Immer noch blockiert? Chromium aus Snap oder Flatpak darf USB-Geräte manchmal gar nicht öffnen. Google Chrome oder Chromium aus den Paketen Ihrer Distribution funktioniert.',
+  'linux.copy': 'Befehle kopieren',
+  'linux.copied': 'Kopiert.',
+  'welcome.title': 'Erstellen Sie einen Lichtplan für Ihren TC420',
+  'welcome.text':
+    'Erstellen Sie hier Programme und senden Sie sie per USB an den Controller. Ihre Arbeit wird in diesem Browser gespeichert. Nach diesem ersten Besuch sind weder Internet noch andere Software nötig.',
+  'welcome.templateTitle': 'Mit einer Vorlage beginnen',
+  'welcome.templateText':
+    'Tag und Nacht, Sonnenaufgang und -untergang, Winter, Sommer oder die Beispiele, die mit PLed geliefert wurden.',
+  'welcome.templateButton': 'Vorlage wählen',
+  'welcome.importTitle': 'PLed-Dateien öffnen',
+  'welcome.importText': 'Importieren Sie eine oder mehrere .tmf-Dateien aus der alten Windows-Software.',
+  'welcome.importButton': '.tmf importieren',
+  'welcome.emptyTitle': 'Leer beginnen',
+  'welcome.emptyText': 'Ein einfaches Tagesprogramm, das Sie selbst anpassen.',
 };

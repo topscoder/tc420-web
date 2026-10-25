@@ -26,7 +26,19 @@ export function connectErrorKind(error) {
   }
 }
 
-export function mountDevice({ conn, store, log, i18n, sim, storage, live, onChange, onControllerChange = () => {} }) {
+export function mountDevice({
+  conn,
+  store,
+  log,
+  i18n,
+  sim,
+  storage,
+  live,
+  usb = { ok: true },
+  support = null,
+  onChange,
+  onControllerChange = () => {},
+}) {
   const t = (key, params) => i18n.t(key, params);
   const timeNow = () => i18n.formatDateTime(new Date(), { hour: '2-digit', minute: '2-digit' });
 
@@ -60,9 +72,10 @@ export function mountDevice({ conn, store, log, i18n, sim, storage, live, onChan
   function render() {
     const on = conn.connected;
     const btn = $('btn-connect');
-    btn.textContent = on ? t('device.chipConnected') : t('device.chipConnect');
+    btn.textContent = on ? t('device.chipConnected') : t(usb.ok ? 'device.chipConnect' : 'device.chipNoUsb');
     btn.classList.toggle('connected', on);
-    btn.setAttribute('aria-haspopup', on ? 'menu' : 'false');
+    btn.classList.toggle('no-usb', !usb.ok);
+    btn.setAttribute('aria-haspopup', on ? 'menu' : usb.ok ? 'false' : 'dialog');
     $('dot').classList.toggle('on', on);
     $('status-text').textContent = on
       ? t('header.status.connected', { name: conn.device.productName || 'TC420' })
@@ -117,8 +130,12 @@ export function mountDevice({ conn, store, log, i18n, sim, storage, live, onChan
 
   function failed(kind, error) {
     log('error', `connecting failed (${kind}): ${error?.name || ''} ${error?.message || ''}`.trim(), 'T1');
-    setLast('T1', false, `device.error.${kind}`);
-    toast(`device.error.${kind}`, {}, { bad: true, sticky: kind !== 'noDevice' });
+    // On Linux "denied" nearly always means the one-time udev setup is missing.
+    const linux = kind === 'denied' && usb.platform === 'linux' && support;
+    const key = linux ? 'device.error.deniedLinux' : `device.error.${kind}`;
+    setLast('T1', false, key);
+    const actions = linux ? [{ label: 'linux.open', primary: true, run: support.openLinux }] : [];
+    toast(key, {}, { bad: true, sticky: kind !== 'noDevice', actions });
   }
 
   async function open(dev, how, { offerClock = true } = {}) {
@@ -143,6 +160,10 @@ export function mountDevice({ conn, store, log, i18n, sim, storage, live, onChan
   // Resolves to true when a controller is connected. offerClock: show the "set the clock?" toast afterwards.
   async function connect({ offerClock = true } = {}) {
     if (conn.connected) return true;
+    if (!usb.ok) {
+      support?.openSupport();
+      return false;
+    }
     if (sim) return open(new SimDevice(simOptionsFromUrl(location.search)), 'simulator opened', { offerClock });
     if (!(await explain())) {
       log('info', 'connecting cancelled', 'T1');

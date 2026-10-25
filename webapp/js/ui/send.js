@@ -3,7 +3,7 @@ import { checkSteps } from '../schedule.js';
 import { planTransfer, sendToController } from '../transfer.js';
 import { $, el, setLast } from './dom.js';
 
-export function mountSend({ conn, store, device, programs, live, log, i18n, onChange }) {
+export function mountSend({ conn, store, device, programs, live, log, i18n, usb = { ok: true }, onChange }) {
   const t = (key, params) => i18n.t(key, params);
   const timeNow = () => i18n.formatDateTime(new Date(), { hour: '2-digit', minute: '2-digit' });
   const dlg = $('dlg-send');
@@ -25,9 +25,10 @@ export function mountSend({ conn, store, device, programs, live, log, i18n, onCh
     const p = store.selected;
     if (multiple) btn.textContent = t('send.buttonMany', { count: store.programs.length });
     else btn.textContent = p ? t('send.button', { name: p.name }) : t('send.buttonNone');
-    btn.disabled = busy || (multiple ? !store.programs.length : !p);
+    btn.disabled = !usb.ok || busy || (multiple ? !store.programs.length : !p);
     $('t5-text').textContent = t(multiple ? 'send.introMany' : 'send.intro');
-    if (lastStatus) $('dl-progress').textContent = t(lastStatus.key, lastStatus.params);
+    if (!usb.ok) $('dl-progress').textContent = t('send.needsUsb');
+    else if (lastStatus) $('dl-progress').textContent = t(lastStatus.key, lastStatus.params);
   }
 
   function status(key, params = {}) {

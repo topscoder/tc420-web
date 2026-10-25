@@ -1,6 +1,7 @@
 // TC420 Web entry point: wires language, program library, device connection, sending, logbook and the Advanced panel.
 // UI texts come from js/locales/*; the log stays in English so it can be shared in bug reports.
 import { parseHexBytes } from './protocol.js';
+import { usbSupport } from './platform.js';
 import { DeviceConnection } from './device.js';
 import { Logbook } from './logbook.js';
 import { I18n, LANGUAGES, LANG_KEY, detectLanguage, applyTranslations } from './i18n.js';
@@ -12,10 +13,13 @@ import { ProgramStore } from './programs.js';
 import { createBackend } from './storage.js';
 import { mountDevice } from './ui/device.js';
 import { mountSend } from './ui/send.js';
+import { mountSupport } from './ui/support.js';
 
 const APP = 'TC420 Web';
-const APP_VERSION = '0.9.0';
+const APP_VERSION = '0.10.0';
 const SIM = new URLSearchParams(location.search).has('sim');
+const detected = usbSupport(navigator, { secure: window.isSecureContext });
+const usb = SIM ? { ...detected, ok: true } : detected; // the simulator needs no USB
 
 // localStorage can throw (private mode, blocked site data); then nothing is remembered.
 function browserStorage() {
@@ -73,7 +77,7 @@ function exportTxt() {
 function startSession() {
   log(
     'session',
-    `new session · ${APP} ${APP_VERSION} · ${location.protocol}//${location.host || '(file)'} · language ${i18n.lang} · secure context ${window.isSecureContext} · WebHID ${'hid' in navigator}${SIM ? ' · SIMULATOR' : ''} · ${navigator.userAgent}`,
+    `new session · ${APP} ${APP_VERSION} · ${location.protocol}//${location.host || '(file)'} · language ${i18n.lang} · secure context ${window.isSecureContext} · WebHID ${'hid' in navigator} · platform ${detected.platform} · browser ${detected.browser || 'unknown'}${SIM ? ' · SIMULATOR' : ''} · ${navigator.userAgent}`,
   );
 }
 
@@ -147,6 +151,7 @@ function updateButtons() {
   send.render();
 }
 
+const support = mountSupport({ usb, i18n, log });
 const device = mountDevice({
   conn,
   store,
@@ -155,10 +160,12 @@ const device = mountDevice({
   sim: SIM,
   storage,
   live,
+  usb,
+  support,
   onChange: () => updateButtons(),
   onControllerChange: () => programs.refresh(),
 });
-const send = mountSend({ conn, store, device, programs, live, log, i18n, onChange: () => updateButtons() });
+const send = mountSend({ conn, store, device, programs, live, log, i18n, usb, onChange: () => updateButtons() });
 store.onChange(() => send.render());
 
 // ---------- raw packet ----------
@@ -188,6 +195,7 @@ function applyLanguage() {
   langSelect.value = i18n.lang;
   applyTranslations(document, i18n);
   $('app-version').textContent = t('adv.version', { version: APP_VERSION });
+  support.render();
   updateButtons();
   refreshResults();
   programs.refresh();
@@ -207,8 +215,6 @@ startSession();
 if (SIM) {
   $('sim-badge').hidden = false;
   $('sim-note').hidden = false;
-} else if (!('hid' in navigator)) {
-  $('unsupported').hidden = false;
-  $('btn-connect').disabled = true;
-  log('error', 'this browser does not support WebHID');
+} else if (!usb.ok) {
+  log('error', `no USB access (${usb.reason}): this browser cannot connect to the TC420`);
 }

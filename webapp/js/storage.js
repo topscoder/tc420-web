@@ -21,6 +21,8 @@ async function openDb(indexedDB) {
 export async function indexedDbBackend(indexedDB = globalThis.indexedDB) {
   if (!indexedDB) throw new Error('IndexedDB not available');
   const db = await openDb(indexedDB);
+  // Let another tab upgrade or delete the database instead of waiting for this one forever.
+  db.onversionchange = () => db.close();
   const tx = (mode) => db.transaction(STORE, mode).objectStore(STORE);
   return {
     kind: 'indexeddb',

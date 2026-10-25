@@ -9,8 +9,6 @@ export default {
   'header.exportJson': 'Log opslaan (.json)',
   'header.exportTxt': 'Log opslaan (.txt)',
 
-  'banner.unsupported':
-    "Deze browser kan geen verbinding maken met USB-apparaten. Je kunt hier programma's maken en bewerken, maar gebruik Chrome of Edge op een computer om ze naar de TC420 te sturen.",
   'banner.sim':
     'Je gebruikt de <strong>simulatie</strong>: er is geen echte TC420. Elk commando krijgt een nagebootst OK-antwoord. Zet hem uit onder <em>Geavanceerd</em> om het echte apparaat te gebruiken.',
 
@@ -28,7 +26,7 @@ export default {
   'device.helpContinue': 'Doorgaan',
   'device.error.noDevice': 'Geen controller gekozen.',
   'device.error.denied':
-    'Je computer blokkeert de toegang tot de controller. Onder Linux is eenmalig een instelling nodig (een udev-regel voor USB-apparaat 0888:4000).',
+    'Je computer blokkeerde de toegang tot de controller. Haal de kabel eruit, steek hem er weer in en probeer het opnieuw.',
   'device.error.busy':
     'De controller wordt gebruikt door een ander tabblad of programma. Sluit dat en probeer het opnieuw.',
   'device.error.unknown':
@@ -172,7 +170,6 @@ export default {
   't4.nameHint': 'Getoond op het display van de controller: max. 8 tekens, A–Z, 0–9, spatie, -',
   't4.loadFailed': '{file} kon niet worden geladen: {error}',
   't4.listTitle': "Programma's (in deze volgorde naar de controller gestuurd)",
-  't4.none': "Nog geen programma's.",
   't4.steps': { one: '{count} stap', other: '{count} stappen' },
   't4.warnings': { one: '{count} waarschuwing', other: '{count} waarschuwingen' },
   't4.edit': 'Bewerken',
@@ -287,4 +284,59 @@ export default {
   'adv.simHint':
     'De pagina herlaadt. Elk commando krijgt een nagebootst antwoord, zodat je alles kunt proberen zonder controller.',
   'adv.testTitle': 'Test voor faden en schakelen',
+
+  'banner.mobile':
+    "Telefoons en tablets kunnen geen verbinding maken met de TC420. Je kunt hier programma's maken, importeren en exporteren. Om ze naar de controller te sturen, open je TC420 Web in Chrome of Edge op een computer.",
+  'banner.browserNamed':
+    "{browser} kan geen verbinding maken met USB-apparaten. Je kunt hier programma's maken, importeren en exporteren. Om ze naar de controller te sturen, open je TC420 Web in Chrome of Edge.",
+  'banner.browser':
+    "Deze browser kan geen verbinding maken met USB-apparaten. Je kunt hier programma's maken, importeren en exporteren. Om ze naar de controller te sturen, open je TC420 Web in Chrome of Edge.",
+  'banner.insecure':
+    'Verbinden met de TC420 werkt alleen op een beveiligde pagina. Open TC420 Web via https://topscoder.github.io/tc420-web/ of vanaf deze computer (localhost).',
+  'device.chipNoUsb': '⚠ USB niet beschikbaar',
+  'device.error.deniedLinux': 'Linux blokkeerde de toegang tot de controller. Daarvoor is eenmalig iets in te stellen.',
+  'send.needsUsb': 'Versturen kan met Chrome of Edge op een computer.',
+  'support.more': 'Welke browsers werken?',
+  'support.title': 'Welke browsers kunnen verbinden met de TC420?',
+  'support.intro': 'TC420 Web praat via USB met de controller. Niet elke browser staat dat toe.',
+  'support.works':
+    '<strong>Werkt:</strong> Chrome, Edge, Opera en andere browsers op basis van Chromium, op Windows, macOS, Linux en ChromeOS.',
+  'support.notWorks':
+    '<strong>Werkt niet:</strong> Safari, Firefox, en elke browser op een iPhone, iPad of Android-apparaat.',
+  'support.os':
+    'Windows en macOS hebben geen drivers of andere software nodig. Linux heeft een <strong>eenmalige instelling</strong> nodig, zodat je gebruiker de controller mag openen.',
+  'support.editing':
+    "In elke browser kun je programma's maken, importeren en exporteren, en ze later vanaf een computer met Chrome of Edge versturen.",
+  'support.advTitle': 'Browser en computer',
+  'support.infoOk': '{where} · kan verbinden met de TC420',
+  'support.infoNo': '{where} · kan niet verbinden met de TC420',
+  'support.unknownBrowser': 'Onbekende browser',
+  'support.platform.mac': 'macOS',
+  'support.platform.windows': 'Windows',
+  'support.platform.linux': 'Linux',
+  'support.platform.chromeos': 'ChromeOS',
+  'support.platform.ios': 'iPhone of iPad',
+  'support.platform.android': 'Android',
+  'support.platform.other': 'onbekend systeem',
+  'linux.open': 'Linux instellen',
+  'linux.title': 'Toegang tot de TC420 toestaan op Linux',
+  'linux.text':
+    'Linux laat je alleen USB-apparaten gebruiken die zijn toegestaan. Voer deze opdrachten één keer uit in een terminal. Ze voegen een regel toe voor de TC420 (USB 0888:4000) en vragen om je wachtwoord.',
+  'linux.after': 'Haal daarna de TC420 los, sluit hem opnieuw aan en klik op TC420 verbinden.',
+  'linux.packaged':
+    'Nog steeds geblokkeerd? Chromium uit Snap of Flatpak mag soms helemaal geen USB-apparaten openen. Google Chrome of Chromium uit de eigen pakketten van je distributie werkt wel.',
+  'linux.copy': 'Opdrachten kopiëren',
+  'linux.copied': 'Gekopieerd.',
+  'welcome.title': 'Maak een lichtschema voor je TC420',
+  'welcome.text':
+    "Maak hier programma's en stuur ze via USB naar de controller. Je werk wordt in deze browser bewaard. Na dit eerste bezoek zijn internet en andere software niet meer nodig.",
+  'welcome.templateTitle': 'Beginnen met een sjabloon',
+  'welcome.templateText':
+    'Dag en nacht, zonsopkomst en zonsondergang, winter, zomer, of de voorbeelden die bij PLed zaten.',
+  'welcome.templateButton': 'Sjabloon kiezen',
+  'welcome.importTitle': 'PLed-bestanden openen',
+  'welcome.importText': 'Importeer een of meer .tmf-bestanden uit de oude Windows-software.',
+  'welcome.importButton': '.tmf importeren',
+  'welcome.emptyTitle': 'Leeg beginnen',
+  'welcome.emptyText': 'Een eenvoudig dagprogramma dat je zelf aanpast.',
 };

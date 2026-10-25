@@ -610,3 +610,55 @@ dialog progress {
   margin: 8px 0;
   padding-left: 20px;
 }
+
+#unsupported {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+#unsupported-text {
+  flex: 1;
+  min-width: 240px;
+}
+pre.commands {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  user-select: all;
+}
+#btn-connect.no-usb {
+  background: transparent;
+  color: var(--warn);
+  border-color: var(--warn);
+}
+.welcome {
+  padding: 8px 0;
+}
+.welcome h3 {
+  margin-top: 0;
+  color: inherit;
+  font-size: 16px;
+}
+.choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.choice {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+.choice .note {
+  flex: 1;
+}

@@ -107,11 +107,50 @@ export function mountPrograms({ store, log, i18n, meta }) {
     }
   }
 
+  // First visit (no programs yet): three ways to start.
+  function welcome() {
+    const choice = (title, text, label, id, run, primary = false) => {
+      const btn = el('button', { class: `small${primary ? ' primary' : ''}`, id }, t(label));
+      btn.addEventListener('click', run);
+      const box = el('div', { class: 'choice' });
+      box.append(el('strong', {}, t(title)), el('span', { class: 'note' }, t(text)), btn);
+      return box;
+    };
+    const pickTemplate = () => {
+      const select = $('template-select');
+      select.focus();
+      try {
+        select.showPicker();
+      } catch {
+        // showPicker needs a recent browser and a user gesture; focusing is enough.
+      }
+    };
+    const choices = el('div', { class: 'choices' });
+    choices.append(
+      choice(
+        'welcome.templateTitle',
+        'welcome.templateText',
+        'welcome.templateButton',
+        'welcome-template',
+        pickTemplate,
+        true,
+      ),
+      choice('welcome.importTitle', 'welcome.importText', 'welcome.importButton', 'welcome-import', () =>
+        $('file').click(),
+      ),
+      choice('welcome.emptyTitle', 'welcome.emptyText', 't4.new', 'welcome-empty', () => $('btn-new-mode').click()),
+    );
+    const box = el('div', { class: 'welcome' });
+    box.append(el('h3', {}, t('welcome.title')), el('p', { class: 'note' }, t('welcome.text')), choices);
+    return box;
+  }
+
   function renderList() {
     const box = $('modes');
     box.innerHTML = '';
+    $('list-title').hidden = !store.programs.length;
     if (!store.programs.length) {
-      box.append(el('p', { class: 'note' }, t('t4.none')));
+      box.append(welcome());
       return;
     }
     const multiple = store.settings.multiplePrograms;

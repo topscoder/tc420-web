@@ -25,7 +25,10 @@
         </div>
       </header>
 
-      <div id="unsupported" class="warn-box" data-i18n="banner.unsupported" hidden></div>
+      <div id="unsupported" class="warn-box" role="status" hidden>
+        <span id="unsupported-text"></span>
+        <button class="small" id="btn-support-more" data-i18n="support.more"></button>
+      </div>
       <div id="sim-note" class="sim-box" data-i18n-html="banner.sim" hidden></div>
 
       <p class="lead" data-i18n="main.intro"></p>
@@ -41,7 +44,7 @@
           <select id="template-select" data-i18n-attr="aria-label:templates.title"></select>
           <button id="btn-add-template" data-i18n="templates.add"></button>
         </div>
-        <h3 data-i18n="t4.listTitle"></h3>
+        <h3 id="list-title" data-i18n="t4.listTitle"></h3>
         <div class="modes" id="modes"></div>
         <div id="editor" hidden>
           <h3 id="editor-title"></h3>
@@ -123,6 +126,13 @@
         </div>
         <p class="note" data-i18n-html="log.note"></p>
 
+        <h3 data-i18n="support.advTitle"></h3>
+        <p class="note" id="platform-info"></p>
+        <div class="row">
+          <button id="btn-support-adv" data-i18n="support.more"></button>
+          <button id="btn-linux-adv" data-i18n="linux.open"></button>
+        </div>
+
         <h3 data-i18n="adv.simTitle"></h3>
         <p>
           <label><input type="checkbox" id="setting-sim" /> <span data-i18n="adv.sim"></span></label>
@@ -188,6 +198,34 @@
       <div class="row end">
         <button id="dlg-clear-cancel" data-i18n="common.cancel"></button>
         <button class="danger" id="dlg-clear-ok" data-i18n="device.clearConfirm"></button>
+      </div>
+    </dialog>
+
+    <dialog id="dlg-support" aria-labelledby="dlg-support-title">
+      <h2 id="dlg-support-title" data-i18n="support.title"></h2>
+      <p data-i18n="support.intro"></p>
+      <ul>
+        <li data-i18n-html="support.works"></li>
+        <li data-i18n-html="support.notWorks"></li>
+      </ul>
+      <p data-i18n-html="support.os"></p>
+      <p data-i18n="support.editing"></p>
+      <div class="row end">
+        <button id="dlg-support-linux" data-i18n="linux.open"></button>
+        <button class="primary" id="dlg-support-close" data-i18n="common.close"></button>
+      </div>
+    </dialog>
+
+    <dialog id="dlg-linux" aria-labelledby="dlg-linux-title">
+      <h2 id="dlg-linux-title" data-i18n="linux.title"></h2>
+      <p data-i18n="linux.text"></p>
+      <pre class="commands" id="linux-commands"></pre>
+      <p data-i18n="linux.after"></p>
+      <p class="note" data-i18n="linux.packaged"></p>
+      <div class="row end">
+        <span class="note" id="linux-copied" role="status"></span>
+        <button id="btn-linux-copy" data-i18n="linux.copy"></button>
+        <button class="primary" id="dlg-linux-close" data-i18n="common.close"></button>
       </div>
     </dialog>
 
