@@ -76,8 +76,9 @@ export class DeviceConnection {
   }
 
   // Resolves to { ok, resp?, ms?, error?, noReply? }; never rejects.
+  // opts.timeoutMs overrides the reply timeout for this one command.
   send(cmd, payload = [], opts = {}) {
-    const o = { test: '', expectReply: cmd !== CMD.END_MODE, quiet: false, ...opts };
+    const o = { test: '', expectReply: cmd !== CMD.END_MODE, quiet: false, timeoutMs: this.replyTimeoutMs, ...opts };
     const run = () => this.sendNow(cmd, payload, o);
     const p = this.queue.then(run, run);
     this.queue = p.catch(() => {});
@@ -93,7 +94,7 @@ export class DeviceConnection {
     const frame = buildFrame(cmd, payload);
     const { reportId, data } = frameToReport(frame);
     if (!o.quiet) this.log('tx', `${label} · ${describeFrame(frame)}`, o.test);
-    const reply = this.waitReply(o.expectReply ? this.replyTimeoutMs : this.noReplyWaitMs);
+    const reply = this.waitReply(o.expectReply ? o.timeoutMs : this.noReplyWaitMs);
     const t0 = performance.now();
     try {
       await this.device.sendReport(reportId, data);
@@ -109,7 +110,7 @@ export class DeviceConnection {
     const ms = Math.round(performance.now() - t0);
     if (!r) {
       if (o.expectReply) {
-        this.log('error', `${label}: no reply within ${this.replyTimeoutMs} ms`, o.test);
+        this.log('error', `${label}: no reply within ${o.timeoutMs} ms`, o.test);
         return { ok: false, error: 'timeout' };
       }
       if (!o.quiet) this.log('info', `${label}: no reply (as expected)`, o.test);

@@ -11,7 +11,7 @@ const WINTER = { id: 'w', name: 'WINTER', steps: [step(0, 0, 10), step(7, 0, 10)
 const SUMMER = { id: 's', name: 'SUMMER', steps: [step(0, 0, 10), step(6, 0, 10)] };
 
 async function setup(simOptions = {}) {
-  const sim = new SimDevice({ latencyMs: 1, ...simOptions });
+  const sim = new SimDevice({ latencyMs: 1, eraseMs: 0, ...simOptions });
   const conn = new DeviceConnection({ replyTimeoutMs: 40, noReplyWaitMs: 5 });
   await conn.open(sim);
   const commands = () => sim.sent.map((b) => b[2]);
@@ -67,6 +67,13 @@ test('default send: clock, clear, one program in bank 0, end', async () => {
   assert.equal(header[5], 0, 'bank 0');
   assert.equal(header[6], 3, 'step count');
   assert.deepEqual([...new Set(progress)], ['clock', 'clear', 'write', 'end']);
+});
+
+test('the packet after the clear may take longer than the normal reply timeout', async () => {
+  const { conn, commands } = await setup({ eraseMs: 100 }); // normal timeout in these tests: 40 ms
+  const r = await sendToController(conn, { plan: [{ program: WINTER, bank: 0 }] });
+  assert.equal(r.ok, true);
+  assert.equal(commands().length, 8);
 });
 
 test('without the clock the controller is cleared first', async () => {

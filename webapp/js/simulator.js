@@ -1,16 +1,26 @@
 // A stand-in for a TC420 HIDDevice: answers every command like the real
 // controller did on 22 Oct 2026 (00 00 CMD 00 01 00 …), except 0x01, which
-// gets no reply. Options let tests simulate failures.
+// gets no reply. Like the real one it is slow to answer the packet after a
+// clear (0x03), while it erases. Options let tests simulate failures.
 import { CMD, VENDOR_ID, PRODUCT_ID } from './protocol.js';
 
 export class SimDevice extends EventTarget {
-  constructor({ latencyMs = 10, failOn = null, silentOn = null, unplugAfter = null, openError = null } = {}) {
+  constructor({
+    latencyMs = 10,
+    eraseMs = 1250,
+    failOn = null,
+    silentOn = null,
+    unplugAfter = null,
+    openError = null,
+  } = {}) {
     super();
     this.opened = false;
     this.productName = 'Time Controller (simulator)';
     this.vendorId = VENDOR_ID;
     this.productId = PRODUCT_ID;
     this.latencyMs = latencyMs;
+    this.eraseMs = eraseMs; // extra delay on the reply after a clear
+    this.erasing = false;
     this.failOn = failOn; // command that gets an error echo
     this.silentOn = silentOn; // command that gets no reply
     this.unplugAfter = unplugAfter; // reports accepted before the cable is "pulled"
@@ -43,6 +53,8 @@ export class SimDevice extends EventTarget {
     const bytes = Uint8Array.from(data);
     this.sent.push(bytes);
     const cmd = bytes[2];
+    const delay = this.latencyMs + (this.erasing ? this.eraseMs : 0);
+    this.erasing = cmd === CMD.CLEAR_ALL;
     if (cmd === CMD.END_MODE || cmd === this.silentOn) return;
     let reply = new Uint8Array(64);
     if (cmd === this.failOn) {
@@ -56,7 +68,7 @@ export class SimDevice extends EventTarget {
       ev.reportId = 0;
       ev.data = new DataView(reply.buffer);
       this.dispatchEvent(ev);
-    }, this.latencyMs);
+    }, delay);
   }
 }
 

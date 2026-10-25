@@ -9,6 +9,10 @@
 // and finish with 0x02.
 import { CMD, MAX_BANKS, MAX_STEPS, clockPayload, modeInitPayload, stepPayload } from './protocol.js';
 
+// The controller confirms 0x03 at once but then erases its memory: on real
+// hardware the reply to the next packet took 1.25 s (normally 10–60 ms).
+export const AFTER_CLEAR_TIMEOUT_MS = 10000;
+
 // What went wrong, for the user: 'disconnected' | 'noReply' | 'rejected' | 'invalid'.
 export function errorKind(result) {
   if (!result || result.ok) return null;
@@ -52,11 +56,14 @@ export async function sendToController(conn, { plan, setClock = true, now = () =
   const cleared = await conn.send(CMD.CLEAR_ALL, [], opts);
   if (!cleared.ok) return fail('clear', cleared, true); // the controller may have cleared before failing to reply
 
+  let first = true;
   for (const { program, bank } of plan) {
     const name = program.name;
     const steps = program.steps.length;
     onProgress({ phase: 'write', done, total, name, step: 0, steps });
-    const head = await conn.send(CMD.MODE_INIT, modeInitPayload(bank, steps, name), opts);
+    const headOpts = first ? { ...opts, timeoutMs: AFTER_CLEAR_TIMEOUT_MS } : opts;
+    first = false;
+    const head = await conn.send(CMD.MODE_INIT, modeInitPayload(bank, steps, name), headOpts);
     if (!head.ok) return fail('write', head, true, { name, step: 0 });
     for (let k = 0; k < steps; k++) {
       const r = await conn.send(CMD.STEP, stepPayload(program.steps[k]), opts);
