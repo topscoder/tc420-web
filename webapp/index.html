@@ -14,7 +14,14 @@
           <span class="status"><span class="dot" id="dot"></span><span id="status-text"></span></span>
           <span class="badge sim" id="sim-badge" data-i18n="header.sim" hidden></span>
           <select id="lang" data-i18n-attr="aria-label:header.language"></select>
-          <button class="primary" id="btn-connect"></button>
+          <div class="device-wrap">
+            <button class="primary" id="btn-connect" aria-haspopup="menu" aria-expanded="false"></button>
+            <div id="device-menu" class="menu" role="menu" hidden>
+              <button role="menuitem" id="menu-clock"></button>
+              <button role="menuitem" id="menu-clear" class="danger-text" data-i18n="device.menuClear"></button>
+              <button role="menuitem" id="menu-disconnect" data-i18n="device.menuDisconnect"></button>
+            </div>
+          </div>
           <button id="btn-export-json" data-i18n="header.exportJson"></button>
           <button id="btn-export-txt" data-i18n="header.exportTxt"></button>
         </div>
@@ -147,12 +154,9 @@
           <h2 data-i18n="t5.title"></h2>
           <span class="badge danger" data-i18n="badge.overwrites"></span>
         </div>
-        <p data-i18n="t5.text"></p>
+        <p id="t5-text"></p>
         <div class="row">
-          <label
-            ><span data-i18n="t5.startBank"></span> <input type="number" id="start-bank" value="0" min="0" max="49"
-          /></label>
-          <button class="danger needs-device" id="btn-download" data-i18n="t5.send"></button>
+          <button class="danger" id="btn-download"></button>
           <span class="progress" id="dl-progress"></span>
           <button id="btn-backup-after" data-i18n="t5.exportBackup" hidden></button>
         </div>
@@ -213,6 +217,35 @@
         <p class="note" data-i18n-html="log.note"></p>
       </section>
     </main>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+      <span id="toast-text"></span>
+      <div class="row" id="toast-actions"></div>
+    </div>
+
+    <dialog id="dlg-connect" aria-labelledby="dlg-connect-title">
+      <h2 id="dlg-connect-title" data-i18n="device.helpTitle"></h2>
+      <p data-i18n-html="device.helpText"></p>
+      <div class="row end">
+        <button id="dlg-connect-cancel" data-i18n="common.cancel"></button>
+        <button class="primary" id="dlg-connect-ok" data-i18n="device.helpContinue"></button>
+      </div>
+    </dialog>
+
+    <dialog id="dlg-clear" aria-labelledby="dlg-clear-title">
+      <h2 id="dlg-clear-title" data-i18n="device.clearTitle"></h2>
+      <p data-i18n="device.clearText"></p>
+      <div class="row end">
+        <button id="dlg-clear-cancel" data-i18n="common.cancel"></button>
+        <button class="danger" id="dlg-clear-ok" data-i18n="device.clearConfirm"></button>
+      </div>
+    </dialog>
+
+    <dialog id="dlg-send" aria-labelledby="dlg-send-title">
+      <h2 id="dlg-send-title"></h2>
+      <div id="dlg-send-body"></div>
+      <div class="row end" id="dlg-send-actions"></div>
+    </dialog>
+
     <script type="module" src="js/main.js"></script>
   </body>
 </html>

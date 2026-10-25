@@ -1,3 +1,6 @@
+[hidden] {
+  display: none !important;
+}
 :root {
   --bg: #f6f5f1;
   --card: #ffffff;
@@ -502,4 +505,97 @@ details summary {
   width: 36px;
   height: 28px;
   padding: 0 2px;
+}
+.device-wrap {
+  position: relative;
+}
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 10;
+  min-width: 230px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  padding: 6px 0;
+  display: flex;
+  flex-direction: column;
+}
+.menu button {
+  border: 0;
+  border-radius: 0;
+  text-align: left;
+  background: transparent;
+  padding: 8px 14px;
+}
+.menu button:hover,
+.menu button:focus {
+  background: var(--code-bg);
+  outline: none;
+}
+.danger-text {
+  color: var(--bad);
+}
+#btn-connect.connected {
+  background: var(--card);
+  color: var(--ok);
+  border-color: var(--ok);
+}
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 20;
+  max-width: 380px;
+  background: var(--ink);
+  color: var(--card);
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast.bad {
+  background: var(--bad);
+  color: #fff;
+}
+.toast button {
+  background: transparent;
+  color: inherit;
+  border-color: currentColor;
+}
+.toast button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+dialog {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 480px;
+  width: calc(100% - 32px);
+  background: var(--card);
+  color: var(--ink);
+}
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+dialog h2 {
+  margin-top: 0;
+}
+.row.end {
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+dialog progress {
+  width: 100%;
+  height: 10px;
+}
+.send-summary {
+  margin: 8px 0;
+  padding-left: 20px;
 }

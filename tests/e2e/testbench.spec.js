@@ -20,6 +20,7 @@ test.beforeEach(async ({ page }) => {
 async function connect(page) {
   await page.click('#btn-connect');
   await expect(page.locator('#status-text')).toContainText('Connected');
+  await page.locator('#toast').getByRole('button', { name: 'Not now' }).click();
 }
 
 test('loads in simulator mode and starts a log session', async ({ page }) => {
@@ -47,9 +48,11 @@ test('imports a .tmf file, edits it and sends it to the controller', async ({ pa
   await page.click('#btn-add-step');
   await expect(page.locator('#modes .mode-item')).toContainText('22 steps');
 
-  page.once('dialog', (d) => d.accept());
   await page.click('#btn-download');
-  await expect(page.locator('#dl-progress')).toHaveText('Sent successfully');
+  await page.click('#send-go');
+  await expect(page.locator('#dlg-send-title')).toHaveText('✓ AFRIKA is running on the controller');
+  await page.locator('#dlg-send').getByRole('button', { name: 'Done' }).click();
+  await expect(page.locator('#dl-progress')).toHaveText('Sent: 1 program is on the controller');
   await expect(page.locator('#last-T5')).toHaveText('Last result: 1 schedule sent');
   await expect(page.locator('#log .k-tx', { hasText: '0x13 step' })).toHaveCount(22);
   await expect(page.locator('#log .k-ack', { hasText: '0x13 step' })).toHaveCount(22);
@@ -77,8 +80,9 @@ test('reports a file that is not a schedule', async ({ page }) => {
 test('a cancelled send sends nothing', async ({ page }) => {
   await connect(page);
   await page.click('#btn-test-mode');
-  page.once('dialog', (d) => d.dismiss());
   await page.click('#btn-download');
+  await page.locator('#dlg-send').getByRole('button', { name: 'Cancel' }).click();
+  await expect(page.locator('#dlg-send')).not.toBeVisible();
   await expect(lastLog(page)).toContainText('sending cancelled');
   await expect(page.locator('#log .k-tx')).toHaveCount(0);
 });
@@ -162,7 +166,7 @@ test.describe('languages', () => {
 
     await page.selectOption('#lang', 'nl');
     await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
-    await expect(page.locator('#btn-connect')).toHaveText('Verbreken');
+    await expect(page.locator('#btn-connect')).toHaveText('● TC420 verbonden ▾');
     await expect(page.locator('[data-test="T2"] h2')).toHaveText('Klok zetten');
     await expect(page.locator('#last-T2')).toHaveText('Laatste resultaat: klok gezet, bevestigd');
     await expect(page.locator('#modes .mode-item')).toContainText('22 stappen');
@@ -177,7 +181,7 @@ test.describe('languages', () => {
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('lang', 'de');
     await expect(page.locator('#lang')).toHaveValue('de');
-    await expect(page.locator('#btn-connect')).toHaveText('Verbinden');
+    await expect(page.locator('#btn-connect')).toHaveText('TC420 verbinden');
   });
 
   test('the log itself stays in English in every language', async ({ page }) => {
@@ -191,9 +195,9 @@ test.describe('languages', () => {
 });
 
 for (const [locale, expected] of [
-  ['de-DE', { lang: 'de', title: 'Uhr stellen', connect: 'Verbinden' }],
-  ['nl-NL', { lang: 'nl', title: 'Klok zetten', connect: 'Verbinden' }],
-  ['fr-FR', { lang: 'en', title: 'Set clock', connect: 'Connect' }],
+  ['de-DE', { lang: 'de', title: 'Uhr stellen', connect: 'TC420 verbinden' }],
+  ['nl-NL', { lang: 'nl', title: 'Klok zetten', connect: 'TC420 verbinden' }],
+  ['fr-FR', { lang: 'en', title: 'Set clock', connect: 'Connect TC420' }],
 ]) {
   test.describe(`browser locale ${locale}`, () => {
     test.use({ locale });

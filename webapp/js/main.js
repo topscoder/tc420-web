@@ -1,21 +1,7 @@
-// TC420 Web entry point: wires language, device connection, logbook and test bench UI.
+// TC420 Web entry point: wires language, program library, device connection, sending, logbook and test bench UI.
 // UI texts come from js/locales/*; the log stays in English so it can be shared in bug reports.
-import {
-  CMD,
-  VENDOR_ID,
-  PRODUCT_ID,
-  MAX_BANKS,
-  MAX_STEPS,
-  clockPayload,
-  modeInitPayload,
-  stepPayload,
-  parseHexBytes,
-  describeFrame,
-  buildFrame,
-} from './protocol.js';
-import { checkSteps, describeWarning } from './schedule.js';
-import { DeviceConnection, describeCollections } from './device.js';
-import { SimDevice } from './simulator.js';
+import { CMD, clockPayload, parseHexBytes, describeFrame, buildFrame } from './protocol.js';
+import { DeviceConnection } from './device.js';
 import { Logbook } from './logbook.js';
 import { I18n, LANGUAGES, LANG_KEY, detectLanguage, applyTranslations } from './i18n.js';
 import { $, el, download, stamp, setLast, bindI18n, refreshResults } from './ui/dom.js';
@@ -24,9 +10,11 @@ import { mountLiveControl } from './ui/live-control.js';
 import { mountPrograms } from './ui/programs.js';
 import { ProgramStore } from './programs.js';
 import { createBackend } from './storage.js';
+import { mountDevice } from './ui/device.js';
+import { mountSend } from './ui/send.js';
 
 const APP = 'TC420 Web';
-const APP_VERSION = '0.7.0';
+const APP_VERSION = '0.8.0';
 const SIM = new URLSearchParams(location.search).has('sim');
 
 // localStorage can throw (private mode, blocked site data); then nothing is remembered.
@@ -152,49 +140,23 @@ function updateButtons() {
   document.querySelectorAll('.needs-play').forEach((b) => {
     b.disabled = !live.playing;
   });
-  $('dot').classList.toggle('on', on);
-  $('status-text').textContent = on
-    ? t('header.status.connected', { name: conn.device.productName || 'TC420' })
-    : t('header.status.disconnected');
-  $('btn-connect').textContent = t(on ? 'header.disconnect' : 'header.connect');
+  device.render();
+  send.render();
 }
 
-async function openDevice(dev, how) {
-  await conn.open(dev);
-  updateButtons();
-  log(
-    'info',
-    `${how}: ${dev.productName || '(no name)'} · VID 0x${dev.vendorId.toString(16).padStart(4, '0')} PID 0x${dev.productId.toString(16).padStart(4, '0')} · ${describeCollections(dev)}`,
-    'T1',
-  );
-  setLast('T1', true, 't1.connected', { name: dev.productName || 'TC420' });
-}
-
-async function connect() {
-  if (conn.connected) {
-    if (live.playing) await live.stop();
-    await conn.close();
-    updateButtons();
-    log('info', 'connection closed', 'T1');
-    return;
-  }
-  if (SIM) {
-    await openDevice(new SimDevice(), 'simulator opened');
-    return;
-  }
-  try {
-    const list = await navigator.hid.requestDevice({ filters: [{ vendorId: VENDOR_ID, productId: PRODUCT_ID }] });
-    if (!list.length) {
-      log('info', 'no device selected', 'T1');
-      return;
-    }
-    await openDevice(list[0], 'device opened');
-  } catch (e) {
-    log('error', `connecting failed: ${e.message}`, 'T1');
-    setLast('T1', false, 't1.failed', { error: e.message });
-  }
-}
-$('btn-connect').addEventListener('click', connect);
+const device = mountDevice({
+  conn,
+  store,
+  log,
+  i18n,
+  sim: SIM,
+  storage,
+  live,
+  onChange: () => updateButtons(),
+  onControllerChange: () => programs.refresh(),
+});
+const send = mountSend({ conn, store, device, programs, live, log, i18n, onChange: () => updateButtons() });
+store.onChange(() => send.render());
 
 // ---------- T2 clock ----------
 
@@ -212,97 +174,6 @@ $('btn-sync-preview').addEventListener('click', () => {
   log('info', `preview (not sent): ${describeFrame(frame)}`, 'T2');
 });
 
-// ---------- T5 send ----------
-
-let progress = null; // { key, params } of the T5 status line
-function setProgress(key, params = {}) {
-  progress = { key, params };
-  $('dl-progress').textContent = t(key, params);
-}
-
-$('btn-download').addEventListener('click', async () => {
-  const modes = store.programs.slice();
-  if (!modes.length) {
-    log('error', 'no programs to send; import or create one in T4 first', 'T5');
-    return;
-  }
-  if (live.playing) await live.stop();
-  $('btn-backup-after').hidden = true;
-  const startBank = Number($('start-bank').value) || 0;
-  if (startBank + modes.length > MAX_BANKS) {
-    log('error', `banks ${startBank}–${startBank + modes.length - 1} are outside 0–${MAX_BANKS - 1}`, 'T5');
-    return;
-  }
-  const bad = modes.filter((m) => m.steps.length < 2 || m.steps.length > MAX_STEPS);
-  if (bad.length) {
-    log('error', `invalid number of steps in: ${bad.map((m) => m.name).join(', ')}`, 'T5');
-    return;
-  }
-  const lines = modes.map((m, i) => {
-    const w = checkSteps(m.steps);
-    const steps = t('t4.steps', { count: m.steps.length });
-    const warn = w.length ? t('t5.summaryWarnings', { warnings: w.map(programs.warningText).join('; ') }) : '';
-    return t('t5.summaryLine', { bank: startBank + i, name: m.name, steps }) + warn;
-  });
-  if (!confirm(t('t5.confirm', { summary: lines.join('\n') }))) {
-    log('info', 'sending cancelled', 'T5');
-    return;
-  }
-  const logSummary = modes
-    .map((m, i) => {
-      const w = checkSteps(m.steps);
-      return `bank ${startBank + i}: ${m.name} (${m.steps.length} steps)${w.length ? ` – ${w.map(describeWarning).join('; ')}` : ''}`;
-    })
-    .join('; ');
-  log('info', `sending started · ${modes.length} program(s) · ${logSummary}`, 'T5');
-  let ok = true;
-  let sentSteps = 0;
-  const total = modes.reduce((s, m) => s + m.steps.length, 0);
-  outer: for (let i = 0; i < modes.length; i++) {
-    const m = modes[i];
-    const bank = startBank + i;
-    setProgress('t5.progressMode', { bank, name: m.name });
-    const r1 = await conn.send(CMD.MODE_INIT, modeInitPayload(bank, m.steps.length, m.name), { test: 'T5' });
-    if (!r1.ok) {
-      ok = false;
-      break;
-    }
-    for (let k = 0; k < m.steps.length; k++) {
-      const r = await conn.send(CMD.STEP, stepPayload(m.steps[k]), { test: 'T5' });
-      if (!r.ok) {
-        ok = false;
-        break outer;
-      }
-      sentSteps++;
-      setProgress('t5.progressStep', {
-        bank,
-        name: m.name,
-        step: k + 1,
-        steps: m.steps.length,
-        done: sentSteps,
-        total,
-      });
-    }
-    await conn.send(CMD.END_MODE, [], { test: 'T5' });
-  }
-  const end = await conn.send(CMD.END, [], { test: 'T5' });
-  ok = ok && end.ok;
-  setProgress(ok ? 't5.success' : 't5.failed');
-  log(
-    ok ? 'info' : 'error',
-    ok
-      ? `sending succeeded: ${modes.length} program(s), ${sentSteps} steps`
-      : `sending failed after ${sentSteps} of ${total} steps`,
-    'T5',
-  );
-  setLast('T5', ok, ok ? 't5.resultOk' : 't5.resultFailed', { count: modes.length });
-  $('btn-backup-after').hidden = !ok;
-  if (ok) {
-    store.markSent(modes.map((m, i) => ({ id: m.id, bank: startBank + i })));
-    programs.refresh();
-  }
-});
-
 // ---------- T6 clear ----------
 
 const showClearText = () => {
@@ -318,6 +189,10 @@ $('btn-clear').addEventListener('click', async () => {
   }
   if (live.playing) await live.stop();
   const r = await conn.send(CMD.CLEAR_ALL, [], { test: 'T6' });
+  if (r.ok) {
+    store.markSent([]);
+    programs.refresh();
+  }
   setLast('T6', r.ok, r.ok ? 't6.ok' : 't6.failed');
 });
 
@@ -354,7 +229,6 @@ function applyLanguage() {
   programs.refresh();
   live.refresh();
   logView.render();
-  if (progress) $('dl-progress').textContent = t(progress.key, progress.params);
 }
 
 i18n.onChange((lang) => {
@@ -373,21 +247,4 @@ if (SIM) {
   $('unsupported').hidden = false;
   $('btn-connect').disabled = true;
   log('error', 'this browser does not support WebHID');
-} else {
-  navigator.hid.addEventListener('disconnect', (e) => {
-    if (conn.device && e.device === conn.device) {
-      live.abort();
-      conn.forget();
-      updateButtons();
-      log('error', 'TC420 unplugged', 'T1');
-    }
-  });
-  navigator.hid.getDevices().then((devs) => {
-    const dev = devs.find((d) => d.vendorId === VENDOR_ID && d.productId === PRODUCT_ID);
-    if (dev) {
-      openDevice(dev, 'reconnected automatically').catch((e) =>
-        log('error', `reconnecting automatically failed: ${e.message}`, 'T1'),
-      );
-    }
-  });
 }

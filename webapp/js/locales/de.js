@@ -6,8 +6,6 @@ export default {
   'header.status.disconnected': 'Nicht verbunden',
   'header.status.connected': 'Verbunden: {name}',
   'header.sim': 'SIMULATION',
-  'header.connect': 'Verbinden',
-  'header.disconnect': 'Trennen',
   'header.exportJson': 'Protokoll speichern (.json)',
   'header.exportTxt': 'Protokoll speichern (.txt)',
 
@@ -34,6 +32,95 @@ export default {
   'badge.clears': 'löscht den Controller',
   'badge.onRequest': 'nur auf Anweisung',
 
+  'common.cancel': 'Abbrechen',
+  'common.close': 'Schließen',
+  'common.done': 'Fertig',
+  'device.chipConnect': 'TC420 verbinden',
+  'device.chipConnected': '● TC420 verbunden ▾',
+  'device.menuClock': 'Uhr stellen ({time})',
+  'device.menuClear': 'Controller löschen…',
+  'device.menuDisconnect': 'Trennen',
+  'device.helpTitle': 'Ihren TC420 verbinden',
+  'device.helpText':
+    'Ihr Browser fragt jetzt, welches Gerät verwendet werden soll. Wählen Sie <strong>Time Controller</strong> und klicken Sie auf <em>Verbinden</em>. Das ist nur einmal nötig; danach verbindet sich TC420 Web von selbst.',
+  'device.helpContinue': 'Weiter',
+  'device.error.noDevice': 'Kein Controller ausgewählt.',
+  'device.error.denied':
+    'Ihr Computer blockiert den Zugriff auf den Controller. Unter Linux ist eine einmalige Einrichtung nötig (eine udev-Regel für das USB-Gerät 0888:4000).',
+  'device.error.busy':
+    'Der Controller wird von einem anderen Tab oder Programm verwendet. Schließen Sie es und versuchen Sie es erneut.',
+  'device.error.unknown':
+    'Die Verbindung zum Controller ist fehlgeschlagen. Ziehen Sie das Kabel ab, stecken Sie es wieder ein und versuchen Sie es erneut.',
+  'device.unplugged': 'Der TC420 wurde getrennt.',
+  'device.clockOffer':
+    'Die Uhr des Controllers geht möglicherweise falsch. Auf die Uhrzeit dieses Computers ({time}) stellen?',
+  'device.setClock': 'Uhr stellen',
+  'device.notNow': 'Nicht jetzt',
+  'device.clockSet': 'Uhr auf {time} gestellt.',
+  'device.clockFailed': 'Uhr stellen fehlgeschlagen: Der Controller hat nicht bestätigt.',
+  'device.clearTitle': 'Alle Programme vom Controller entfernen?',
+  'device.clearText':
+    'Der Controller hat danach keine Programme mehr. Ihre Programme in diesem Browser bleiben erhalten.',
+  'device.clearConfirm': 'Alle Programme entfernen',
+  'device.cleared': 'Alle Programme wurden vom Controller entfernt.',
+  'device.clearFailed': 'Löschen fehlgeschlagen: Der Controller hat nicht bestätigt.',
+  'send.button': '{name} an TC420 senden',
+  'send.buttonMany': { one: '{count} Programm an TC420 senden', other: '{count} Programme an TC420 senden' },
+  'send.buttonNone': 'An TC420 senden',
+  'send.intro':
+    'Sendet das ausgewählte Programm an den Controller. Der Controller wird vorher gelöscht, sodass er danach nur dieses Programm abspielt; am Gerät muss nichts ausgewählt werden.',
+  'send.introMany':
+    'Sendet alle Programme in der Reihenfolge der Liste an den Controller (Programm 1, 2, …). Der Controller wird vorher gelöscht.',
+  'send.invalidTitle': '{name} kann noch nicht gesendet werden',
+  'send.invalidHint': 'Korrigieren Sie das im Editor und versuchen Sie es erneut.',
+  'send.confirmTitle': '{name} an den TC420 senden?',
+  'send.confirmTitleMany': {
+    one: '{count} Programm an den TC420 senden?',
+    other: '{count} Programme an den TC420 senden?',
+  },
+  'send.willRun': 'Der Controller spielt danach {name} ({steps}) ab. Alles andere auf dem Controller wird entfernt.',
+  'send.slotLine': 'Programm {n} ← {name} ({steps})',
+  'send.replaceAll': 'Alles andere auf dem Controller wird entfernt.',
+  'send.noReadBack':
+    'Der Controller kann nicht ausgelesen werden. Ihre Programme bleiben in diesem Browser gespeichert; erstellen Sie sicherheitshalber eine Sicherung.',
+  'send.alsoClock': 'Auch die Uhr auf {time} stellen',
+  'send.send': 'Senden',
+  'send.progressTitle': 'Senden an TC420…',
+  'send.keepConnected': 'Lassen Sie das Kabel angeschlossen.',
+  'send.phase.clock': 'Uhr wird gestellt…',
+  'send.phase.clear': 'Controller wird gelöscht…',
+  'send.phase.write': '{name} · Schritt {step} von {steps}',
+  'send.phase.end': 'Wird abgeschlossen…',
+  'send.statusOk': {
+    one: 'Gesendet: {count} Programm ist auf dem Controller',
+    other: 'Gesendet: {count} Programme sind auf dem Controller',
+  },
+  'send.statusFailed': 'Senden fehlgeschlagen (siehe Protokoll)',
+  'send.doneTitle': '✓ {name} läuft auf dem Controller',
+  'send.doneTitleMany': {
+    one: '✓ {count} Programm ist auf dem Controller',
+    other: '✓ {count} Programme sind auf dem Controller',
+  },
+  'send.clockWasSet': 'Die Uhr wurde auf {time} gestellt.',
+  'send.nothingElse': 'Sonst ist nichts auf dem Controller.',
+  'send.onlyThese': 'Nur diese Programme sind auf dem Controller.',
+  'send.exportBackup': 'Sicherung erstellen',
+  'send.error.disconnected': 'Die Verbindung wurde beim Senden unterbrochen. Prüfen Sie, ob das Kabel eingesteckt ist.',
+  'send.error.noReply':
+    'Der Controller hat nicht geantwortet. Prüfen Sie das Kabel und ob kein anderes Programm oder Tab den Controller verwendet.',
+  'send.error.rejected': 'Der Controller hat die Daten nicht angenommen.',
+  'send.error.invalid': 'Das Programm ist ungültig.',
+  'send.errorTitle.disconnected': 'Senden wurde unterbrochen',
+  'send.errorTitle.noReply': 'Der Controller hat nicht geantwortet',
+  'send.errorTitle.rejected': 'Der Controller hat die Daten abgelehnt',
+  'send.errorTitle.invalid': 'Dieses Programm kann nicht gesendet werden',
+  'send.maybeEmpty':
+    'Der Controller ist jetzt möglicherweise leer oder enthält ein unvollständiges Programm. Senden Sie erneut, um das zu beheben.',
+  'send.unchanged': 'Auf dem Controller wurde nichts geändert.',
+  'send.reconnectRetry': 'Neu verbinden und wiederholen',
+  'send.tryAgain': 'Erneut versuchen',
+  'send.showLog': 'Protokoll anzeigen',
+
   'last.result': 'Letztes Ergebnis: {text}',
 
   'obs.label': 'Ihre Beobachtung:',
@@ -46,7 +133,6 @@ export default {
   't1.text':
     'Klicken Sie oben auf <em>Verbinden</em> und wählen Sie <em>Time Controller</em>. Die Seite protokolliert die USB-Daten des Geräts.',
   't1.connected': 'verbunden mit {name}',
-  't1.failed': 'Verbindung fehlgeschlagen: {error}',
 
   't2.title': 'Uhr stellen',
   't2.pcTime': 'Uhrzeit dieses Computers:',
@@ -181,23 +267,12 @@ export default {
   'schedule.error.channels': 'unerwartete Anzahl Kanäle: {count}',
 
   't5.title': 'An den Controller senden',
-  't5.text':
-    'Sendet alle Zeitpläne aus T4 an den Controller. Jeder Zeitplan erhält einen eigenen Programmplatz (Bank), beginnend bei der Startbank. Ein Zeitplan überschreibt nur das Programm auf seiner eigenen Bank. Lassen Sie keine Lücken: Leere Banken erscheinen als leere Programme im Display.',
-  't5.startBank': 'Startbank',
-  't5.send': 'Senden',
   't5.note':
     'Prüfen Sie danach im Display: Stehen die Namen dort? Passt das Licht zur aktuellen Uhrzeit zum Diagramm in T4?',
   't5.exportBackup': 'Jetzt Sicherung erstellen',
   't5.multiple': 'Mehrere Programme auf dem Controller',
   't5.multipleHint':
     'Nur wenn Sie mit den Tasten Ihres TC420 ein Programm auswählen können. Die Liste zeigt dann Programmnummern in der Reihenfolge des Controllers und kann umsortiert werden.',
-  't5.confirm': 'Diese Programme auf dem Controller überschreiben?\n\n{summary}',
-  't5.summaryLine': 'Bank {bank}: {name} ({steps})',
-  't5.summaryWarnings': ' – Achtung: {warnings}',
-  't5.progressMode': 'Bank {bank}: {name} …',
-  't5.progressStep': 'Bank {bank}: {name} · Schritt {step}/{steps} · gesamt {done}/{total}',
-  't5.success': 'Erfolgreich gesendet',
-  't5.failed': 'Senden fehlgeschlagen (siehe Protokoll)',
   't5.resultOk': { one: '{count} Zeitplan gesendet', other: '{count} Zeitpläne gesendet' },
   't5.resultFailed': 'fehlgeschlagen',
 

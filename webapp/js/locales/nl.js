@@ -6,8 +6,6 @@ export default {
   'header.status.disconnected': 'Niet verbonden',
   'header.status.connected': 'Verbonden: {name}',
   'header.sim': 'SIMULATIE',
-  'header.connect': 'Verbinden',
-  'header.disconnect': 'Verbreken',
   'header.exportJson': 'Log opslaan (.json)',
   'header.exportTxt': 'Log opslaan (.txt)',
 
@@ -34,6 +32,95 @@ export default {
   'badge.clears': 'wist de controller',
   'badge.onRequest': 'alleen op aanwijzing',
 
+  'common.cancel': 'Annuleren',
+  'common.close': 'Sluiten',
+  'common.done': 'Klaar',
+  'device.chipConnect': 'TC420 verbinden',
+  'device.chipConnected': '● TC420 verbonden ▾',
+  'device.menuClock': 'Klok gelijkzetten ({time})',
+  'device.menuClear': 'Controller wissen…',
+  'device.menuDisconnect': 'Verbinding verbreken',
+  'device.helpTitle': 'Je TC420 verbinden',
+  'device.helpText':
+    'Je browser vraagt nu welk apparaat je wilt gebruiken. Kies <strong>Time Controller</strong> en klik op <em>Verbinden</em>. Dit hoeft maar één keer; daarna maakt TC420 Web zelf verbinding.',
+  'device.helpContinue': 'Doorgaan',
+  'device.error.noDevice': 'Geen controller gekozen.',
+  'device.error.denied':
+    'Je computer blokkeert de toegang tot de controller. Onder Linux is eenmalig een instelling nodig (een udev-regel voor USB-apparaat 0888:4000).',
+  'device.error.busy':
+    'De controller wordt gebruikt door een ander tabblad of programma. Sluit dat en probeer het opnieuw.',
+  'device.error.unknown':
+    'Verbinden met de controller is mislukt. Haal de kabel eruit, steek hem er weer in en probeer het opnieuw.',
+  'device.unplugged': 'De TC420 is losgekoppeld.',
+  'device.clockOffer':
+    'De klok van de controller kan verkeerd staan. Gelijkzetten met de tijd van deze computer ({time})?',
+  'device.setClock': 'Klok gelijkzetten',
+  'device.notNow': 'Niet nu',
+  'device.clockSet': 'Klok gezet op {time}.',
+  'device.clockFailed': 'Klok gelijkzetten is mislukt: de controller bevestigde niet.',
+  'device.clearTitle': "Alle programma's van de controller verwijderen?",
+  'device.clearText':
+    "De controller heeft daarna geen programma's meer. Je programma's in deze browser blijven bewaard.",
+  'device.clearConfirm': "Alle programma's verwijderen",
+  'device.cleared': "Alle programma's zijn van de controller verwijderd.",
+  'device.clearFailed': 'Wissen is mislukt: de controller bevestigde niet.',
+  'send.button': '{name} naar TC420 sturen',
+  'send.buttonMany': { one: '{count} programma naar TC420 sturen', other: "{count} programma's naar TC420 sturen" },
+  'send.buttonNone': 'Naar TC420 sturen',
+  'send.intro':
+    'Stuurt het gekozen programma naar de controller. De controller wordt eerst gewist, zodat hij daarna alleen dit programma afspeelt; op het apparaat hoef je niets te kiezen.',
+  'send.introMany':
+    "Stuurt alle programma's in de volgorde van de lijst naar de controller (programma 1, 2, …). De controller wordt eerst gewist.",
+  'send.invalidTitle': '{name} kan nog niet worden verstuurd',
+  'send.invalidHint': 'Pas dit aan in de editor en probeer het opnieuw.',
+  'send.confirmTitle': '{name} naar de TC420 sturen?',
+  'send.confirmTitleMany': {
+    one: '{count} programma naar de TC420 sturen?',
+    other: "{count} programma's naar de TC420 sturen?",
+  },
+  'send.willRun': 'De controller gaat {name} ({steps}) afspelen. Al het andere op de controller wordt verwijderd.',
+  'send.slotLine': 'Programma {n} ← {name} ({steps})',
+  'send.replaceAll': 'Al het andere op de controller wordt verwijderd.',
+  'send.noReadBack':
+    "De controller kan niet worden uitgelezen. Je programma's blijven bewaard in deze browser; maak voor de zekerheid een back-up.",
+  'send.alsoClock': 'Ook de klok gelijkzetten op {time}',
+  'send.send': 'Versturen',
+  'send.progressTitle': 'Versturen naar TC420…',
+  'send.keepConnected': 'Laat de kabel aangesloten.',
+  'send.phase.clock': 'Klok gelijkzetten…',
+  'send.phase.clear': 'Controller wissen…',
+  'send.phase.write': '{name} · stap {step} van {steps}',
+  'send.phase.end': 'Afronden…',
+  'send.statusOk': {
+    one: 'Verstuurd: {count} programma staat op de controller',
+    other: "Verstuurd: {count} programma's staan op de controller",
+  },
+  'send.statusFailed': 'Versturen mislukt (zie het logboek)',
+  'send.doneTitle': '✓ {name} draait op de controller',
+  'send.doneTitleMany': {
+    one: '✓ {count} programma staat op de controller',
+    other: "✓ {count} programma's staan op de controller",
+  },
+  'send.clockWasSet': 'De klok is gezet op {time}.',
+  'send.nothingElse': 'Er staat verder niets op de controller.',
+  'send.onlyThese': "Alleen deze programma's staan op de controller.",
+  'send.exportBackup': 'Back-up maken',
+  'send.error.disconnected': 'De verbinding viel weg tijdens het versturen. Controleer of de kabel aangesloten is.',
+  'send.error.noReply':
+    'De controller reageerde niet. Controleer de kabel en of geen ander programma of tabblad de controller gebruikt.',
+  'send.error.rejected': 'De controller heeft de gegevens niet geaccepteerd.',
+  'send.error.invalid': 'Het programma is niet geldig.',
+  'send.errorTitle.disconnected': 'Versturen is onderbroken',
+  'send.errorTitle.noReply': 'De controller reageerde niet',
+  'send.errorTitle.rejected': 'De controller weigerde de gegevens',
+  'send.errorTitle.invalid': 'Dit programma kan niet worden verstuurd',
+  'send.maybeEmpty':
+    'De controller is nu mogelijk leeg of bevat een onvolledig programma. Verstuur opnieuw om dit op te lossen.',
+  'send.unchanged': 'Er is niets veranderd op de controller.',
+  'send.reconnectRetry': 'Opnieuw verbinden en proberen',
+  'send.tryAgain': 'Opnieuw proberen',
+  'send.showLog': 'Logboek tonen',
+
   'last.result': 'Laatste resultaat: {text}',
 
   'obs.label': 'Jouw waarneming:',
@@ -46,7 +133,6 @@ export default {
   't1.text':
     'Klik bovenaan op <em>Verbinden</em> en kies <em>Time Controller</em>. De pagina logt de USB-gegevens van het apparaat.',
   't1.connected': 'verbonden met {name}',
-  't1.failed': 'verbinden mislukt: {error}',
 
   't2.title': 'Klok zetten',
   't2.pcTime': 'Tijd van deze computer:',
@@ -178,23 +264,12 @@ export default {
   'schedule.error.channels': 'onverwacht aantal kanalen: {count}',
 
   't5.title': 'Versturen naar de controller',
-  't5.text':
-    "Stuurt alle schema's uit T4 naar de controller. Elk schema krijgt een eigen programmaplaats (bank), te beginnen bij de startbank. Een schema overschrijft alleen het programma op zijn eigen bank. Laat geen gaten: lege banken verschijnen als lege programma's op het display.",
-  't5.startBank': 'Startbank',
-  't5.send': 'Versturen',
   't5.note':
     'Controleer daarna op het display: staan de namen er? Klopt het licht op het huidige tijdstip met de grafiek in T4?',
   't5.exportBackup': 'Nu een back-up maken',
   't5.multiple': "Meerdere programma's op de controller",
   't5.multipleHint':
     'Alleen als je met de knoppen van je TC420 een programma kunt kiezen. De lijst toont dan programmanummers in de volgorde van de controller en kan worden herschikt.',
-  't5.confirm': "Deze programma's op de controller overschrijven?\n\n{summary}",
-  't5.summaryLine': 'bank {bank}: {name} ({steps})',
-  't5.summaryWarnings': ' – let op: {warnings}',
-  't5.progressMode': 'bank {bank}: {name} …',
-  't5.progressStep': 'bank {bank}: {name} · stap {step}/{steps} · totaal {done}/{total}',
-  't5.success': 'Versturen geslaagd',
-  't5.failed': 'Versturen mislukt (zie logboek)',
   't5.resultOk': { one: '{count} schema verstuurd', other: "{count} schema's verstuurd" },
   't5.resultFailed': 'mislukt',
 

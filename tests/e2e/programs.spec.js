@@ -100,10 +100,10 @@ test('rejects a file that is not a backup', async ({ page }) => {
 
 test('marks the program on the controller and notices edits after sending', async ({ page }) => {
   await page.setInputFiles('#file', schemaPath('WINTER'));
-  await page.click('#btn-connect');
-  page.once('dialog', (d) => d.accept());
   await page.click('#btn-download');
-  await expect(page.locator('#dl-progress')).toHaveText('Sent successfully');
+  await page.click('#send-go');
+  await page.locator('#dlg-send').getByRole('button', { name: 'Done' }).click();
+  await expect(page.locator('#dl-progress')).toHaveText('Sent: 1 program is on the controller');
   await expect(items(page).first().locator('.on-controller')).toHaveText('On controller');
   await expect(page.locator('#btn-backup-after')).toBeVisible();
 

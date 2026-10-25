@@ -4,7 +4,7 @@
 import { CMD, VENDOR_ID, PRODUCT_ID } from './protocol.js';
 
 export class SimDevice extends EventTarget {
-  constructor({ latencyMs = 10, failOn = null, silentOn = null } = {}) {
+  constructor({ latencyMs = 10, failOn = null, silentOn = null, unplugAfter = null, openError = null } = {}) {
     super();
     this.opened = false;
     this.productName = 'Time Controller (simulator)';
@@ -13,12 +13,19 @@ export class SimDevice extends EventTarget {
     this.latencyMs = latencyMs;
     this.failOn = failOn; // command that gets an error echo
     this.silentOn = silentOn; // command that gets no reply
+    this.unplugAfter = unplugAfter; // reports accepted before the cable is "pulled"
+    this.openError = openError; // DOMException name thrown by open(), e.g. 'NotAllowedError'
     this.sent = [];
     const report = [{ reportId: 0, items: [{ reportSize: 8, reportCount: 64 }] }];
     this.collections = [{ usagePage: 0xff, usage: 0xff, inputReports: report, outputReports: report }];
   }
 
   async open() {
+    if (this.openError) {
+      const e = new Error(`simulated ${this.openError}`);
+      e.name = this.openError;
+      throw e;
+    }
     this.opened = true;
   }
 
@@ -28,6 +35,11 @@ export class SimDevice extends EventTarget {
 
   async sendReport(reportId, data) {
     if (!this.opened) throw new Error('device is not open');
+    if (this.unplugAfter !== null && this.sent.length >= this.unplugAfter) {
+      this.opened = false;
+      this.dispatchEvent(new Event('disconnect'));
+      throw new Error('The device was disconnected.');
+    }
     const bytes = Uint8Array.from(data);
     this.sent.push(bytes);
     const cmd = bytes[2];
@@ -46,4 +58,17 @@ export class SimDevice extends EventTarget {
       this.dispatchEvent(ev);
     }, this.latencyMs);
   }
+}
+
+// Simulator options from the page address, for trying out failures by hand and in tests:
+// ?sim=1&simSilent=13&simFail=12&simUnplug=20&simOpen=NotAllowedError (command codes in hex).
+export function simOptionsFromUrl(search) {
+  const q = new URLSearchParams(search);
+  const hex = (k) => (q.has(k) ? parseInt(q.get(k), 16) : null);
+  return {
+    silentOn: hex('simSilent'),
+    failOn: hex('simFail'),
+    unplugAfter: q.has('simUnplug') ? Number(q.get('simUnplug')) : null,
+    openError: q.get('simOpen'),
+  };
 }
