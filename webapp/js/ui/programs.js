@@ -151,6 +151,7 @@ export function mountPrograms({ store, log, i18n, meta }) {
     const box = $('modes');
     box.innerHTML = '';
     $('list-title').hidden = !store.programs.length;
+    $('list-title').textContent = t(store.settings.multiplePrograms ? 't4.listTitle' : 't4.listTitleOne');
     if (!store.programs.length) {
       box.append(welcome());
       return;

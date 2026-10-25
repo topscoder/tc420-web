@@ -1,10 +1,10 @@
 {
   "name": "tc420-web",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "private": true,
-  "description": "Edit and send TC420 LED controller schedules from the browser",
+  "description": "Edit the lighting schedules of a TC420 LED controller and send them over USB from the browser, without internet or other software.",
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "node --test \"tests/unit/**/*.test.js\"",
@@ -25,5 +25,10 @@
     "eslint": "10.13.0",
     "globals": "17.13.0",
     "prettier": "3.9.10"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/topscoder/tc420-web.git"
+  },
+  "homepage": "https://topscoder.github.io/tc420-web/"
 }

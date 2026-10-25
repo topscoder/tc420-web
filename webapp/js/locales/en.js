@@ -164,6 +164,7 @@ export default {
   't4.moveDown': 'Move down',
   't4.nameHint': 'Shown on the controller display: max. 8 characters, A–Z, 0–9, space, -',
   't4.loadFailed': '{file} could not be loaded: {error}',
+  't4.listTitleOne': 'Programs',
   't4.listTitle': 'Programs (sent to the controller in this order)',
   't4.steps': { one: '{count} step', other: '{count} steps' },
   't4.warnings': { one: '{count} warning', other: '{count} warnings' },
@@ -364,4 +365,14 @@ export default {
   'preview.statePlaying': 'Playing {name} on the lights',
   'preview.stateHolding': 'Holding {name} at the chosen time',
   'preview.stateManual': 'Manual levels on the lights',
+
+  'about.title': 'About',
+  'about.license':
+    'TC420 Web is free, open-source software under the <a href="https://github.com/topscoder/tc420-web/blob/main/LICENSE" target="_blank" rel="noopener">MIT license</a>. Source code and help: <a href="https://github.com/topscoder/tc420-web" target="_blank" rel="noopener">github.com/topscoder/tc420-web</a>.',
+  'about.disclaimer':
+    'TC420 Web is an independent project. It is not made, endorsed or supported by the manufacturer of the TC420; the name is only used to say which controller it works with. Use it at your own risk.',
+  'about.privacy':
+    'Privacy: everything happens in this browser. Your programs and the log are stored only on this device; nothing is sent anywhere, and there are no trackers or analytics.',
+  'about.credits':
+    'The protocol was worked out from the original PLed software and checked against the open-source <a href="https://github.com/wallneradam/tc420" target="_blank" rel="noopener">wallneradam/tc420</a> library (no code was copied). The AFRIKA, AMAZONE and THAILAND templates are the example programs that came with PLed.',
 };

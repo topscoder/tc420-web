@@ -41,7 +41,7 @@ test('every key used in index.html and the UI code exists', () => {
     m[1].split(';').forEach((pair) => keys.add(pair.split(':')[1].trim()));
   }
   const prefixes =
-    '(?:app|header|banner|main|settings|adv|support|linux|welcome|pwa|preview|last|obs|t[1-7]|schedule|log|editor|templates|device|send|common)';
+    '(?:app|header|banner|main|settings|adv|support|linux|welcome|pwa|preview|about|last|obs|t[1-7]|schedule|log|editor|templates|device|send|common)';
   const literal = new RegExp(`'(${prefixes}\\.[\\w.]+)'`, 'g');
   for (const file of filesIn(join(WEBAPP, 'js'), '.js')) {
     for (const m of readFileSync(file, 'utf8').matchAll(literal)) keys.add(m[1]);

@@ -172,6 +172,7 @@ export default {
   't4.moveDown': 'Omlaag',
   't4.nameHint': 'Getoond op het display van de controller: max. 8 tekens, A–Z, 0–9, spatie, -',
   't4.loadFailed': '{file} kon niet worden geladen: {error}',
+  't4.listTitleOne': "Programma's",
   't4.listTitle': "Programma's (in deze volgorde naar de controller gestuurd)",
   't4.steps': { one: '{count} stap', other: '{count} stappen' },
   't4.warnings': { one: '{count} waarschuwing', other: '{count} waarschuwingen' },
@@ -373,4 +374,14 @@ export default {
   'preview.statePlaying': '{name} speelt af op de lampen',
   'preview.stateHolding': '{name} staat stil op het gekozen tijdstip',
   'preview.stateManual': 'Handmatige niveaus op de lampen',
+
+  'about.title': 'Over',
+  'about.license':
+    'TC420 Web is gratis opensourcesoftware onder de <a href="https://github.com/topscoder/tc420-web/blob/main/LICENSE" target="_blank" rel="noopener">MIT-licentie</a>. Broncode en hulp: <a href="https://github.com/topscoder/tc420-web" target="_blank" rel="noopener">github.com/topscoder/tc420-web</a>.',
+  'about.disclaimer':
+    'TC420 Web is een onafhankelijk project. Het is niet gemaakt, goedgekeurd of ondersteund door de fabrikant van de TC420; de naam wordt alleen gebruikt om te zeggen met welke controller het werkt. Gebruik is op eigen risico.',
+  'about.privacy':
+    "Privacy: alles gebeurt in deze browser. Je programma's en het logboek staan alleen op dit apparaat; er wordt niets verstuurd, en er zijn geen trackers of statistieken.",
+  'about.credits':
+    'Het protocol is uitgezocht aan de hand van de oorspronkelijke PLed-software en gecontroleerd met de opensourcebibliotheek <a href="https://github.com/wallneradam/tc420" target="_blank" rel="noopener">wallneradam/tc420</a> (er is geen code overgenomen). De sjablonen AFRIKA, AMAZONE en THAILAND zijn de voorbeeldprogramma\'s die bij PLed zaten.',
 };
