@@ -5,6 +5,7 @@ import { sanitizeName, parseBackup, BackupError } from '../programs.js';
 import { minutesOf } from '../editor-model.js';
 import { TEMPLATES } from '../templates.js';
 import { $, el, download, stamp, setLast } from './dom.js';
+import { ask } from './ask.js';
 import { mountEditor } from './editor.js';
 
 const blankStep = (h, m, ch, jump) => ({
@@ -78,7 +79,8 @@ export function mountPrograms({ store, log, i18n, meta }) {
   async function restoreBackup(file) {
     try {
       const backup = parseBackup(await file.text());
-      if (!confirm(t('t4.confirmRestore', { count: backup.programs.length }))) return;
+      const okKey = 'common.replace';
+      if (!(await ask('t4.confirmRestore', { count: backup.programs.length }, { okKey, danger: true }))) return;
       store.restore(backup);
       log('info', `backup restored from ${file.name}: ${store.programs.length} programs`, 'T4');
       setLast('T4', true, 't4.restored', { count: store.programs.length });
@@ -188,11 +190,13 @@ export function mountPrograms({ store, log, i18n, meta }) {
       const meta =
         t('t4.steps', { count: p.steps.length }) + (w.length ? ` · ${t('t4.warnings', { count: w.length })}` : '');
       item.append(el('span', { class: 'meta' }, meta));
+      const actions = el('span', { class: 'actions' });
+      item.append(actions);
 
       const button = (label, onClick, attrs = {}) => {
         const b = el('button', { class: 'small', ...attrs }, label);
         b.addEventListener('click', onClick);
-        item.append(b);
+        actions.append(b);
         return b;
       };
       button(t('t4.edit'), () => {
@@ -222,8 +226,8 @@ export function mountPrograms({ store, log, i18n, meta }) {
           { 'aria-label': t('t4.moveDown'), title: t('t4.moveDown') },
         ).disabled = i === store.programs.length - 1;
       }
-      button(t('t4.remove'), () => {
-        if (!confirm(t('t4.confirmDelete', { name: p.name }))) return;
+      button(t('t4.remove'), async () => {
+        if (!(await ask('t4.confirmDelete', { name: p.name }, { okKey: 'common.delete', danger: true }))) return;
         store.remove(p.id);
         log('info', `program ${p.name} deleted`, 'T4');
         render();

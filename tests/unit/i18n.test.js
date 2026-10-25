@@ -125,3 +125,13 @@ test('notifies listeners on language change and ignores unknown languages', () =
   assert.deepEqual(seen, ['de', 'en']);
   assert.equal(i18n.lang, 'en');
 });
+
+test('the UI never uses the browser dialogs alert(), confirm() or prompt()', () => {
+  const found = filesIn(join(WEBAPP, 'js'), '.js').flatMap((file) =>
+    readFileSync(file, 'utf8')
+      .split('\n')
+      .filter((line) => !line.trim().startsWith('//') && /(^|[^.\w])(alert|confirm|prompt)\(/.test(line))
+      .map((line) => `${file}: ${line.trim()}`),
+  );
+  assert.deepEqual(found, []);
+});

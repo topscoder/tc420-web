@@ -52,14 +52,14 @@ test('duplicate and delete', async ({ page }) => {
   await expect(items(page)).toHaveCount(2);
   await expect(items(page).nth(1).locator('input.name')).toHaveValue('WINTER-2');
 
-  page.once('dialog', (d) => {
-    expect(d.message()).toBe('Delete program WINTER-2? This cannot be undone.');
-    d.dismiss();
-  });
   await items(page).nth(1).getByRole('button', { name: 'Remove' }).click();
+  await expect(page.locator('#dlg-ask-text')).toHaveText('Delete program WINTER-2? This cannot be undone.');
+  await expect(page.locator('#dlg-ask-cancel')).toBeFocused(); // Enter must not delete by accident
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#dlg-ask')).toBeHidden();
   await expect(items(page)).toHaveCount(2);
-  page.once('dialog', (d) => d.accept());
   await items(page).nth(1).getByRole('button', { name: 'Remove' }).click();
+  await page.locator('#dlg-ask').getByRole('button', { name: 'Delete' }).click();
   await expect(items(page)).toHaveCount(1);
 });
 
@@ -74,16 +74,14 @@ test('exports a backup and restores it', async ({ page }) => {
   expect(backup.programs.map((p) => p.name)).toEqual(['WINTER', 'AFRIKA']);
 
   for (let i = 0; i < 2; i++) {
-    page.once('dialog', (d) => d.accept());
     await items(page).first().getByRole('button', { name: 'Remove' }).click();
+    await page.click('#dlg-ask-ok');
   }
   await expect(page.locator('#modes .welcome')).toBeVisible();
 
-  page.once('dialog', (d) => {
-    expect(d.message()).toContain('with the 2 programs from the backup');
-    d.accept();
-  });
   await page.setInputFiles('#backup-file', file);
+  await expect(page.locator('#dlg-ask-text')).toContainText('with the 2 programs from the backup');
+  await page.locator('#dlg-ask').getByRole('button', { name: 'Replace' }).click();
   await expect(page.locator('#last-T4')).toHaveText('Last result: 2 programs restored from the backup');
   await expect(items(page)).toHaveCount(2);
   await page.reload();

@@ -144,11 +144,9 @@ test('sends a raw packet', async ({ page }) => {
   await openPanel(page, 'advanced');
   await page.fill('#raw-cmd', '11');
   await page.fill('#raw-payload', '07 EA 0A 18 0A 00 00');
-  page.once('dialog', (d) => {
-    expect(d.message()).toBe('Send command 0x11 with 7 bytes of payload?');
-    d.accept();
-  });
   await page.click('#btn-raw');
+  await expect(page.locator('#dlg-ask-text')).toHaveText('Send command 0x11 with 7 bytes of payload?');
+  await page.click('#dlg-ask-ok');
   await expect(page.locator('#last-T7')).toHaveText('Last result: confirmed');
 });
 

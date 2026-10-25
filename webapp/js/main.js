@@ -6,6 +6,7 @@ import { DeviceConnection } from './device.js';
 import { Logbook } from './logbook.js';
 import { I18n, LANGUAGES, LANG_KEY, detectLanguage, applyTranslations } from './i18n.js';
 import { $, el, download, stamp, setLast, bindI18n, refreshResults } from './ui/dom.js';
+import { ask, bindAsk } from './ui/ask.js';
 import { mountLogView } from './ui/log-view.js';
 import { mountLiveControl } from './ui/live-control.js';
 import { mountPrograms } from './ui/programs.js';
@@ -16,7 +17,7 @@ import { mountSend } from './ui/send.js';
 import { mountSupport } from './ui/support.js';
 
 const APP = 'TC420 Web';
-const APP_VERSION = '0.10.0';
+const APP_VERSION = '0.11.0';
 const SIM = new URLSearchParams(location.search).has('sim');
 const detected = usbSupport(navigator, { secure: window.isSecureContext });
 const usb = SIM ? { ...detected, ok: true } : detected; // the simulator needs no USB
@@ -44,6 +45,7 @@ const preferred = navigator.languages?.length ? navigator.languages : [navigator
 const i18n = new I18n({ lang: remembered(LANG_KEY) || detectLanguage(preferred), preferred });
 const t = (key, params) => i18n.t(key, params);
 bindI18n(i18n);
+bindAsk(i18n);
 
 const langSelect = $('lang');
 Object.entries(LANGUAGES).forEach(([code, name]) => langSelect.append(el('option', { value: code }, name)));
@@ -84,8 +86,8 @@ function startSession() {
 $('btn-export-json').addEventListener('click', exportJson);
 $('btn-export-txt').addEventListener('click', exportTxt);
 $('btn-new-session').addEventListener('click', startSession);
-$('btn-clear-log').addEventListener('click', () => {
-  if (!confirm(t('log.clearConfirm'))) return;
+$('btn-clear-log').addEventListener('click', async () => {
+  if (!(await ask('log.clearConfirm', {}, { okKey: 'log.clear', danger: true }))) return;
   logbook.clear();
   logView.render();
   startSession();
@@ -182,7 +184,7 @@ $('btn-raw').addEventListener('click', async () => {
     return;
   }
   const label = `0x${cmd.toString(16).padStart(2, '0')}`;
-  if (!confirm(t('t7.confirm', { cmd: label, count: payload.length }))) return;
+  if (!(await ask('t7.confirm', { cmd: label, count: payload.length }, { okKey: 't7.send' }))) return;
   const r = await conn.send(cmd, payload, { test: 'T7', expectReply: $('raw-expect').checked });
   setLast('T7', r.ok, r.ok ? 't7.ok' : 't7.failed', { error: r.error || 'NOT OK' });
 });

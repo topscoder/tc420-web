@@ -1,6 +1,6 @@
 {
   "name": "tc420-web",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": true,
   "description": "Edit and send TC420 LED controller schedules from the browser",
   "type": "module",
@@ -17,6 +17,7 @@
     "node": ">=22"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.64.1",
     "eslint": "10.13.0",

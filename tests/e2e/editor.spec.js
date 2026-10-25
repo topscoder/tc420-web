@@ -160,7 +160,16 @@ test('separate channels, linking them again, and channel names', async ({ page }
   await fromTemplate(page, 'winter');
   await page.uncheck('#link-channels');
   await expect(page.locator('#channel-picker .channel-btn')).toHaveCount(5);
-  await expect(page.locator('#editor-table th')).toHaveText(['#', 'Time', 'CH1', 'CH2', 'CH3', 'CH4', 'CH5', '']);
+  await expect(page.locator('#editor-table th')).toHaveText([
+    '#',
+    'Time',
+    'CH1',
+    'CH2',
+    'CH3',
+    'CH4',
+    'CH5',
+    'Delete step',
+  ]);
   const ch2 = row(page, '07:30').locator('input[type=number]').nth(1);
   await ch2.fill('5');
   await ch2.press('Tab');
@@ -172,12 +181,16 @@ test('separate channels, linking them again, and channel names', async ({ page }
   await name1.press('Tab');
   await expect(page.locator('#editor-table th').nth(2)).toHaveText('White');
 
-  page.once('dialog', (d) => {
-    expect(d.message()).toContain('levels of White');
-    d.accept();
-  });
   await page.check('#link-channels');
-  await expect(page.locator('#editor-table th')).toHaveText(['#', 'Time', 'Level (all channels)', 'Change', '']);
+  await expect(page.locator('#dlg-ask-text')).toContainText('levels of White');
+  await page.click('#dlg-ask-ok');
+  await expect(page.locator('#editor-table th')).toHaveText([
+    '#',
+    'Time',
+    'Level (all channels)',
+    'Change',
+    'Delete step',
+  ]);
   await page.uncheck('#link-channels');
   await expect(row(page, '07:30').locator('input[type=number]').nth(1)).toHaveValue('70');
 

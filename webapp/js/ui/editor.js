@@ -18,6 +18,7 @@ import {
 } from '../editor-model.js';
 import { CHANNEL_NAME_LEN } from '../programs.js';
 import { $, el } from './dom.js';
+import { ask } from './ask.js';
 
 const W = 760;
 const H = 260;
@@ -27,6 +28,17 @@ const Y0 = 12;
 const Y1 = 214;
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const SNAP_MINUTES = 5;
+// Each channel also has its own line pattern, so channels can be told apart without colour.
+const DASHES = ['', '7 4', '2 3', '9 3 2 3', '4 2 1 2'];
+
+// A short sample of a channel's line (colour and pattern) for legends and headers.
+function lineSample(color, c) {
+  const root = svg('svg', { class: 'swatch', viewBox: '0 0 20 10', width: '20', height: '10', 'aria-hidden': 'true' });
+  root.append(
+    svg('line', { x1: 1, y1: 5, x2: 19, y2: 5, stroke: color, 'stroke-width': 2.5, 'stroke-dasharray': DASHES[c] }),
+  );
+  return root;
+}
 
 function svg(tag, attrs = {}) {
   const e = document.createElementNS(SVG_NS, tag);
@@ -146,6 +158,7 @@ export function mountEditor({ store, log, i18n, onChange }) {
           d,
           fill: 'none',
           stroke: colors()[c],
+          'stroke-dasharray': p.linked ? '' : DASHES[c],
           'stroke-width': c === shownChannel(p) ? 2.5 : 1.5,
           opacity: c === shownChannel(p) ? 1 : 0.55,
           class: 'level-line',
@@ -342,7 +355,8 @@ export function mountEditor({ store, log, i18n, onChange }) {
       : [t('t4.col.step'), t('t4.col.time'), ...names(), ''];
     cols.forEach((h, k) => {
       const th = el('th', {}, h);
-      if (!p.linked && k >= 2 && k < 7) th.style.color = colors()[k - 2];
+      if (!h) th.append(el('span', { class: 'sr-only' }, t('t4.deleteStep'))); // the delete column
+      if (!p.linked && k >= 2 && k < 7) th.prepend(lineSample(colors()[k - 2], k - 2));
       head.append(th);
     });
     table.append(head);
@@ -406,7 +420,7 @@ export function mountEditor({ store, log, i18n, onChange }) {
         { class: `small channel-btn${c === activeChannel ? ' on' : ''}`, 'aria-pressed': String(c === activeChannel) },
         name,
       );
-      b.prepend(Object.assign(el('i', { class: 'swatch' }), { style: `background:${colors()[c]}` }));
+      b.prepend(lineSample(colors()[c], c));
       b.addEventListener('click', () => {
         activeChannel = c;
         render();
@@ -475,11 +489,11 @@ export function mountEditor({ store, log, i18n, onChange }) {
     renderChannelSettings();
   }
 
-  $('link-channels').addEventListener('change', () => {
+  $('link-channels').addEventListener('change', async () => {
     const p = program();
     if (!p) return;
     const on = $('link-channels').checked;
-    if (on && !isLinked(p.steps) && !confirm(t('editor.linkConfirm', { channel: names()[0] }))) {
+    if (on && !isLinked(p.steps) && !(await ask('editor.linkConfirm', { channel: names()[0] }))) {
       $('link-channels').checked = false;
       return;
     }

@@ -78,10 +78,10 @@ export function mountSend({ conn, store, device, programs, live, log, i18n, usb 
       return;
     }
     if (!conn.connected && !(await device.connect({ offerClock: false }))) return;
-    confirm(entries);
+    confirmSend(entries);
   }
 
-  function confirm(entries) {
+  function confirmSend(entries) {
     const multiple = store.settings.multiplePrograms;
     const clock = el('input', { type: 'checkbox', id: 'send-clock' });
     clock.checked = true;

@@ -1,16 +1,27 @@
 [hidden] {
   display: none !important;
 }
+/* Read by screen readers, not shown. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 :root {
   --bg: #f6f5f1;
   --card: #ffffff;
   --ink: #1d1d1b;
   --quiet: #6b6a64;
   --line: #dddbd3;
-  --accent: #2f6fdb;
-  --ok: #2e8b57;
+  --accent: #2a63c7;
+  --ok: #1d7444;
   --bad: #c2412d;
-  --warn: #b7791f;
+  --warn: #8f5d0c;
+  --on-accent: #ffffff;
+  --on-bad: #ffffff;
   --code-bg: #f1efe8;
   --ch1: #2f6fdb;
   --ch2: #e0662f;
@@ -29,6 +40,8 @@
     --ok: #5cc28d;
     --bad: #f07a63;
     --warn: #e0b04f;
+    --on-accent: #0f1d36;
+    --on-bad: #2b0c06;
     --code-bg: #2b2b29;
     --ch1: #6b9cf0;
     --ch2: #f08a5a;
@@ -52,7 +65,7 @@ body {
     sans-serif;
 }
 main {
-  max-width: 1040px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 16px 64px;
 }
@@ -66,7 +79,7 @@ header.top {
   padding: 12px 16px;
 }
 .top-inner {
-  max-width: 1040px;
+  max-width: 1280px;
   margin: 0 auto;
   display: flex;
   gap: 12px;
@@ -77,6 +90,12 @@ h1 {
   font-size: 20px;
   margin: 0;
   margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo {
+  flex: none;
 }
 h2 {
   font-size: 17px;
@@ -128,12 +147,16 @@ button {
 button.primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 button.danger {
   background: var(--bad);
   border-color: var(--bad);
-  color: #fff;
+  color: var(--on-bad);
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 button.small {
   padding: 3px 9px;
@@ -145,6 +168,7 @@ button:disabled {
 }
 input,
 select {
+  max-width: 100%;
   font: inherit;
   color: var(--ink);
   background: var(--card);
@@ -343,6 +367,7 @@ input[type='range'] {
 }
 .table-wrap {
   overflow-x: auto;
+  position: relative; /* keeps the hidden .sr-only header text inside the scroller */
 }
 table {
   border-collapse: collapse;
@@ -430,6 +455,19 @@ details summary {
 .mode-item .badge {
   font-size: 11px;
 }
+.badge.safe {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.badge.danger {
+  border-color: var(--bad);
+  color: var(--bad);
+}
+.mode-item .actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
 .spacer {
   flex: 1;
 }
@@ -491,12 +529,8 @@ details summary {
   color: var(--card);
   border-color: var(--ink);
 }
-.channel-btn .swatch,
-.channel-btn i {
+svg.swatch {
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
   margin-right: 5px;
   vertical-align: middle;
 }
@@ -571,7 +605,7 @@ details summary {
 }
 .toast.bad {
   background: var(--bad);
-  color: #fff;
+  color: var(--on-bad);
 }
 .toast button {
   background: transparent;
@@ -581,7 +615,7 @@ details summary {
 .toast button.primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 dialog {
   border: 1px solid var(--line);
@@ -661,4 +695,36 @@ pre.commands {
 }
 .choice .note {
   flex: 1;
+}
+
+/* Programs list and editor side by side on wide screens; stacked below. */
+.lib-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px 24px;
+}
+@media (min-width: 1100px) {
+  .lib-grid {
+    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+  }
+  .lib-grid:has(#editor[hidden]) {
+    grid-template-columns: 1fr;
+  }
+  .lib-main {
+    border-left: 1px solid var(--line);
+    padding-left: 24px;
+  }
+  .lib-grid:has(#editor[hidden]) .lib-main {
+    display: none;
+  }
+  #editor-title {
+    margin-top: 4px;
+  }
+  .lib-side .mode-item .actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+.row > label {
+  max-width: 100%;
 }

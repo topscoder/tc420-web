@@ -4,13 +4,42 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>TC420 Web</title>
+    <meta
+      name="description"
+      content="Edit the lighting schedules of a TC420 LED controller and send them over USB, without internet or other software."
+    />
+    <meta name="theme-color" content="#1f3a68" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f3a68'/%3E%3Cg fill='%23ffcc4d'%3E%3Crect x='4.5' y='18' width='3' height='8' rx='1.2'/%3E%3Crect x='9.5' y='12' width='3' height='14' rx='1.2'/%3E%3Crect x='14.5' y='6' width='3' height='20' rx='1.2'/%3E%3Crect x='19.5' y='12' width='3' height='14' rx='1.2'/%3E%3Crect x='24.5' y='18' width='3' height='8' rx='1.2'/%3E%3C/g%3E%3C/svg%3E"
+    />
     <link rel="stylesheet" href="css/app.css" />
   </head>
   <body>
     <main>
       <header class="top">
         <div class="top-inner">
-          <h1 data-i18n="app.title">TC420 Web</h1>
+          <h1>
+            <svg
+              class="logo"
+              aria-hidden="true"
+              width="28"
+              height="28"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 32 32"
+            >
+              <rect width="32" height="32" rx="7" fill="#1f3a68" />
+              <g fill="#ffcc4d">
+                <rect x="4.5" y="18" width="3" height="8" rx="1.2" />
+                <rect x="9.5" y="12" width="3" height="14" rx="1.2" />
+                <rect x="14.5" y="6" width="3" height="20" rx="1.2" />
+                <rect x="19.5" y="12" width="3" height="14" rx="1.2" />
+                <rect x="24.5" y="18" width="3" height="8" rx="1.2" />
+              </g>
+            </svg>
+            <span data-i18n="app.title">TC420 Web</span>
+          </h1>
           <span class="status"><span class="dot" id="dot"></span><span id="status-text"></span></span>
           <span class="badge sim" id="sim-badge" data-i18n="header.sim" hidden></span>
           <select id="lang" data-i18n-attr="aria-label:header.language"></select>
@@ -34,44 +63,50 @@
       <p class="lead" data-i18n="main.intro"></p>
 
       <section class="card" id="programs-card">
-        <h2 data-i18n="t4.title"></h2>
-        <p class="note" id="lib-status"></p>
-        <div id="drop">
-          <span data-i18n-html="t4.drop"></span><input id="file" type="file" accept=".tmf" multiple hidden />
-        </div>
-        <div class="row">
-          <button id="btn-new-mode" data-i18n="t4.new"></button>
-          <select id="template-select" data-i18n-attr="aria-label:templates.title"></select>
-          <button id="btn-add-template" data-i18n="templates.add"></button>
-        </div>
-        <h3 id="list-title" data-i18n="t4.listTitle"></h3>
-        <div class="modes" id="modes"></div>
-        <div id="editor" hidden>
-          <h3 id="editor-title"></h3>
-          <div class="row">
-            <label><input type="checkbox" id="link-channels" /> <strong data-i18n="editor.link"></strong></label>
-            <span class="spacer"></span>
-            <button id="btn-undo" data-i18n="editor.undo"></button>
-            <button id="btn-redo" data-i18n="editor.redo"></button>
-            <button id="btn-add-step" data-i18n="t4.addStep"></button>
-            <button id="btn-export-tmf" data-i18n="t4.exportTmf"></button>
+        <div class="lib-grid">
+          <div class="lib-side">
+            <h2 data-i18n="t4.title"></h2>
+            <p class="note" id="lib-status"></p>
+            <div id="drop">
+              <span data-i18n-html="t4.drop"></span><input id="file" type="file" accept=".tmf" multiple hidden />
+            </div>
+            <div class="row">
+              <button id="btn-new-mode" data-i18n="t4.new"></button>
+              <select id="template-select" data-i18n-attr="aria-label:templates.title"></select>
+              <button id="btn-add-template" data-i18n="templates.add"></button>
+            </div>
+            <h3 id="list-title" data-i18n="t4.listTitle"></h3>
+            <div class="modes" id="modes"></div>
+            <div class="last" id="last-T4" role="status"></div>
           </div>
-          <div class="row" id="channel-picker"></div>
-          <ul class="warnings" id="editor-warnings"></ul>
-          <p class="note warn-text" id="editor-message" role="status"></p>
-          <div class="chart" id="editor-chart"></div>
-          <div class="row">
-            <span class="note" data-i18n="editor.chartHelp"></span>
-            <span class="spacer"></span>
-            <label class="note"><input type="checkbox" id="chart-zoom" /> <span data-i18n="t4.zoom"></span></label>
+          <div class="lib-main">
+            <div id="editor" hidden>
+              <h3 id="editor-title"></h3>
+              <div class="row">
+                <label><input type="checkbox" id="link-channels" /> <strong data-i18n="editor.link"></strong></label>
+                <span class="spacer"></span>
+                <button id="btn-undo" data-i18n="editor.undo"></button>
+                <button id="btn-redo" data-i18n="editor.redo"></button>
+                <button id="btn-add-step" data-i18n="t4.addStep"></button>
+                <button id="btn-export-tmf" data-i18n="t4.exportTmf"></button>
+              </div>
+              <div class="row" id="channel-picker"></div>
+              <ul class="warnings" id="editor-warnings"></ul>
+              <p class="note warn-text" id="editor-message" role="status"></p>
+              <div class="chart" id="editor-chart"></div>
+              <div class="row">
+                <span class="note" data-i18n="editor.chartHelp"></span>
+                <span class="spacer"></span>
+                <label class="note"><input type="checkbox" id="chart-zoom" /> <span data-i18n="t4.zoom"></span></label>
+              </div>
+              <div class="table-wrap"><table id="editor-table"></table></div>
+              <details>
+                <summary data-i18n="editor.channels"></summary>
+                <div id="channel-fields"></div>
+              </details>
+            </div>
           </div>
-          <div class="table-wrap"><table id="editor-table"></table></div>
-          <details>
-            <summary data-i18n="editor.channels"></summary>
-            <div id="channel-fields"></div>
-          </details>
         </div>
-        <div class="last" id="last-T4"></div>
       </section>
 
       <section class="card" id="send-card">
@@ -110,7 +145,7 @@
 
         <h3 data-i18n="log.title"></h3>
         <p class="note" id="log-count"></p>
-        <div id="log" aria-live="polite"></div>
+        <div id="log" role="log" tabindex="0" data-i18n-attr="aria-label:log.title"></div>
         <div class="row">
           <button id="btn-export-json" data-i18n="header.exportJson"></button>
           <button id="btn-export-txt" data-i18n="header.exportTxt"></button>
@@ -226,6 +261,14 @@
         <span class="note" id="linux-copied" role="status"></span>
         <button id="btn-linux-copy" data-i18n="linux.copy"></button>
         <button class="primary" id="dlg-linux-close" data-i18n="common.close"></button>
+      </div>
+    </dialog>
+
+    <dialog id="dlg-ask" aria-labelledby="dlg-ask-text">
+      <p id="dlg-ask-text"></p>
+      <div class="row end">
+        <button id="dlg-ask-cancel" data-i18n="common.cancel"></button>
+        <button id="dlg-ask-ok"></button>
       </div>
     </dialog>
 
