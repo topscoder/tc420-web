@@ -1,4 +1,4 @@
-// End-to-end tests of the test bench against the built-in simulator (?sim=1).
+// End-to-end tests of the main page and the Advanced panel against the built-in simulator (?sim=1).
 // Playwright's default browser locale is en-US, so the UI starts in English.
 import { test, expect } from '@playwright/test';
 import { fileURLToPath } from 'node:url';
@@ -17,6 +17,8 @@ test.beforeEach(async ({ page }) => {
   await page.goto('./?sim=1');
 });
 
+const openPanel = (page, id) => page.locator(`#${id} > summary`).click();
+
 async function connect(page) {
   await page.click('#btn-connect');
   await expect(page.locator('#status-text')).toContainText('Connected');
@@ -28,15 +30,52 @@ test('loads in simulator mode and starts a log session', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.locator('#sim-badge')).toHaveText('SIMULATOR');
   await expect(page.locator('#log .k-session').last()).toContainText('SIMULATOR');
-  await expect(page.locator('#btn-sync')).toBeDisabled();
 });
 
-test('connects and sets the clock', async ({ page }) => {
+test('shows no protocol details until Advanced is opened', async ({ page }) => {
   await connect(page);
-  await expect(page.locator('#last-T1')).toContainText('connected to Time Controller');
-  await page.click('#btn-sync');
-  await expect(page.locator('#last-T2')).toHaveText('Last result: clock set, confirmed');
+  await page.setInputFiles('#file', schema('WINTER'));
+  await page.click('#btn-download');
+  await page.click('#send-go');
+  await page.locator('#dlg-send').getByRole('button', { name: 'Done' }).click();
+  await expect(page.locator('#log')).toBeHidden();
+  await expect(page.locator('#raw-cmd')).toBeHidden();
+  const visible = await page.locator('main').innerText();
+  for (const word of ['0x', 'packet', 'bank', 'WebHID', 'T1', 'T5']) expect(visible).not.toContain(word);
+
+  await openPanel(page, 'advanced');
+  await expect(page.locator('#log')).toBeVisible();
+  await expect(page.locator('#log .k-ack').first()).toContainText('0x11 set clock');
+  await expect(page.locator('#app-version')).toHaveText(/^TC420 Web \d+\.\d+\.\d+$/);
+  await expect(page.locator('#advanced a[href*="github.com/topscoder/tc420-web/issues"]')).toBeVisible();
+});
+
+test('connects and sets the clock from the device menu', async ({ page }) => {
+  await connect(page);
+  await expect(page.locator('#log .log-row', { hasText: 'simulator opened' })).toHaveCount(1);
+  await page.click('#btn-connect');
+  await page.click('#menu-clock');
+  await expect(page.locator('#toast-text')).toContainText('Clock set to');
   await expect(page.locator('#log .k-ack').last()).toContainText('0x11 set clock');
+});
+
+test('the simulator can be turned off and on in Advanced', async ({ page }) => {
+  await openPanel(page, 'advanced');
+  await expect(page.locator('#setting-sim')).toBeChecked();
+  await Promise.all([page.waitForURL((url) => !url.search.includes('sim')), page.uncheck('#setting-sim')]);
+  await expect(page.locator('#sim-badge')).toBeHidden();
+  await openPanel(page, 'advanced');
+  await expect(page.locator('#setting-sim')).not.toBeChecked();
+  await Promise.all([page.waitForURL(/\?sim=1/), page.check('#setting-sim')]);
+  await expect(page.locator('#sim-badge')).toBeVisible();
+});
+
+test('a note can be added to the log', async ({ page }) => {
+  await openPanel(page, 'advanced');
+  await page.fill('#obs-note', 'lights fade nicely');
+  await page.click('#obs-ok');
+  await expect(lastLog(page)).toContainText('observation: works · lights fade nicely');
+  await expect(page.locator('#obs-note')).toHaveValue('');
 });
 
 test('imports a .tmf file, edits it and sends it to the controller', async ({ page }) => {
@@ -53,7 +92,6 @@ test('imports a .tmf file, edits it and sends it to the controller', async ({ pa
   await expect(page.locator('#dlg-send-title')).toHaveText('✓ AFRIKA is running on the controller');
   await page.locator('#dlg-send').getByRole('button', { name: 'Done' }).click();
   await expect(page.locator('#dl-progress')).toHaveText('Sent: 1 program is on the controller');
-  await expect(page.locator('#last-T5')).toHaveText('Last result: 1 schedule sent');
   await expect(page.locator('#log .k-tx', { hasText: '0x13 step' })).toHaveCount(22);
   await expect(page.locator('#log .k-ack', { hasText: '0x13 step' })).toHaveCount(22);
 });
@@ -79,6 +117,7 @@ test('reports a file that is not a schedule', async ({ page }) => {
 
 test('a cancelled send sends nothing', async ({ page }) => {
   await connect(page);
+  await openPanel(page, 'advanced');
   await page.click('#btn-test-mode');
   await page.click('#btn-download');
   await page.locator('#dlg-send').getByRole('button', { name: 'Cancel' }).click();
@@ -89,6 +128,7 @@ test('a cancelled send sends nothing', async ({ page }) => {
 
 test('online play starts, follows the sliders and stops', async ({ page }) => {
   await connect(page);
+  await openPanel(page, 'advanced');
   await page.click('#btn-play-start');
   await expect(page.locator('#btn-play-stop')).toBeEnabled();
   await page.locator('#sl0').fill('70');
@@ -99,21 +139,9 @@ test('online play starts, follows the sliders and stops', async ({ page }) => {
   await expect(page.locator('#btn-play-start')).toBeEnabled();
 });
 
-test('clearing the controller needs the typed confirmation', async ({ page }) => {
-  await connect(page);
-  page.once('dialog', (d) => d.accept('no'));
-  await page.click('#btn-clear');
-  await expect(lastLog(page)).toContainText('clearing cancelled');
-  page.once('dialog', (d) => {
-    expect(d.message()).toContain('Type CLEAR');
-    d.accept('clear');
-  });
-  await page.click('#btn-clear');
-  await expect(page.locator('#last-T6')).toHaveText('Last result: all cleared, confirmed');
-});
-
 test('sends a raw packet', async ({ page }) => {
   await connect(page);
+  await openPanel(page, 'advanced');
   await page.fill('#raw-cmd', '11');
   await page.fill('#raw-payload', '07 EA 0A 18 0A 00 00');
   page.once('dialog', (d) => {
@@ -126,9 +154,11 @@ test('sends a raw packet', async ({ page }) => {
 
 test('keeps the log after a reload and exports it as JSON', async ({ page }) => {
   await connect(page);
-  await page.click('#btn-sync');
-  await expect(page.locator('#last-T2')).toContainText('confirmed');
+  await page.click('#btn-connect');
+  await page.click('#menu-clock');
+  await expect(page.locator('#toast-text')).toContainText('Clock set to');
   await page.reload();
+  await openPanel(page, 'advanced');
   await expect(page.locator('#log .k-ack', { hasText: '0x11' })).toHaveCount(1);
   await expect(page.locator('#log-count')).toContainText('lines · kept in this browser');
 
@@ -152,31 +182,29 @@ test('explains when the browser has no WebHID', async ({ page }) => {
   });
   await page.goto('./');
   await expect(page.locator('#unsupported')).toBeVisible();
-  await expect(page.locator('#unsupported')).toContainText('does not support WebHID');
+  await expect(page.locator('#unsupported')).toContainText('cannot connect to USB devices');
   await expect(page.locator('#btn-connect')).toBeDisabled();
 });
 
 test.describe('languages', () => {
   test('switches language without losing edits and remembers the choice', async ({ page }) => {
     await connect(page);
-    await page.click('#btn-sync');
-    await expect(page.locator('#last-T2')).toHaveText('Last result: clock set, confirmed');
     await page.setInputFiles('#file', schema('AFRIKA'));
+    await expect(page.locator('#last-T4')).toContainText('Last result:');
     await page.click('#btn-add-step');
 
     await page.selectOption('#lang', 'nl');
     await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
     await expect(page.locator('#btn-connect')).toHaveText('● TC420 verbonden ▾');
-    await expect(page.locator('[data-test="T2"] h2')).toHaveText('Klok zetten');
-    await expect(page.locator('#last-T2')).toHaveText('Laatste resultaat: klok gezet, bevestigd');
+    await expect(page.locator('#settings h2')).toHaveText('Instellingen');
+    await expect(page.locator('#last-T4')).toContainText('Laatste resultaat:');
     await expect(page.locator('#modes .mode-item')).toContainText('22 stappen');
     await expect(page.locator('#status-text')).toHaveText('Verbonden: Time Controller (simulator)');
     await expect(lastLog(page)).toContainText('language changed to nl');
 
     await page.selectOption('#lang', 'de');
-    await expect(page.locator('[data-test="T2"] h2')).toHaveText('Uhr stellen');
+    await expect(page.locator('#advanced h2')).toHaveText('Erweitert');
     await expect(page.locator('#modes .mode-item')).toContainText('22 Schritte');
-    await expect(page.locator('#t6-text code')).toHaveText('LÖSCHEN');
 
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('lang', 'de');
@@ -188,22 +216,22 @@ test.describe('languages', () => {
     await page.selectOption('#lang', 'de');
     await page.click('#btn-connect');
     await expect(page.locator('#status-text')).toContainText('Verbunden');
-    await page.click('#btn-sync');
+    await page.locator('#toast').getByRole('button', { name: 'Uhr stellen' }).click();
     await expect(page.locator('#log .k-ack').last()).toContainText('0x11 set clock');
     await expect(page.locator('#log-count')).toContainText('Zeilen · in diesem Browser gespeichert');
   });
 });
 
 for (const [locale, expected] of [
-  ['de-DE', { lang: 'de', title: 'Uhr stellen', connect: 'TC420 verbinden' }],
-  ['nl-NL', { lang: 'nl', title: 'Klok zetten', connect: 'TC420 verbinden' }],
-  ['fr-FR', { lang: 'en', title: 'Set clock', connect: 'Connect TC420' }],
+  ['de-DE', { lang: 'de', title: 'Einstellungen', connect: 'TC420 verbinden' }],
+  ['nl-NL', { lang: 'nl', title: 'Instellingen', connect: 'TC420 verbinden' }],
+  ['fr-FR', { lang: 'en', title: 'Settings', connect: 'Connect TC420' }],
 ]) {
   test.describe(`browser locale ${locale}`, () => {
     test.use({ locale });
     test(`starts in ${expected.lang}`, async ({ page }) => {
       await expect(page.locator('html')).toHaveAttribute('lang', expected.lang);
-      await expect(page.locator('[data-test="T2"] h2')).toHaveText(expected.title);
+      await expect(page.locator('#settings h2')).toHaveText(expected.title);
       await expect(page.locator('#btn-connect')).toHaveText(expected.connect);
     });
   });

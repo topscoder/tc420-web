@@ -10,27 +10,9 @@ export default {
   'header.exportTxt': 'Log opslaan (.txt)',
 
   'banner.unsupported':
-    'Deze browser ondersteunt geen WebHID. Gebruik Chrome of Edge; Safari en Firefox kunnen geen USB-HID-apparaten benaderen.',
+    "Deze browser kan geen verbinding maken met USB-apparaten. Je kunt hier programma's maken en bewerken, maar gebruik Chrome of Edge op een computer om ze naar de TC420 te sturen.",
   'banner.sim':
-    'Je gebruikt de <strong>simulatie</strong>: er is geen echte TC420. Elk commando krijgt een nagebootst OK-antwoord. Verwijder <code>?sim=1</code> uit de adresregel voor het echte apparaat.',
-
-  'intro.title': 'Zo werkt TC420 Web',
-  'intro.text':
-    'Deze pagina werkt zonder internet. Elke actie en elk antwoord van de TC420 komt in het logboek onderaan. Het logboek blijft bewaard in deze browser, ook na herladen. Noteer bij elke test wat je op het apparaat ziet en klik op een resultaatknop. Sla na afloop het logboek op met <em>Log opslaan</em> en voeg het bestand toe als je een probleem meldt.',
-  'intro.order': 'Aanbevolen volgorde:',
-  'intro.step1': '<strong>T1</strong> Verbinden en <strong>T2</strong> Klok zetten. Veilig.',
-  'intro.step2': '<strong>T3</strong> Live bediening. Veilig: er wordt niets opgeslagen.',
-  'intro.step3':
-    "<strong>T4</strong> Beheer je programma's: importeren, maken, bewerken, back-up. Dit gebeurt alleen in de browser.",
-  'intro.step4': "<strong>T5</strong> Versturen. Dit overschrijft programma's op de controller.",
-  'intro.step5': '<strong>T6</strong> Alles wissen en <strong>T7</strong> Expert alleen als het nodig is.',
-
-  'badge.safe': 'veilig',
-  'badge.nothingStored': 'niets wordt opgeslagen',
-  'badge.browserOnly': 'alleen in de browser',
-  'badge.overwrites': "overschrijft programma's",
-  'badge.clears': 'wist de controller',
-  'badge.onRequest': 'alleen op aanwijzing',
+    'Je gebruikt de <strong>simulatie</strong>: er is geen echte TC420. Elk commando krijgt een nagebootst OK-antwoord. Zet hem uit onder <em>Geavanceerd</em> om het echte apparaat te gebruiken.',
 
   'common.cancel': 'Annuleren',
   'common.close': 'Sluiten',
@@ -123,22 +105,14 @@ export default {
 
   'last.result': 'Laatste resultaat: {text}',
 
-  'obs.label': 'Jouw waarneming:',
+  'obs.label': 'Notitie voor het logboek:',
   'obs.placeholder': 'Wat zie je op de TC420? (optioneel)',
   'obs.works': '✔ Werkt',
   'obs.fails': '✘ Werkt niet',
   'obs.saved': 'opgeslagen',
 
-  't1.title': 'Verbinden',
-  't1.text':
-    'Klik bovenaan op <em>Verbinden</em> en kies <em>Time Controller</em>. De pagina logt de USB-gegevens van het apparaat.',
   't1.connected': 'verbonden met {name}',
 
-  't2.title': 'Klok zetten',
-  't2.pcTime': 'Tijd van deze computer:',
-  't2.sync': 'Klok synchroniseren (0x11)',
-  't2.preview': 'Pakket tonen',
-  't2.note': 'Kijk daarna of de tijd op het display van de TC420 klopt.',
   't2.ok': 'klok gezet, bevestigd',
   't2.failed': 'geen bevestiging',
 
@@ -163,9 +137,8 @@ export default {
   't4.drop': 'Sleep <code>.tmf</code>-bestanden hierheen of <label for="file">kies bestanden</label>',
   't4.new': 'Nieuw programma',
   't4.testMode': 'Testschema faden/springen (komende minuten)',
-  't4.testWhat': 'Wat doet het testschema?',
   't4.testExplain':
-    'Het maakt een programma dat vanaf ongeveer 2 minuten na nu in 3 minuten CH1 geleidelijk naar 100 % brengt (faden) en CH2 op hetzelfde moment in één keer op 100 % zet (springen). Na nog 3 minuten dimt CH1 geleidelijk naar 0 en gaat CH2 in één keer uit. Zo kun je met T5 zien of de springvlag doet wat we verwachten. De controller moet daarvoor dit programma afspelen; kies het zo nodig op het display.',
+    'Maakt het programma FADETEST. Vanaf ongeveer 2 minuten na nu gaat CH1 in 3 minuten geleidelijk naar 100 %, terwijl CH2 in één keer op 100 % springt. 3 minuten later dimt CH1 geleidelijk naar 0 en gaat CH2 in één keer uit. Stuur het naar de controller om te controleren of faden en direct schakelen werken.',
   't4.saved': 'Automatisch opgeslagen in deze browser.',
   't4.savedMemory':
     "Deze browser kan niets opslaan (privévenster of geblokkeerde opslag). Je programma's verdwijnen als je de pagina sluit: maak een back-up.",
@@ -200,7 +173,6 @@ export default {
   't4.loadFailed': '{file} kon niet worden geladen: {error}',
   't4.listTitle': "Programma's (in deze volgorde naar de controller gestuurd)",
   't4.none': "Nog geen programma's.",
-  't4.bank': 'bank {n}',
   't4.steps': { one: '{count} stap', other: '{count} stappen' },
   't4.warnings': { one: '{count} waarschuwing', other: '{count} waarschuwingen' },
   't4.edit': 'Bewerken',
@@ -264,8 +236,6 @@ export default {
   'schedule.error.channels': 'onverwacht aantal kanalen: {count}',
 
   't5.title': 'Versturen naar de controller',
-  't5.note':
-    'Controleer daarna op het display: staan de namen er? Klopt het licht op het huidige tijdstip met de grafiek in T4?',
   't5.exportBackup': 'Nu een back-up maken',
   't5.multiple': "Meerdere programma's op de controller",
   't5.multipleHint':
@@ -273,12 +243,6 @@ export default {
   't5.resultOk': { one: '{count} schema verstuurd', other: "{count} schema's verstuurd" },
   't5.resultFailed': 'mislukt',
 
-  't6.title': "Alle programma's wissen",
-  't6.text':
-    "Stuurt 0x03. Daarna staan er geen programma's meer op de controller. Je moet bevestigen door <code>{word}</code> te typen.",
-  't6.button': 'Alles wissen (0x03)',
-  't6.word': 'WISSEN',
-  't6.prompt': "Typ {word} om alle programma's op de controller te wissen.",
   't6.ok': 'alles gewist, bevestigd',
   't6.failed': 'niet bevestigd',
 
@@ -305,5 +269,22 @@ export default {
   'log.clear': 'Logboek leegmaken',
   'log.clearConfirm': 'Het logboek leegmaken? Sla het eerst op als je het wilt bewaren.',
   'log.note':
-    'Het logboek staat in de opslag van deze browser en is altijd in het Engels, zodat het in foutmeldingen gedeeld kan worden. Gebruik na het testen <em>Log opslaan</em> en bewaar het bestand; leegmaken kan niet ongedaan worden.',
+    'Het logboek staat in deze browser en is altijd in het Engels, zodat het in foutmeldingen gedeeld kan worden. Leegmaken kan niet ongedaan worden.',
+
+  'main.intro':
+    'Maak een lichtschema en stuur het naar je TC420. Alles wordt in deze browser bewaard en werkt zonder internet.',
+  'settings.title': 'Instellingen',
+  'settings.backupTitle': 'Back-up',
+  'settings.controllerTitle': 'Controller',
+  'adv.title': 'Geavanceerd',
+  'adv.text': 'Hulpmiddelen om problemen op te lossen. Voor normaal gebruik heb je deze niet nodig.',
+  'adv.version': 'TC420 Web {version}',
+  'adv.reportTitle': 'Een probleem melden',
+  'adv.reportText':
+    'Sla het logboek hieronder op als bestand en <a href="https://github.com/topscoder/tc420-web/issues/new" target="_blank" rel="noopener">maak een issue aan op GitHub</a>. Beschrijf wat je deed en wat er gebeurde, en voeg het bestand toe. Het logboek bevat de berichten tussen app en controller, je programmanamen en je browserversie.',
+  'adv.simTitle': 'Simulatie',
+  'adv.sim': 'Simulatie gebruiken in plaats van een echte TC420',
+  'adv.simHint':
+    'De pagina herlaadt. Elk commando krijgt een nagebootst antwoord, zodat je alles kunt proberen zonder controller.',
+  'adv.testTitle': 'Test voor faden en schakelen',
 };

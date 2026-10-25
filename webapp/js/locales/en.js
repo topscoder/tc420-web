@@ -10,27 +10,9 @@ export default {
   'header.exportTxt': 'Save log (.txt)',
 
   'banner.unsupported':
-    'This browser does not support WebHID. Use Chrome or Edge; Safari and Firefox cannot access USB HID devices.',
+    'This browser cannot connect to USB devices. You can make and edit programs here, but to send them to the TC420 use Chrome or Edge on a computer.',
   'banner.sim':
-    'You are using the <strong>simulator</strong>: there is no real TC420. Every command gets a simulated OK reply. Remove <code>?sim=1</code> from the address bar to use the real device.',
-
-  'intro.title': 'How TC420 Web works',
-  'intro.text':
-    'This page works without internet. Every action and every reply from the TC420 goes into the log at the bottom. The log is kept in this browser, also after reloading. For each test, note what you see on the device and click a result button. When you are done, save the log with <em>Save log</em> and attach the file when you report a problem.',
-  'intro.order': 'Recommended order:',
-  'intro.step1': '<strong>T1</strong> Connect and <strong>T2</strong> Set clock. Safe.',
-  'intro.step2': '<strong>T3</strong> Live control. Safe: nothing is stored.',
-  'intro.step3':
-    '<strong>T4</strong> Manage your programs: import, create, edit, back up. This only happens in the browser.',
-  'intro.step4': '<strong>T5</strong> Send. This overwrites programs on the controller.',
-  'intro.step5': '<strong>T6</strong> Clear all and <strong>T7</strong> Expert only when needed.',
-
-  'badge.safe': 'safe',
-  'badge.nothingStored': 'nothing is stored',
-  'badge.browserOnly': 'browser only',
-  'badge.overwrites': 'overwrites programs',
-  'badge.clears': 'clears the controller',
-  'badge.onRequest': 'only when asked',
+    'You are using the <strong>simulator</strong>: there is no real TC420. Every command gets a simulated OK reply. Turn it off under <em>Advanced</em> to use the real device.',
 
   'common.cancel': 'Cancel',
   'common.close': 'Close',
@@ -115,22 +97,14 @@ export default {
 
   'last.result': 'Last result: {text}',
 
-  'obs.label': 'Your observation:',
+  'obs.label': 'Note for the log:',
   'obs.placeholder': 'What do you see on the TC420? (optional)',
   'obs.works': '✔ Works',
   'obs.fails': '✘ Does not work',
   'obs.saved': 'saved',
 
-  't1.title': 'Connect',
-  't1.text':
-    'Click <em>Connect</em> at the top and choose <em>Time Controller</em>. The page logs the USB details of the device.',
   't1.connected': 'connected to {name}',
 
-  't2.title': 'Set clock',
-  't2.pcTime': 'Computer time:',
-  't2.sync': 'Synchronise clock (0x11)',
-  't2.preview': 'Show packet',
-  't2.note': 'Then check that the time on the TC420 display is right.',
   't2.ok': 'clock set, confirmed',
   't2.failed': 'not confirmed',
 
@@ -155,9 +129,8 @@ export default {
   't4.drop': 'Drop <code>.tmf</code> files here or <label for="file">choose files</label>',
   't4.new': 'New program',
   't4.testMode': 'Fade/jump test schedule (next minutes)',
-  't4.testWhat': 'What does the test schedule do?',
   't4.testExplain':
-    'It creates a program that, starting about 2 minutes from now, takes CH1 gradually to 100 % in 3 minutes (fade) and switches CH2 to 100 % at once at the same moment (jump). After another 3 minutes CH1 dims gradually to 0 and CH2 switches off at once. This lets you see with T5 whether the jump flag does what we expect. The controller has to be playing this program; select it on the display if needed.',
+    'Creates the program FADETEST. Starting about 2 minutes from now, CH1 fades up to 100 % in 3 minutes while CH2 switches to 100 % at once. 3 minutes later CH1 fades back to 0 and CH2 switches off at once. Send it to the controller to check that fading and switching instantly work.',
   't4.saved': 'Saved automatically in this browser.',
   't4.savedMemory':
     'This browser cannot store data (private window or blocked storage). Your programs are lost when you close the page: export a backup.',
@@ -192,7 +165,6 @@ export default {
   't4.loadFailed': '{file} could not be loaded: {error}',
   't4.listTitle': 'Programs (sent to the controller in this order)',
   't4.none': 'No programs yet.',
-  't4.bank': 'bank {n}',
   't4.steps': { one: '{count} step', other: '{count} steps' },
   't4.warnings': { one: '{count} warning', other: '{count} warnings' },
   't4.edit': 'Edit',
@@ -256,8 +228,6 @@ export default {
   'schedule.error.channels': 'unexpected number of channels: {count}',
 
   't5.title': 'Send to the controller',
-  't5.note':
-    'Then check on the display: are the names there? Does the light at the current time match the chart in T4?',
   't5.exportBackup': 'Export backup now',
   't5.multiple': 'Multiple programs on the controller',
   't5.multipleHint':
@@ -265,12 +235,6 @@ export default {
   't5.resultOk': { one: '{count} schedule sent', other: '{count} schedules sent' },
   't5.resultFailed': 'failed',
 
-  't6.title': 'Clear all programs',
-  't6.text':
-    'Sends 0x03. Afterwards there are no programs left on the controller. You have to confirm by typing <code>{word}</code>.',
-  't6.button': 'Clear all (0x03)',
-  't6.word': 'CLEAR',
-  't6.prompt': 'Type {word} to clear all programs on the controller.',
   't6.ok': 'all cleared, confirmed',
   't6.failed': 'not confirmed',
 
@@ -297,5 +261,22 @@ export default {
   'log.clear': 'Clear log',
   'log.clearConfirm': 'Clear the log? Save it first if you want to keep it.',
   'log.note':
-    'The log is stored in this browser and is always in English, so it can be shared in bug reports. After testing, use <em>Save log</em> and keep the file; clearing cannot be undone.',
+    'The log is kept in this browser and is always in English, so it can be shared in bug reports. Clearing cannot be undone.',
+
+  'main.intro':
+    'Make a lighting schedule and send it to your TC420. Everything is saved in this browser and works without internet.',
+  'settings.title': 'Settings',
+  'settings.backupTitle': 'Backup',
+  'settings.controllerTitle': 'Controller',
+  'adv.title': 'Advanced',
+  'adv.text': 'Tools for troubleshooting. You do not need these for normal use.',
+  'adv.version': 'TC420 Web {version}',
+  'adv.reportTitle': 'Report a problem',
+  'adv.reportText':
+    'Save the log below as a file, then <a href="https://github.com/topscoder/tc420-web/issues/new" target="_blank" rel="noopener">open an issue on GitHub</a>. Describe what you did and what happened, and attach the file. The log contains the messages exchanged with the controller, your program names and your browser version.',
+  'adv.simTitle': 'Simulator',
+  'adv.sim': 'Use the simulator instead of a real TC420',
+  'adv.simHint':
+    'The page reloads. Every command gets a simulated reply, so you can try everything without a controller.',
+  'adv.testTitle': 'Fade and switch test',
 };

@@ -22,86 +22,17 @@
               <button role="menuitem" id="menu-disconnect" data-i18n="device.menuDisconnect"></button>
             </div>
           </div>
-          <button id="btn-export-json" data-i18n="header.exportJson"></button>
-          <button id="btn-export-txt" data-i18n="header.exportTxt"></button>
         </div>
       </header>
 
       <div id="unsupported" class="warn-box" data-i18n="banner.unsupported" hidden></div>
       <div id="sim-note" class="sim-box" data-i18n-html="banner.sim" hidden></div>
 
-      <section class="card">
-        <h2 data-i18n="intro.title"></h2>
-        <p data-i18n-html="intro.text"></p>
-        <p data-i18n="intro.order"></p>
-        <ol class="plan">
-          <li data-i18n-html="intro.step1"></li>
-          <li data-i18n-html="intro.step2"></li>
-          <li data-i18n-html="intro.step3"></li>
-          <li data-i18n-html="intro.step4"></li>
-          <li data-i18n-html="intro.step5"></li>
-        </ol>
-      </section>
+      <p class="lead" data-i18n="main.intro"></p>
 
-      <section class="card" data-test="T1">
-        <div class="card-head">
-          <span class="tid">T1</span>
-          <h2 data-i18n="t1.title"></h2>
-          <span class="badge safe" data-i18n="badge.safe"></span>
-        </div>
-        <p data-i18n-html="t1.text"></p>
-        <div class="last" id="last-T1"></div>
-      </section>
-
-      <section class="card" data-test="T2">
-        <div class="card-head">
-          <span class="tid">T2</span>
-          <h2 data-i18n="t2.title"></h2>
-          <span class="badge safe" data-i18n="badge.safe"></span>
-        </div>
-        <p><span data-i18n="t2.pcTime"></span> <strong id="pc-time"></strong></p>
-        <div class="row">
-          <button class="primary needs-device" id="btn-sync" data-i18n="t2.sync"></button>
-          <button id="btn-sync-preview" data-i18n="t2.preview"></button>
-        </div>
-        <p class="note" data-i18n="t2.note"></p>
-        <div class="last" id="last-T2"></div>
-      </section>
-
-      <section class="card" data-test="T3">
-        <div class="card-head">
-          <span class="tid">T3</span>
-          <h2 data-i18n="t3.title"></h2>
-          <span class="badge safe" data-i18n="badge.nothingStored"></span>
-        </div>
-        <p data-i18n-html="t3.text"></p>
-        <div class="row">
-          <label
-            ><span data-i18n="t3.name"></span> <input type="text" id="play-name" value="TEST" maxlength="8" size="9"
-          /></label>
-          <button class="primary needs-device" id="btn-play-start" data-i18n="t3.start"></button>
-          <button class="needs-device" id="btn-play-stop" data-i18n="t3.stop" disabled></button>
-          <span class="progress note" id="play-stats"></span>
-        </div>
-        <div class="sliders" id="sliders"></div>
-        <div class="row">
-          <button class="needs-play" id="btn-all-0" data-i18n="t3.all0" disabled></button>
-          <button class="needs-play" id="btn-all-100" data-i18n="t3.all100" disabled></button>
-          <button class="needs-play" id="btn-sweep" data-i18n="t3.sweep" disabled></button>
-          <label class="note"><input type="checkbox" id="verbose" /> <span data-i18n="t3.verbose"></span></label>
-        </div>
-        <p class="note" data-i18n="t3.note"></p>
-        <div class="last" id="last-T3"></div>
-      </section>
-
-      <section class="card" data-test="T4">
-        <div class="card-head">
-          <span class="tid">T4</span>
-          <h2 data-i18n="t4.title"></h2>
-          <span class="badge safe" data-i18n="badge.browserOnly"></span>
-        </div>
+      <section class="card" id="programs-card">
+        <h2 data-i18n="t4.title"></h2>
         <p class="note" id="lib-status"></p>
-        <p class="note" data-i18n="t4.noReadBack"></p>
         <div id="drop">
           <span data-i18n-html="t4.drop"></span><input id="file" type="file" accept=".tmf" multiple hidden />
         </div>
@@ -109,15 +40,7 @@
           <button id="btn-new-mode" data-i18n="t4.new"></button>
           <select id="template-select" data-i18n-attr="aria-label:templates.title"></select>
           <button id="btn-add-template" data-i18n="templates.add"></button>
-          <button id="btn-test-mode" data-i18n="t4.testMode"></button>
-          <button id="btn-export-backup" data-i18n="t4.exportBackup"></button>
-          <button id="btn-restore-backup" data-i18n="t4.restoreBackup"></button>
-          <input id="backup-file" type="file" accept=".json,application/json" hidden />
         </div>
-        <details>
-          <summary data-i18n="t4.testWhat"></summary>
-          <p class="note" data-i18n="t4.testExplain"></p>
-        </details>
         <h3 data-i18n="t4.listTitle"></h3>
         <div class="modes" id="modes"></div>
         <div id="editor" hidden>
@@ -148,45 +71,88 @@
         <div class="last" id="last-T4"></div>
       </section>
 
-      <section class="card" data-test="T5">
-        <div class="card-head">
-          <span class="tid">T5</span>
-          <h2 data-i18n="t5.title"></h2>
-          <span class="badge danger" data-i18n="badge.overwrites"></span>
-        </div>
+      <section class="card" id="send-card">
+        <h2 data-i18n="t5.title"></h2>
         <p id="t5-text"></p>
         <div class="row">
           <button class="danger" id="btn-download"></button>
           <span class="progress" id="dl-progress"></span>
           <button id="btn-backup-after" data-i18n="t5.exportBackup" hidden></button>
         </div>
+        <p class="note" data-i18n="t4.noReadBack"></p>
+      </section>
+
+      <details class="card fold" id="settings">
+        <summary><h2 data-i18n="settings.title"></h2></summary>
+        <h3 data-i18n="settings.backupTitle"></h3>
+        <div class="row">
+          <button id="btn-export-backup" data-i18n="t4.exportBackup"></button>
+          <button id="btn-restore-backup" data-i18n="t4.restoreBackup"></button>
+          <input id="backup-file" type="file" accept=".json,application/json" hidden />
+        </div>
+        <h3 data-i18n="settings.controllerTitle"></h3>
         <p>
           <label><input type="checkbox" id="setting-multiple" /> <span data-i18n="t5.multiple"></span></label>
           <br /><span class="note" data-i18n="t5.multipleHint"></span>
         </p>
-        <p class="note" data-i18n="t5.note"></p>
-        <div class="last" id="last-T5"></div>
-      </section>
+      </details>
 
-      <section class="card" data-test="T6">
-        <div class="card-head">
-          <span class="tid">T6</span>
-          <h2 data-i18n="t6.title"></h2>
-          <span class="badge danger" data-i18n="badge.clears"></span>
-        </div>
-        <p id="t6-text"></p>
+      <details class="card fold" id="advanced">
+        <summary><h2 data-i18n="adv.title"></h2></summary>
+        <p class="note" data-i18n="adv.text"></p>
+        <p class="note" id="app-version"></p>
+
+        <h3 data-i18n="adv.reportTitle"></h3>
+        <p data-i18n-html="adv.reportText"></p>
+
+        <h3 data-i18n="log.title"></h3>
+        <p class="note" id="log-count"></p>
+        <div id="log" aria-live="polite"></div>
         <div class="row">
-          <button class="danger needs-device" id="btn-clear" data-i18n="t6.button"></button>
+          <button id="btn-export-json" data-i18n="header.exportJson"></button>
+          <button id="btn-export-txt" data-i18n="header.exportTxt"></button>
+          <button id="btn-new-session" data-i18n="log.newSession"></button>
+          <button id="btn-clear-log" data-i18n="log.clear"></button>
         </div>
-        <div class="last" id="last-T6"></div>
-      </section>
+        <div class="obs">
+          <span class="note" data-i18n="obs.label"></span>
+          <input type="text" id="obs-note" data-i18n-attr="placeholder:obs.placeholder" />
+          <button class="small" id="obs-ok" data-i18n="obs.works"></button>
+          <button class="small" id="obs-bad" data-i18n="obs.fails"></button>
+          <span class="saved" id="obs-saved"></span>
+        </div>
+        <p class="note" data-i18n-html="log.note"></p>
 
-      <section class="card" data-test="T7">
-        <div class="card-head">
-          <span class="tid">T7</span>
-          <h2 data-i18n="t7.title"></h2>
-          <span class="badge danger" data-i18n="badge.onRequest"></span>
+        <h3 data-i18n="adv.simTitle"></h3>
+        <p>
+          <label><input type="checkbox" id="setting-sim" /> <span data-i18n="adv.sim"></span></label>
+          <br /><span class="note" data-i18n="adv.simHint"></span>
+        </p>
+
+        <h3 data-i18n="t3.title"></h3>
+        <p data-i18n-html="t3.text"></p>
+        <div class="row">
+          <label
+            ><span data-i18n="t3.name"></span> <input type="text" id="play-name" value="TEST" maxlength="8" size="9"
+          /></label>
+          <button class="primary needs-device" id="btn-play-start" data-i18n="t3.start"></button>
+          <button class="needs-device" id="btn-play-stop" data-i18n="t3.stop" disabled></button>
+          <span class="progress note" id="play-stats"></span>
         </div>
+        <div class="sliders" id="sliders"></div>
+        <div class="row">
+          <button class="needs-play" id="btn-all-0" data-i18n="t3.all0" disabled></button>
+          <button class="needs-play" id="btn-all-100" data-i18n="t3.all100" disabled></button>
+          <button class="needs-play" id="btn-sweep" data-i18n="t3.sweep" disabled></button>
+          <label class="note"><input type="checkbox" id="verbose" /> <span data-i18n="t3.verbose"></span></label>
+        </div>
+        <div class="last" id="last-T3"></div>
+
+        <h3 data-i18n="adv.testTitle"></h3>
+        <p class="note" data-i18n="t4.testExplain"></p>
+        <div class="row"><button id="btn-test-mode" data-i18n="t4.testMode"></button></div>
+
+        <h3 data-i18n="t7.title"></h3>
         <p class="note" data-i18n="t7.text"></p>
         <div class="row">
           <label><span data-i18n="t7.cmd"></span> <input type="text" id="raw-cmd" value="11" size="4" /></label>
@@ -200,22 +166,7 @@
           <button class="needs-device" id="btn-raw" data-i18n="t7.send"></button>
         </div>
         <div class="last" id="last-T7"></div>
-      </section>
-
-      <section class="card">
-        <div class="card-head">
-          <h2 data-i18n="log.title"></h2>
-          <span class="note" id="log-count"></span>
-        </div>
-        <div id="log" aria-live="polite"></div>
-        <div class="row">
-          <button id="btn-export-json2" data-i18n="header.exportJson"></button>
-          <button id="btn-export-txt2" data-i18n="header.exportTxt"></button>
-          <button id="btn-new-session" data-i18n="log.newSession"></button>
-          <button id="btn-clear-log" data-i18n="log.clear"></button>
-        </div>
-        <p class="note" data-i18n-html="log.note"></p>
-      </section>
+      </details>
     </main>
     <div id="toast" class="toast" role="status" aria-live="polite" hidden>
       <span id="toast-text"></span>

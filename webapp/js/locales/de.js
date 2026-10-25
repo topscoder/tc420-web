@@ -10,27 +10,9 @@ export default {
   'header.exportTxt': 'Protokoll speichern (.txt)',
 
   'banner.unsupported':
-    'Dieser Browser unterstützt kein WebHID. Verwenden Sie Chrome oder Edge; Safari und Firefox können nicht auf USB-HID-Geräte zugreifen.',
+    'Dieser Browser kann keine Verbindung zu USB-Geräten herstellen. Sie können hier Programme erstellen und bearbeiten, aber zum Senden an den TC420 verwenden Sie Chrome oder Edge auf einem Computer.',
   'banner.sim':
-    'Sie verwenden die <strong>Simulation</strong>: Es ist kein echter TC420 angeschlossen. Jeder Befehl erhält eine simulierte OK-Antwort. Entfernen Sie <code>?sim=1</code> aus der Adresszeile, um das echte Gerät zu verwenden.',
-
-  'intro.title': 'So funktioniert TC420 Web',
-  'intro.text':
-    'Diese Seite funktioniert ohne Internet. Jede Aktion und jede Antwort des TC420 landet im Protokoll unten. Das Protokoll bleibt in diesem Browser gespeichert, auch nach dem Neuladen. Notieren Sie bei jedem Test, was Sie am Gerät sehen, und klicken Sie auf eine Ergebnis-Schaltfläche. Speichern Sie zum Schluss das Protokoll mit <em>Protokoll speichern</em> und hängen Sie die Datei an, wenn Sie ein Problem melden.',
-  'intro.order': 'Empfohlene Reihenfolge:',
-  'intro.step1': '<strong>T1</strong> Verbinden und <strong>T2</strong> Uhr stellen. Sicher.',
-  'intro.step2': '<strong>T3</strong> Live-Steuerung. Sicher: Es wird nichts gespeichert.',
-  'intro.step3':
-    '<strong>T4</strong> Programme verwalten: importieren, erstellen, bearbeiten, sichern. Das geschieht nur im Browser.',
-  'intro.step4': '<strong>T5</strong> Senden. Dadurch werden Programme auf dem Controller überschrieben.',
-  'intro.step5': '<strong>T6</strong> Alles löschen und <strong>T7</strong> Experte nur bei Bedarf.',
-
-  'badge.safe': 'sicher',
-  'badge.nothingStored': 'nichts wird gespeichert',
-  'badge.browserOnly': 'nur im Browser',
-  'badge.overwrites': 'überschreibt Programme',
-  'badge.clears': 'löscht den Controller',
-  'badge.onRequest': 'nur auf Anweisung',
+    'Sie verwenden die <strong>Simulation</strong>: Es ist kein echter TC420 angeschlossen. Jeder Befehl erhält eine simulierte OK-Antwort. Schalten Sie sie unter <em>Erweitert</em> aus, um das echte Gerät zu verwenden.',
 
   'common.cancel': 'Abbrechen',
   'common.close': 'Schließen',
@@ -123,22 +105,14 @@ export default {
 
   'last.result': 'Letztes Ergebnis: {text}',
 
-  'obs.label': 'Ihre Beobachtung:',
+  'obs.label': 'Notiz für das Protokoll:',
   'obs.placeholder': 'Was sehen Sie am TC420? (optional)',
   'obs.works': '✔ Funktioniert',
   'obs.fails': '✘ Funktioniert nicht',
   'obs.saved': 'gespeichert',
 
-  't1.title': 'Verbinden',
-  't1.text':
-    'Klicken Sie oben auf <em>Verbinden</em> und wählen Sie <em>Time Controller</em>. Die Seite protokolliert die USB-Daten des Geräts.',
   't1.connected': 'verbunden mit {name}',
 
-  't2.title': 'Uhr stellen',
-  't2.pcTime': 'Uhrzeit dieses Computers:',
-  't2.sync': 'Uhr synchronisieren (0x11)',
-  't2.preview': 'Paket anzeigen',
-  't2.note': 'Prüfen Sie danach, ob die Uhrzeit im Display des TC420 stimmt.',
   't2.ok': 'Uhr gestellt, bestätigt',
   't2.failed': 'nicht bestätigt',
 
@@ -164,9 +138,8 @@ export default {
   't4.drop': '<code>.tmf</code>-Dateien hierher ziehen oder <label for="file">Dateien auswählen</label>',
   't4.new': 'Neues Programm',
   't4.testMode': 'Testzeitplan Überblenden/Schalten (nächste Minuten)',
-  't4.testWhat': 'Was macht der Testzeitplan?',
   't4.testExplain':
-    'Er erstellt ein Programm, das ab etwa 2 Minuten nach jetzt CH1 innerhalb von 3 Minuten allmählich auf 100 % bringt (Überblenden) und CH2 im selben Moment sofort auf 100 % schaltet (Schalten). Nach weiteren 3 Minuten dimmt CH1 allmählich auf 0 und CH2 schaltet sofort aus. So können Sie mit T5 sehen, ob das Schalt-Flag wie erwartet funktioniert. Der Controller muss dafür dieses Programm abspielen; wählen Sie es bei Bedarf im Display aus.',
+    'Erstellt das Programm FADETEST. Ab etwa 2 Minuten nach jetzt blendet CH1 innerhalb von 3 Minuten auf 100 % auf, während CH2 sofort auf 100 % schaltet. 3 Minuten später blendet CH1 wieder auf 0 ab und CH2 schaltet sofort aus. Senden Sie es an den Controller, um zu prüfen, ob Überblenden und sofortiges Schalten funktionieren.',
   't4.saved': 'Automatisch in diesem Browser gespeichert.',
   't4.savedMemory':
     'Dieser Browser kann nichts speichern (privates Fenster oder blockierter Speicher). Ihre Programme gehen beim Schließen der Seite verloren: Erstellen Sie eine Sicherung.',
@@ -202,7 +175,6 @@ export default {
   't4.loadFailed': '{file} konnte nicht geladen werden: {error}',
   't4.listTitle': 'Programme (werden in dieser Reihenfolge an den Controller gesendet)',
   't4.none': 'Noch keine Programme.',
-  't4.bank': 'Bank {n}',
   't4.steps': { one: '{count} Schritt', other: '{count} Schritte' },
   't4.warnings': { one: '{count} Warnung', other: '{count} Warnungen' },
   't4.edit': 'Bearbeiten',
@@ -267,8 +239,6 @@ export default {
   'schedule.error.channels': 'unerwartete Anzahl Kanäle: {count}',
 
   't5.title': 'An den Controller senden',
-  't5.note':
-    'Prüfen Sie danach im Display: Stehen die Namen dort? Passt das Licht zur aktuellen Uhrzeit zum Diagramm in T4?',
   't5.exportBackup': 'Jetzt Sicherung erstellen',
   't5.multiple': 'Mehrere Programme auf dem Controller',
   't5.multipleHint':
@@ -276,12 +246,6 @@ export default {
   't5.resultOk': { one: '{count} Zeitplan gesendet', other: '{count} Zeitpläne gesendet' },
   't5.resultFailed': 'fehlgeschlagen',
 
-  't6.title': 'Alle Programme löschen',
-  't6.text':
-    'Sendet 0x03. Danach sind keine Programme mehr auf dem Controller. Sie müssen durch Eingabe von <code>{word}</code> bestätigen.',
-  't6.button': 'Alles löschen (0x03)',
-  't6.word': 'LÖSCHEN',
-  't6.prompt': 'Geben Sie {word} ein, um alle Programme auf dem Controller zu löschen.',
   't6.ok': 'alles gelöscht, bestätigt',
   't6.failed': 'nicht bestätigt',
 
@@ -308,5 +272,22 @@ export default {
   'log.clear': 'Protokoll leeren',
   'log.clearConfirm': 'Protokoll leeren? Speichern Sie es vorher, wenn Sie es behalten möchten.',
   'log.note':
-    'Das Protokoll wird in diesem Browser gespeichert und ist immer auf Englisch, damit es in Fehlerberichten geteilt werden kann. Verwenden Sie nach dem Testen <em>Protokoll speichern</em> und bewahren Sie die Datei auf; das Leeren kann nicht rückgängig gemacht werden.',
+    'Das Protokoll wird in diesem Browser gespeichert und ist immer auf Englisch, damit es in Fehlerberichten geteilt werden kann. Das Leeren kann nicht rückgängig gemacht werden.',
+
+  'main.intro':
+    'Erstellen Sie einen Lichtplan und senden Sie ihn an Ihren TC420. Alles wird in diesem Browser gespeichert und funktioniert ohne Internet.',
+  'settings.title': 'Einstellungen',
+  'settings.backupTitle': 'Sicherung',
+  'settings.controllerTitle': 'Controller',
+  'adv.title': 'Erweitert',
+  'adv.text': 'Werkzeuge zur Fehlersuche. Für die normale Nutzung brauchen Sie diese nicht.',
+  'adv.version': 'TC420 Web {version}',
+  'adv.reportTitle': 'Ein Problem melden',
+  'adv.reportText':
+    'Speichern Sie das Protokoll unten als Datei und <a href="https://github.com/topscoder/tc420-web/issues/new" target="_blank" rel="noopener">eröffnen Sie ein Issue auf GitHub</a>. Beschreiben Sie, was Sie getan haben und was passiert ist, und hängen Sie die Datei an. Das Protokoll enthält die Nachrichten zwischen App und Controller, Ihre Programmnamen und Ihre Browserversion.',
+  'adv.simTitle': 'Simulation',
+  'adv.sim': 'Simulation statt eines echten TC420 verwenden',
+  'adv.simHint':
+    'Die Seite wird neu geladen. Jeder Befehl erhält eine simulierte Antwort, sodass Sie alles ohne Controller ausprobieren können.',
+  'adv.testTitle': 'Test für Überblenden und Schalten',
 };

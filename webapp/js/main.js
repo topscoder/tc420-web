@@ -1,6 +1,6 @@
-// TC420 Web entry point: wires language, program library, device connection, sending, logbook and test bench UI.
+// TC420 Web entry point: wires language, program library, device connection, sending, logbook and the Advanced panel.
 // UI texts come from js/locales/*; the log stays in English so it can be shared in bug reports.
-import { CMD, clockPayload, parseHexBytes, describeFrame, buildFrame } from './protocol.js';
+import { parseHexBytes } from './protocol.js';
 import { DeviceConnection } from './device.js';
 import { Logbook } from './logbook.js';
 import { I18n, LANGUAGES, LANG_KEY, detectLanguage, applyTranslations } from './i18n.js';
@@ -14,7 +14,7 @@ import { mountDevice } from './ui/device.js';
 import { mountSend } from './ui/send.js';
 
 const APP = 'TC420 Web';
-const APP_VERSION = '0.8.0';
+const APP_VERSION = '0.9.0';
 const SIM = new URLSearchParams(location.search).has('sim');
 
 // localStorage can throw (private mode, blocked site data); then nothing is remembered.
@@ -77,8 +77,8 @@ function startSession() {
   );
 }
 
-['btn-export-json', 'btn-export-json2'].forEach((id) => $(id).addEventListener('click', exportJson));
-['btn-export-txt', 'btn-export-txt2'].forEach((id) => $(id).addEventListener('click', exportTxt));
+$('btn-export-json').addEventListener('click', exportJson);
+$('btn-export-txt').addEventListener('click', exportTxt);
 $('btn-new-session').addEventListener('click', startSession);
 $('btn-clear-log').addEventListener('click', () => {
   if (!confirm(t('log.clearConfirm'))) return;
@@ -87,31 +87,34 @@ $('btn-clear-log').addEventListener('click', () => {
   startSession();
 });
 
-// ---------- observations ----------
+// ---------- notes for the log ----------
 
-document.querySelectorAll('[data-test]').forEach((card) => {
-  const test = card.dataset.test;
-  const box = el('div', { class: 'obs' });
-  const note = el('input', { type: 'text', 'data-i18n-attr': 'placeholder:obs.placeholder' });
-  const ok = el('button', { class: 'small', 'data-i18n': 'obs.works' });
-  const bad = el('button', { class: 'small', 'data-i18n': 'obs.fails' });
-  const saved = el('span', { class: 'saved' });
-  const save = (good) => {
-    const extra = note.value.trim() ? ` · ${note.value.trim()}` : '';
-    log(good ? 'obs-ok' : 'obs-bad', `observation: ${good ? 'works' : 'does not work'}${extra}`, test);
-    note.value = '';
-    saved.textContent = t('obs.saved');
-    setTimeout(() => {
-      saved.textContent = '';
-    }, 2000);
-  };
-  ok.addEventListener('click', () => save(true));
-  bad.addEventListener('click', () => save(false));
-  note.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') save(true);
-  });
-  box.append(el('span', { class: 'note', 'data-i18n': 'obs.label' }), note, ok, bad, saved);
-  card.append(box);
+const obsNote = $('obs-note');
+function saveObservation(good) {
+  const extra = obsNote.value.trim() ? ` · ${obsNote.value.trim()}` : '';
+  log(good ? 'obs-ok' : 'obs-bad', `observation: ${good ? 'works' : 'does not work'}${extra}`);
+  obsNote.value = '';
+  $('obs-saved').textContent = t('obs.saved');
+  setTimeout(() => {
+    $('obs-saved').textContent = '';
+  }, 2000);
+}
+$('obs-ok').addEventListener('click', () => saveObservation(true));
+$('obs-bad').addEventListener('click', () => saveObservation(false));
+obsNote.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') saveObservation(true);
+});
+
+// ---------- simulator ----------
+
+const simSetting = $('setting-sim');
+simSetting.checked = SIM;
+simSetting.addEventListener('change', () => {
+  const url = new URL(location.href);
+  if (simSetting.checked) url.searchParams.set('sim', '1');
+  else url.searchParams.delete('sim');
+  log('info', `simulator turned ${simSetting.checked ? 'on' : 'off'}; reloading`);
+  location.assign(url);
 });
 
 // ---------- device ----------
@@ -158,45 +161,7 @@ const device = mountDevice({
 const send = mountSend({ conn, store, device, programs, live, log, i18n, onChange: () => updateButtons() });
 store.onChange(() => send.render());
 
-// ---------- T2 clock ----------
-
-const showClock = () => {
-  $('pc-time').textContent = i18n.formatDateTime(new Date(), { dateStyle: 'full', timeStyle: 'medium' });
-};
-setInterval(showClock, 500);
-
-$('btn-sync').addEventListener('click', async () => {
-  const r = await conn.send(CMD.SET_CLOCK, clockPayload(new Date()), { test: 'T2' });
-  setLast('T2', r.ok, r.ok ? 't2.ok' : 't2.failed');
-});
-$('btn-sync-preview').addEventListener('click', () => {
-  const frame = buildFrame(CMD.SET_CLOCK, clockPayload(new Date()));
-  log('info', `preview (not sent): ${describeFrame(frame)}`, 'T2');
-});
-
-// ---------- T6 clear ----------
-
-const showClearText = () => {
-  $('t6-text').innerHTML = t('t6.text', { word: t('t6.word') });
-};
-
-$('btn-clear').addEventListener('click', async () => {
-  const word = t('t6.word');
-  const answer = prompt(t('t6.prompt', { word }));
-  if (answer?.trim().toUpperCase() !== word.toUpperCase()) {
-    log('info', 'clearing cancelled', 'T6');
-    return;
-  }
-  if (live.playing) await live.stop();
-  const r = await conn.send(CMD.CLEAR_ALL, [], { test: 'T6' });
-  if (r.ok) {
-    store.markSent([]);
-    programs.refresh();
-  }
-  setLast('T6', r.ok, r.ok ? 't6.ok' : 't6.failed');
-});
-
-// ---------- T7 raw ----------
+// ---------- raw packet ----------
 
 $('btn-raw').addEventListener('click', async () => {
   let cmd;
@@ -222,8 +187,7 @@ function applyLanguage() {
   document.title = t('app.title');
   langSelect.value = i18n.lang;
   applyTranslations(document, i18n);
-  showClearText();
-  showClock();
+  $('app-version').textContent = t('adv.version', { version: APP_VERSION });
   updateButtons();
   refreshResults();
   programs.refresh();

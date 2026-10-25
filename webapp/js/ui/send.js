@@ -201,6 +201,7 @@ export function mountSend({ conn, store, device, programs, live, log, i18n, onCh
         label: 'send.showLog',
         run: () => {
           close();
+          $('advanced').open = true;
           $('log').scrollIntoView({ behavior: 'smooth' });
         },
       },

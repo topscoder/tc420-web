@@ -62,6 +62,7 @@ test('the clock can be left out', async ({ page }) => {
 test('multiple programs mode sends all programs in list order', async ({ page }) => {
   await open(page);
   await importBoth(page);
+  await page.locator('#settings > summary').click();
   await page.check('#setting-multiple');
   await expect(page.locator('#btn-download')).toHaveText('Send 2 programs to TC420');
   await page.click('#btn-download');
@@ -107,6 +108,7 @@ test('no reply while writing: the controller may be empty and the badge goes awa
   await expect(dialog(page)).toContainText('The controller may now be empty or contain an incomplete program.');
   await page.locator('#dlg-send').getByRole('button', { name: 'Show log' }).click();
   await expect(dialog(page)).toBeHidden();
+  await expect(page.locator('#log')).toBeVisible(); // "Show log" opens Advanced
   await expect(page.locator('#log .k-error').last()).toContainText(
     'sending failed: noReply during write (ZOMER step 1)',
   );
@@ -143,7 +145,6 @@ for (const [name, text] of [
     await open(page, `&simOpen=${name}`);
     await page.click('#btn-connect');
     await expect(page.locator('#toast-text')).toContainText(text);
-    await expect(page.locator('#last-T1')).toContainText(text);
     await expect(page.locator('#btn-connect')).toHaveText('Connect TC420');
   });
 }

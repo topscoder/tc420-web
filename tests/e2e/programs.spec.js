@@ -65,6 +65,7 @@ test('duplicate and delete', async ({ page }) => {
 
 test('exports a backup and restores it', async ({ page }) => {
   await page.setInputFiles('#file', [schemaPath('WINTER'), schemaPath('AFRIKA')]);
+  await page.locator('#settings > summary').click();
   const [download] = await Promise.all([page.waitForEvent('download'), page.click('#btn-export-backup')]);
   expect(download.suggestedFilename()).toMatch(/^tc420-web-backup-\d{8}-\d{4}\.json$/);
   const file = await download.path();
@@ -120,6 +121,7 @@ test('marks the program on the controller and notices edits after sending', asyn
 test('multiple programs setting shows slot numbers and reordering, and is remembered', async ({ page }) => {
   await page.setInputFiles('#file', [schemaPath('WINTER'), schemaPath('ZOMER')]);
   await expect(items(page).first().locator('.tid')).toHaveCount(0);
+  await page.locator('#settings > summary').click();
   await page.check('#setting-multiple');
   await expect(items(page).first().locator('.tid')).toHaveText('Program 1');
   await items(page).nth(1).getByRole('button', { name: 'Move up' }).click();
@@ -149,7 +151,7 @@ test('warns when the browser cannot store anything', async ({ page }) => {
 test('the library is shown in Dutch and German too', async ({ page }) => {
   await page.setInputFiles('#file', schemaPath('WINTER'));
   await page.selectOption('#lang', 'nl');
-  await expect(page.locator('[data-test="T4"] h2')).toHaveText("Mijn programma's");
+  await expect(page.locator('#programs-card h2')).toHaveText("Mijn programma's");
   await expect(page.locator('#lib-status')).toHaveText('Automatisch opgeslagen in deze browser.');
   await expect(items(page).first().getByRole('button', { name: 'Dupliceren' })).toBeVisible();
   await page.selectOption('#lang', 'de');

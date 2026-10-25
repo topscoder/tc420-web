@@ -40,7 +40,8 @@ test('every key used in index.html and the UI code exists', () => {
   for (const m of html.matchAll(/data-i18n-attr="([^"]+)"/g)) {
     m[1].split(';').forEach((pair) => keys.add(pair.split(':')[1].trim()));
   }
-  const prefixes = '(?:app|header|banner|intro|badge|last|obs|t[1-7]|schedule|log|editor|templates|device|send|common)';
+  const prefixes =
+    '(?:app|header|banner|main|settings|adv|last|obs|t[1-7]|schedule|log|editor|templates|device|send|common)';
   const literal = new RegExp(`'(${prefixes}\\.[\\w.]+)'`, 'g');
   for (const file of filesIn(join(WEBAPP, 'js'), '.js')) {
     for (const m of readFileSync(file, 'utf8').matchAll(literal)) keys.add(m[1]);
@@ -67,7 +68,7 @@ test('index.html has no hard-coded text outside translated elements', () => {
   const html = readFileSync(join(WEBAPP, 'index.html'), 'utf8')
     .replace(/<head>[\s\S]*?<\/head>/, '')
     .replace(/<script[\s\S]*?<\/script>/g, '');
-  const allowed = new Set(['TC420 Web', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']);
+  const allowed = new Set(['TC420 Web']);
   const texts = [...html.matchAll(/>([^<>]+)</g)].map((m) => m[1].trim()).filter(Boolean);
   assert.deepEqual(
     texts.filter((t) => !allowed.has(t)),
