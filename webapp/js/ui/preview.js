@@ -6,10 +6,10 @@ import { advance, clockAt, SPEEDS } from '../preview.js';
 import { $, el } from './dom.js';
 
 const TICK_MS = 100;
-// On 25 Oct 2026 a real TC420 refused online play for "SUNRISE" (reply length 2)
-// after accepting "TEST" on 22 Oct. If the program name is refused, the
-// preview tries once more with this name, which is known to work.
-export const FALLBACK_NAME = 'TEST';
+// The name the controller shows during the preview. A real TC420 refused
+// online play as "SUNRISE" (the program stored on it) with reply length 2 and a
+// beep, also after reconnecting, and accepted "TEST" at once (25 Oct 2026).
+export const PREVIEW_NAME = 'TEST';
 
 export function mountPreview({ conn, store, live, editor, log, i18n }) {
   const t = (key, params) => i18n.t(key, params);
@@ -54,14 +54,9 @@ export function mountPreview({ conn, store, live, editor, log, i18n }) {
   }
 
   async function startLive() {
-    const name = program().name;
-    let ok = await live.start(name);
-    if (!ok && name !== FALLBACK_NAME && conn.connected) {
-      log('info', `preview: the controller refused online play as ${name}; trying again as ${FALLBACK_NAME}`);
-      ok = await live.start(FALLBACK_NAME);
-    }
+    const ok = await live.start(PREVIEW_NAME);
     refused = !ok;
-    if (ok) log('info', `preview started: ${name} (${mode})`);
+    if (ok) log('info', `preview started: ${program().name} (${mode})`);
     else log('error', 'preview: the controller refused online play');
     render();
     return ok;

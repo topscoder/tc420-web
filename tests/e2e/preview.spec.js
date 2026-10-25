@@ -33,7 +33,7 @@ test('plays the program fast-forwarded, pauses, scrubs and stops', async ({ page
   await page.check('input[name="preview-speed"][value="1"]');
   await page.click('#btn-preview-play');
   await expect(page.locator('#preview-state')).toHaveText('Playing WINTER on the lights');
-  await expect(page.locator('#log .k-tx', { hasText: '0x15' })).toContainText('57 49 4E 54 45 52'); // "WINTER"
+  await expect(page.locator('#log .k-tx', { hasText: '0x15' })).toContainText('54 45 53 54 00 7F'); // "TEST"
   await expect(page.locator('#editor-chart .play-cursor')).toHaveCount(1);
   await expect(clock(page)).not.toHaveText('00:00'); // one day per minute: 24 minutes per second
 
@@ -93,19 +93,6 @@ test('closing the panel stops the preview', async ({ page }) => {
   await expect(page.locator('#log .log-row').filter({ hasText: 'preview stopped' })).toHaveCount(1);
 });
 
-test('a refused start is tried once more with a known-good name', async ({ page }) => {
-  await page.goto('./?sim=1&simFail=15&simFailTimes=1');
-  await page.setInputFiles('#file', schemaPath('WINTER'));
-  await connect(page);
-  await page.click('#btn-preview');
-  await page.click('#btn-preview-play');
-  await expect(page.locator('#preview-state')).toHaveText('Playing WINTER on the lights');
-  const starts = page.locator('#log .k-tx', { hasText: '0x15' });
-  await expect(starts).toHaveCount(2);
-  await expect(starts.nth(1)).toContainText('54 45 53 54 00 7F'); // "TEST"
-  await expect(page.locator('#log .log-row', { hasText: 'refused online play as WINTER' })).toHaveCount(1);
-});
-
 test('a refused preview says so and does not keep retrying while scrubbing', async ({ page }) => {
   await page.goto('./?sim=1&simFail=15');
   await page.setInputFiles('#file', schemaPath('WINTER'));
@@ -117,8 +104,8 @@ test('a refused preview says so and does not keep retrying while scrubbing', asy
   await slider.fill('600');
   await slider.fill('700');
   await page.waitForTimeout(200);
-  // One attempt: the program name, then the fallback name. Scrubbing afterwards does not retry.
-  await expect(page.locator('#log .k-tx', { hasText: '0x15' })).toHaveCount(2);
+  // One attempt; scrubbing afterwards does not retry.
+  await expect(page.locator('#log .k-tx', { hasText: '0x15' })).toHaveCount(1);
   await page.click('#btn-preview-play'); // Play does try again
-  await expect(page.locator('#log .k-tx', { hasText: '0x15' })).toHaveCount(4);
+  await expect(page.locator('#log .k-tx', { hasText: '0x15' })).toHaveCount(2);
 });

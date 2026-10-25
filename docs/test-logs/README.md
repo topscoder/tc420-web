@@ -45,3 +45,13 @@ TC420 Web 0.14.0, 25 Oct 2026, installed as an app. First test of *Preview on de
   On 22 Oct, `0x15` as "TEST" was accepted.
 - Moving the time slider repeated the start about 25 times within a second (a bug, fixed in 0.14.1).
 - 0.14.1 tries a refused start once more as "TEST", so the next log shows whether the name is the cause.
+
+## tc420-testlog-20261025-1815.txt
+
+TC420 Web 0.14.1, 25 Oct 2026, after reconnecting the controller. Same start as above, plus:
+
+- `0x15` as "SUNRISE" was refused again (length 2); the retry as "TEST" was accepted at once.
+- The preview then played SUNRISE for over two minutes: 2026 × `0x16`, none failed, levels fading up and down
+  as in the chart; the tester confirmed it works. Stop sent `0x02` (confirmed).
+- Sending SUNRISE right after the preview worked as usual (slow reply of 1245 ms after the clear).
+- Since 0.14.2 the preview always uses the name "TEST".

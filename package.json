@@ -1,6 +1,6 @@
 {
   "name": "tc420-web",
-  "version": "0.14.1",
+  "version": "0.14.2",
   "private": true,
   "description": "Edit the lighting schedules of a TC420 LED controller and send them over USB from the browser, without internet or other software.",
   "type": "module",
