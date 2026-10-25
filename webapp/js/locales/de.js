@@ -375,6 +375,8 @@ export default {
   'preview.note':
     'Es wird nichts gespeichert. Wenn Sie stoppen, kehrt der Controller zu seinem normalen Programm zurück.',
   'preview.needsDevice': 'Verbinden Sie den TC420, um die Vorschau an den Lampen zu sehen.',
+  'preview.refused':
+    'Der Controller hat die Vorschau nicht gestartet. Ziehen Sie das USB-Kabel ab, stecken Sie es wieder ein und versuchen Sie es erneut; das Protokoll unter Erweitert enthält die Details.',
   'preview.stateIdle': 'Keine Wiedergabe',
   'preview.statePlaying': '{name} läuft an den Lampen',
   'preview.stateHolding': '{name} hält an der gewählten Uhrzeit',

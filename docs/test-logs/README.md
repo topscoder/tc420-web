@@ -34,3 +34,14 @@ Test of the guided send flow from issue #5:
   confirming `0x03`. The app now allows 10 s for that packet.
 - Reported afterwards by the tester: the controller runs WINTER without pressing any buttons, also after
   unplugging and reconnecting the power.
+
+## tc420-testlog-20261025-1802.txt
+
+TC420 Web 0.14.0, 25 Oct 2026, installed as an app. First test of *Preview on device* (issue #6):
+
+- SUNRISE (9 steps) sent with the default flow: all confirmed, again a slow reply (1246 ms) after the clear.
+- Every `0x15` start of online play as "SUNRISE" was **refused**: reply `00 00 15 00 02 00` (length 2 instead
+  of 1). The controller beeped; the lights did not change, because the app sends no levels after a refusal.
+  On 22 Oct, `0x15` as "TEST" was accepted.
+- Moving the time slider repeated the start about 25 times within a second (a bug, fixed in 0.14.1).
+- 0.14.1 tries a refused start once more as "TEST", so the next log shows whether the name is the cause.

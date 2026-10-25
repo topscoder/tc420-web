@@ -19,7 +19,7 @@ import { mountPwa } from './ui/pwa.js';
 import { mountPreview } from './ui/preview.js';
 
 const APP = 'TC420 Web';
-const APP_VERSION = '0.14.0';
+const APP_VERSION = '0.14.1';
 const SIM = new URLSearchParams(location.search).has('sim');
 const detected = usbSupport(navigator, { secure: window.isSecureContext });
 const usb = SIM ? { ...detected, ok: true } : detected; // the simulator needs no USB

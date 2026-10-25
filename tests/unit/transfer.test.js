@@ -148,11 +148,21 @@ test('error kinds from send results and from opening the device', () => {
 });
 
 test('simulator options can be set from the page address', () => {
-  assert.deepEqual(simOptionsFromUrl('?sim=1&simSilent=13&simFail=12&simUnplug=20&simOpen=NotAllowedError'), {
-    silentOn: 0x13,
-    failOn: 0x12,
-    unplugAfter: 20,
-    openError: 'NotAllowedError',
+  assert.deepEqual(
+    simOptionsFromUrl('?sim=1&simSilent=13&simFail=12&simFailTimes=1&simUnplug=20&simOpen=NotAllowedError'),
+    {
+      silentOn: 0x13,
+      failOn: 0x12,
+      failTimes: 1,
+      unplugAfter: 20,
+      openError: 'NotAllowedError',
+    },
+  );
+  assert.deepEqual(simOptionsFromUrl('?sim=1'), {
+    silentOn: null,
+    failOn: null,
+    failTimes: Infinity,
+    unplugAfter: null,
+    openError: null,
   });
-  assert.deepEqual(simOptionsFromUrl('?sim=1'), { silentOn: null, failOn: null, unplugAfter: null, openError: null });
 });

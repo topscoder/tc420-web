@@ -361,6 +361,8 @@ export default {
   'preview.time': 'Time of day',
   'preview.note': 'Nothing is saved. When you stop, the controller returns to its normal program.',
   'preview.needsDevice': 'Connect the TC420 to preview on the lights.',
+  'preview.refused':
+    'The controller did not start the preview. Unplug the USB cable, plug it in again and try once more; the log under Advanced has the details.',
   'preview.stateIdle': 'Not playing',
   'preview.statePlaying': 'Playing {name} on the lights',
   'preview.stateHolding': 'Holding {name} at the chosen time',

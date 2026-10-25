@@ -370,6 +370,8 @@ export default {
   'preview.time': 'Tijdstip',
   'preview.note': 'Er wordt niets opgeslagen. Als je stopt, gaat de controller terug naar zijn normale programma.',
   'preview.needsDevice': 'Verbind de TC420 om een voorbeeld op de lampen te zien.',
+  'preview.refused':
+    'De controller startte het voorbeeld niet. Haal de USB-kabel los, sluit hem opnieuw aan en probeer het nog eens; het logboek onder Geavanceerd bevat de details.',
   'preview.stateIdle': 'Speelt niet af',
   'preview.statePlaying': '{name} speelt af op de lampen',
   'preview.stateHolding': '{name} staat stil op het gekozen tijdstip',

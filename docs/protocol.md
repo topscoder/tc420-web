@@ -94,7 +94,10 @@ PLed's send function has exactly ten call sites, which cover all eight commands.
 - **`0x13` jump bits**: bit *n* is channel *n*+1. A set bit means **switch instantly** to the new level at the
   step's time; a clear bit means **fade** gradually from the previous step. (Library; bit layout observed in
   PLed `0x403c76`–`0x403cf5`. Not yet watched on hardware, issue #11.)
-- **`0x15`**: the `7F` byte is what PLed sends; the library notes it seems to have no effect.
+- **`0x15`**: the `7F` byte is what PLed sends; the library notes it seems to have no effect. On 25 Oct 2026
+  the controller refused `0x15` as "SUNRISE" with `00 00 15 00 02 00` (length 2) and a beep, after accepting
+  "TEST" on 22 Oct. Whether the name, its length or the controller's state was the cause is being tested;
+  TC420 Web retries a refused start once as "TEST".
 - **`0x16`**: jump bits do not apply; the controller shows the values at once. The display shows the name
   given to `0x15`.
 
@@ -141,7 +144,8 @@ Example packets (bytes 0 to 5+LEN, then the checksum at offset 62):
 
 - [ ] Fade versus instant switch on real hardware (test program FADETEST in *Advanced*), issue #11.
 - [ ] What the controller does with a step that goes back in time (AMAZONE has 02:30 as its last step).
-- [ ] What a rejection reply really looks like.
+- [x] What a rejection reply looks like: `00 00 CMD 00 02 00`, length 2 (seen for `0x15` on 25 Oct 2026).
+- [ ] Why the controller refused online play as "SUNRISE" but accepted "TEST".
 - [ ] Whether writing fewer programs without a clear leaves programs in higher banks in place.
 
 ## Evidence index (PLed)

@@ -6,6 +6,10 @@ import { advance, clockAt, SPEEDS } from '../preview.js';
 import { $, el } from './dom.js';
 
 const TICK_MS = 100;
+// On 25 Oct 2026 a real TC420 refused online play for "SUNRISE" (reply length 2)
+// after accepting "TEST" on 22 Oct. If the program name is refused, the
+// preview tries once more with this name, which is known to work.
+export const FALLBACK_NAME = 'TEST';
 
 export function mountPreview({ conn, store, live, editor, log, i18n }) {
   const t = (key, params) => i18n.t(key, params);
@@ -17,6 +21,8 @@ export function mountPreview({ conn, store, live, editor, log, i18n }) {
   let lastTick = 0;
   const manual = [0, 0, 0, 0, 0];
   const sliders = [];
+  let starting = null; // the start attempt in progress, so slider moves do not start it again
+  let refused = false; // the last start attempt was refused
 
   const program = () => store.selected;
   const active = () => live.playing;
@@ -30,7 +36,7 @@ export function mountPreview({ conn, store, live, editor, log, i18n }) {
     input.addEventListener('input', async () => {
       manual[c] = Number(input.value);
       out.textContent = `${input.value} %`;
-      if (await ensureLive()) live.setValues(manual);
+      if (!refused && (await ensureLive())) live.setValues(manual); // after a refusal only Play tries again
     });
     $('preview-sliders').append(label, input, out);
     sliders.push({ label, input, out });
@@ -38,11 +44,25 @@ export function mountPreview({ conn, store, live, editor, log, i18n }) {
 
   // ---------- playback ----------
 
-  async function ensureLive() {
-    if (active()) return true;
-    if (!conn.connected || !program()) return false;
-    const ok = await live.start(program().name);
-    if (ok) log('info', `preview started: ${program().name} (${mode})`);
+  function ensureLive() {
+    if (active()) return Promise.resolve(true);
+    if (!conn.connected || !program()) return Promise.resolve(false);
+    starting ??= startLive().finally(() => {
+      starting = null;
+    });
+    return starting;
+  }
+
+  async function startLive() {
+    const name = program().name;
+    let ok = await live.start(name);
+    if (!ok && name !== FALLBACK_NAME && conn.connected) {
+      log('info', `preview: the controller refused online play as ${name}; trying again as ${FALLBACK_NAME}`);
+      ok = await live.start(FALLBACK_NAME);
+    }
+    refused = !ok;
+    if (ok) log('info', `preview started: ${name} (${mode})`);
+    else log('error', 'preview: the controller refused online play');
     render();
     return ok;
   }
@@ -119,13 +139,16 @@ export function mountPreview({ conn, store, live, editor, log, i18n }) {
     sliders.forEach((s) => {
       s.input.disabled = !conn.connected;
     });
+    $('preview-state').classList.toggle('warn-text', conn.connected && !active() && refused);
     $('preview-state').textContent = !conn.connected
       ? t('preview.needsDevice')
-      : active()
-        ? t(mode === 'manual' ? 'preview.stateManual' : running ? 'preview.statePlaying' : 'preview.stateHolding', {
-            name: program()?.name || '',
-          })
-        : t('preview.stateIdle');
+      : !active() && refused
+        ? t('preview.refused')
+        : active()
+          ? t(mode === 'manual' ? 'preview.stateManual' : running ? 'preview.statePlaying' : 'preview.stateHolding', {
+              name: program()?.name || '',
+            })
+          : t('preview.stateIdle');
     $('btn-preview').setAttribute('aria-expanded', String(!panel.hidden));
     $('btn-preview').disabled = !program();
   }
@@ -141,7 +164,7 @@ export function mountPreview({ conn, store, live, editor, log, i18n }) {
   $('btn-preview-stop').addEventListener('click', stop);
   $('preview-time').addEventListener('input', async () => {
     minute = Number($('preview-time').value);
-    if (mode === 'play' && (await ensureLive())) {
+    if (mode === 'play' && !refused && (await ensureLive())) {
       if (!timer) {
         lastTick = performance.now();
         timer = setInterval(tick, TICK_MS);

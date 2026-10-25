@@ -1,0 +1,166 @@
+TC420 Web 0.14.0
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+
+2026-10-22T08:06:26.041Z	SESSIE	-	nieuwe sessie · TC420 Web 0.3.0 · https://topscoder.github.io · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-22T08:15:44.690Z	SESSIE	-	nieuwe sessie · TC420 Web 0.3.0 · https://topscoder.github.io · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-22T08:16:15.758Z	INFO	T4	schema ingelezen: WINTER.tmf · TC420 · 5 kanalen · 9 stappen · derde veld 3
+2026-10-22T08:19:12.365Z	INFO	T1	apparaat geopend: Time Controller · VID 0x0888 PID 0x4000 · usagePage 0xff usage 0xff · in [id 0: 64 B] · uit [id 0: 64 B]
+2026-10-22T08:19:20.196Z	INFO	T5	download gestart · 1 schema('s) · bank 0: WINTER (9 stappen)
+2026-10-22T08:19:20.198Z	TX	T5	0x12 modus-header · 00 55 AA 12 00 08 00 09 57 49 4E 54 45 52 … FB 0D 0A
+2026-10-22T08:19:20.213Z	ACK	T5	0x12 modus-header: 14 ms · RX 00 00 12 00 01 00 00 00 00 00 00 00 … · cmd 0x12, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.214Z	TX	T5	0x13 stap · 00 55 AA 13 00 08 00 00 0A 0A 0A 0A 0A 00 … 4C 0D 0A
+2026-10-22T08:19:20.260Z	ACK	T5	0x13 stap: 45 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.261Z	TX	T5	0x13 stap · 00 55 AA 13 00 08 07 00 0A 0A 0A 0A 0A 00 … 53 0D 0A
+2026-10-22T08:19:20.317Z	ACK	T5	0x13 stap: 55 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.318Z	TX	T5	0x13 stap · 00 55 AA 13 00 08 07 1E 46 46 46 46 46 00 … 9D 0D 0A
+2026-10-22T08:19:20.333Z	ACK	T5	0x13 stap: 14 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.333Z	TX	T5	0x13 stap · 00 55 AA 13 00 08 0B 00 46 46 46 46 46 00 … 83 0D 0A
+2026-10-22T08:19:20.349Z	ACK	T5	0x13 stap: 15 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.350Z	TX	T5	0x13 stap · 00 55 AA 13 00 08 0B 1E 64 64 64 64 64 00 … 37 0D 0A
+2026-10-22T08:19:20.395Z	ACK	T5	0x13 stap: 45 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.396Z	TX	T5	0x13 stap · 00 55 AA 13 00 08 0F 00 64 64 64 64 64 00 … 1D 0D 0A
+2026-10-22T08:19:20.412Z	ACK	T5	0x13 stap: 16 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.413Z	TX	T5	0x13 stap · 00 55 AA 13 00 08 0F 1E 46 46 46 46 46 00 … A5 0D 0A
+2026-10-22T08:19:20.429Z	ACK	T5	0x13 stap: 15 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.430Z	TX	T5	0x13 stap · 00 55 AA 13 00 08 14 00 46 46 46 46 46 00 … 8C 0D 0A
+2026-10-22T08:19:20.445Z	ACK	T5	0x13 stap: 14 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.445Z	TX	T5	0x13 stap · 00 55 AA 13 00 08 14 1E 0A 0A 0A 0A 0A 00 … 7E 0D 0A
+2026-10-22T08:19:20.509Z	ACK	T5	0x13 stap: 63 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.510Z	TX	T5	0x01 einde modus · 00 55 AA 01 00 00 … 00 0D 0A
+2026-10-22T08:19:20.813Z	INFO	T5	0x01 einde modus: geen antwoord (zoals verwacht)
+2026-10-22T08:19:20.814Z	TX	T5	0x02 einde / stop · 00 55 AA 02 00 00 … 01 0D 0A
+2026-10-22T08:19:20.829Z	ACK	T5	0x02 einde / stop: 14 ms · RX 00 00 02 00 01 00 00 00 00 00 00 00 … · cmd 0x02, lengte 1, resultaat 0x00 → OK
+2026-10-22T08:19:20.830Z	INFO	T5	download geslaagd: 1 schema('s), 9 stappen
+2026-10-22T08:19:51.134Z	FOUT	T1	TC420 losgekoppeld
+2026-10-22T09:36:40.041Z	SESSIE	-	nieuwe sessie · TC420 Web 0.3.0 · https://topscoder.github.io · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-24T12:30:37.927Z	SESSION	-	new session · TC420 Web 0.5.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-24T12:30:41.312Z	SESSION	-	new session · TC420 Web 0.5.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-24T12:30:44.263Z	INFO	-	language changed to en
+2026-10-24T12:30:52.020Z	INFO	-	language changed to de
+2026-10-24T12:30:58.528Z	INFO	-	language changed to en
+2026-10-24T12:31:01.621Z	INFO	-	language changed to de
+2026-10-24T12:31:05.932Z	INFO	-	language changed to nl
+2026-10-24T12:35:45.123Z	SESSION	-	new session · TC420 Web 0.5.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-24T12:36:06.548Z	INFO	T4	schedule loaded: WINTER.tmf · TC420 · 5 channels · 9 steps · third field 3
+2026-10-24T12:55:59.963Z	SESSION	-	new session · TC420 Web 0.5.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T06:44:14.189Z	INFO	T4	program library: 0 programs in indexeddb storage
+2026-10-25T06:44:14.221Z	SESSION	-	new session · TC420 Web 0.6.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T07:52:33.066Z	INFO	T4	program library: 0 programs in indexeddb storage
+2026-10-25T07:52:33.095Z	SESSION	-	new session · TC420 Web 0.8.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T07:54:18.723Z	INFO	T4	program library: 0 programs in indexeddb storage
+2026-10-25T07:54:18.746Z	SESSION	-	new session · TC420 Web 0.9.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T07:55:17.286Z	INFO	T4	program created from template daynight
+2026-10-25T07:55:24.987Z	INFO	T4	step moved in DAYNIGHT: 06:00 0 %
+2026-10-25T07:55:28.293Z	INFO	T4	step moved in DAYNIGHT: 07:05 100 %
+2026-10-25T07:55:34.712Z	INFO	T4	program DAYNIGHT deleted
+2026-10-25T07:55:44.278Z	INFO	T4	program created from template sunrise
+2026-10-25T07:56:11.734Z	INFO	T4	step moved in SUNRISE: 00:00 3 %
+2026-10-25T07:56:16.275Z	INFO	T4	step moved in SUNRISE: 06:30 3 %
+2026-10-25T07:56:18.728Z	INFO	T4	step moved in SUNRISE: 20:30 3 %
+2026-10-25T07:57:36.844Z	ERROR	T1	connecting failed (noDevice):
+2026-10-25T07:58:10.344Z	INFO	T4	program SUNRISE saved as .tmf (9 steps)
+2026-10-25T07:59:08.499Z	INFO	T4	backup exported (1 programs)
+2026-10-25T08:00:17.340Z	INFO	T4	program library: 1 programs in indexeddb storage
+2026-10-25T08:00:17.368Z	SESSION	-	new session · TC420 Web 0.9.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T11:16:36.888Z	INFO	T4	program library: 1 programs in indexeddb storage
+2026-10-25T11:16:36.928Z	SESSION	-	new session · TC420 Web 0.10.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · platform mac · browser Chrome · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T11:16:44.690Z	INFO	T4	program library: 1 programs in indexeddb storage
+2026-10-25T11:16:44.716Z	SESSION	-	new session · TC420 Web 0.10.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · platform mac · browser Chrome · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T11:20:49.697Z	INFO	T4	program library: 1 programs in indexeddb storage
+2026-10-25T11:20:49.735Z	SESSION	-	new session · TC420 Web 0.10.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · platform mac · browser Chrome · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T11:20:53.919Z	INFO	T4	empty program created
+2026-10-25T11:20:58.237Z	INFO	T4	program PROG2 deleted
+2026-10-25T11:34:16.084Z	INFO	T4	program library: 1 programs in indexeddb storage
+2026-10-25T11:34:16.125Z	SESSION	-	new session · TC420 Web 0.11.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · platform mac · browser Chrome · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T16:23:51.337Z	INFO	T4	program library: 1 programs in indexeddb storage
+2026-10-25T16:23:51.392Z	SESSION	-	new session · TC420 Web 0.12.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · platform mac · browser Chrome · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T16:23:51.928Z	INFO	-	TC420 Web is now available offline
+2026-10-25T16:23:56.117Z	INFO	-	installed as an app
+2026-10-25T16:57:13.016Z	INFO	T4	program library: 1 programs in indexeddb storage
+2026-10-25T16:57:13.127Z	SESSION	-	new session · TC420 Web 0.12.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · platform mac · browser Chrome · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T16:57:16.780Z	INFO	-	a new version of TC420 Web is ready
+2026-10-25T16:57:21.566Z	INFO	T4	program library: 1 programs in indexeddb storage
+2026-10-25T16:57:21.609Z	SESSION	-	new session · TC420 Web 0.14.0 · https://topscoder.github.io · language nl · secure context true · WebHID true · platform mac · browser Chrome · Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+2026-10-25T16:59:42.725Z	INFO	T1	device opened: Time Controller · VID 0x0888 PID 0x4000 · usagePage 0xff usage 0xff · in [id 0: 64 B] · out [id 0: 64 B]
+2026-10-25T16:59:45.975Z	TX	T2	0x11 set clock · 00 55 AA 11 00 07 07 EA 0A 19 11 3B 2D … A4 0D 0A
+2026-10-25T16:59:45.994Z	ACK	T2	0x11 set clock: 17 ms · RX 00 00 11 00 01 00 00 00 00 00 00 00 … · cmd 0x11, length 1, result 0x00 → OK
+2026-10-25T17:00:36.355Z	INFO	T5	sending started · slot 1: SUNRISE (9 steps) · clock yes
+2026-10-25T17:00:36.357Z	TX	send	0x11 set clock · 00 55 AA 11 00 07 07 EA 0A 19 12 00 24 … 61 0D 0A
+2026-10-25T17:00:36.369Z	ACK	send	0x11 set clock: 11 ms · RX 00 00 11 00 01 00 00 00 00 00 00 00 … · cmd 0x11, length 1, result 0x00 → OK
+2026-10-25T17:00:36.370Z	TX	send	0x03 clear all · 00 55 AA 03 00 00 … 02 0D 0A
+2026-10-25T17:00:36.385Z	ACK	send	0x03 clear all: 14 ms · RX 00 00 03 00 01 00 00 00 00 00 00 00 … · cmd 0x03, length 1, result 0x00 → OK
+2026-10-25T17:00:36.386Z	TX	send	0x12 mode header · 00 55 AA 12 00 09 00 09 53 55 4E 52 49 53 45 … 4C 0D 0A
+2026-10-25T17:00:37.633Z	ACK	send	0x12 mode header: 1246 ms · RX 00 00 12 00 01 00 00 00 00 00 00 00 … · cmd 0x12, length 1, result 0x00 → OK
+2026-10-25T17:00:37.634Z	TX	send	0x13 step · 00 55 AA 13 00 08 00 00 05 05 05 05 05 00 … 33 0D 0A
+2026-10-25T17:00:37.649Z	ACK	send	0x13 step: 14 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, length 1, result 0x00 → OK
+2026-10-25T17:00:37.651Z	TX	send	0x13 step · 00 55 AA 13 00 08 06 1E 05 05 05 05 05 00 … 57 0D 0A
+2026-10-25T17:00:37.705Z	ACK	send	0x13 step: 53 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, length 1, result 0x00 → OK
+2026-10-25T17:00:37.707Z	TX	send	0x13 step · 00 55 AA 13 00 08 07 1E 1E 1E 1E 1E 1E 00 … D5 0D 0A
+2026-10-25T17:00:37.753Z	ACK	send	0x13 step: 45 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, length 1, result 0x00 → OK
+2026-10-25T17:00:37.755Z	TX	send	0x13 step · 00 55 AA 13 00 08 09 00 50 50 50 50 50 00 … B3 0D 0A
+2026-10-25T17:00:37.769Z	ACK	send	0x13 step: 13 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, length 1, result 0x00 → OK
+2026-10-25T17:00:37.771Z	TX	send	0x13 step · 00 55 AA 13 00 08 0C 00 64 64 64 64 64 00 … 1A 0D 0A
+2026-10-25T17:00:37.785Z	ACK	send	0x13 step: 13 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, length 1, result 0x00 → OK
+2026-10-25T17:00:37.787Z	TX	send	0x13 step · 00 55 AA 13 00 08 0F 00 64 64 64 64 64 00 … 1D 0D 0A
+2026-10-25T17:00:37.801Z	ACK	send	0x13 step: 13 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, length 1, result 0x00 → OK
+2026-10-25T17:00:37.803Z	TX	send	0x13 step · 00 55 AA 13 00 08 12 00 50 50 50 50 50 00 … BC 0D 0A
+2026-10-25T17:00:37.817Z	ACK	send	0x13 step: 13 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, length 1, result 0x00 → OK
+2026-10-25T17:00:37.818Z	TX	send	0x13 step · 00 55 AA 13 00 08 13 1E 1E 1E 1E 1E 1E 00 … E1 0D 0A
+2026-10-25T17:00:37.833Z	ACK	send	0x13 step: 13 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, length 1, result 0x00 → OK
+2026-10-25T17:00:37.834Z	TX	send	0x13 step · 00 55 AA 13 00 08 14 1E 05 05 05 05 05 00 … 65 0D 0A
+2026-10-25T17:00:37.897Z	ACK	send	0x13 step: 61 ms · RX 00 00 13 00 01 00 00 00 00 00 00 00 … · cmd 0x13, length 1, result 0x00 → OK
+2026-10-25T17:00:37.899Z	TX	send	0x01 end of mode · 00 55 AA 01 00 00 … 00 0D 0A
+2026-10-25T17:00:38.201Z	INFO	send	0x01 end of mode: no reply (as expected)
+2026-10-25T17:00:38.202Z	TX	send	0x02 end / stop · 00 55 AA 02 00 00 … 01 0D 0A
+2026-10-25T17:00:38.217Z	ACK	send	0x02 end / stop: 13 ms · RX 00 00 02 00 01 00 00 00 00 00 00 00 … · cmd 0x02, length 1, result 0x00 → OK
+2026-10-25T17:00:38.226Z	INFO	T5	sending succeeded: 1 program(s), clock set
+2026-10-25T17:00:53.785Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:00:53.801Z	NACK	T3	0x15 online play start: 14 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:44.644Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:44.656Z	NACK	T3	0x15 online play start: 10 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.726Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.744Z	NACK	T3	0x15 online play start: 16 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.751Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.770Z	NACK	T3	0x15 online play start: 18 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.771Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.784Z	NACK	T3	0x15 online play start: 11 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.786Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.800Z	NACK	T3	0x15 online play start: 13 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.802Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.816Z	NACK	T3	0x15 online play start: 13 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.819Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.832Z	NACK	T3	0x15 online play start: 12 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.835Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.848Z	NACK	T3	0x15 online play start: 12 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.852Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.864Z	NACK	T3	0x15 online play start: 11 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.868Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.880Z	NACK	T3	0x15 online play start: 11 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.884Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.896Z	NACK	T3	0x15 online play start: 11 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.901Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.912Z	NACK	T3	0x15 online play start: 10 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.918Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.936Z	NACK	T3	0x15 online play start: 17 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.938Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:55.954Z	NACK	T3	0x15 online play start: 15 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:55.984Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:56.000Z	NACK	T3	0x15 online play start: 15 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:56.567Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:56.584Z	NACK	T3	0x15 online play start: 15 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:56.603Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:56.616Z	NACK	T3	0x15 online play start: 12 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:56.635Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:56.648Z	NACK	T3	0x15 online play start: 11 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:56.668Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:56.680Z	NACK	T3	0x15 online play start: 11 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:56.685Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:56.696Z	NACK	T3	0x15 online play start: 10 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:56.701Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:56.712Z	NACK	T3	0x15 online play start: 10 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:56.734Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:56.744Z	NACK	T3	0x15 online play start: 9 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:56.956Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:56.968Z	NACK	T3	0x15 online play start: 11 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
+2026-10-25T17:01:59.391Z	TX	T3	0x15 online play start · 00 55 AA 15 00 09 53 55 4E 52 49 53 45 00 7F … C5 0D 0A
+2026-10-25T17:01:59.408Z	NACK	T3	0x15 online play start: 15 ms · RX 00 00 15 00 02 00 00 00 00 00 00 00 … · cmd 0x15, length 2, result 0x00 → NOT OK
